@@ -1,0 +1,377 @@
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import productApi from '../api/productApi';
+import brandApi from '../api/brandApi';
+import ProductCard from '../components/common/ProductCard';
+import LoadingAnimations from '../components/common/LoadingAnimations';
+import Notification from '../components/common/Notification';
+import { motion, AnimatePresence } from "framer-motion";
+
+
+export default function SearchResultsPage() {
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const keyword = queryParams.get("keyword");
+
+  const products = location.state?.products;
+
+  const [results, setResults] = useState([]);
+  const [brands, setBrands] = useState([]);
+
+  //Notification
+  const [show, setShow] = useState(false);
+  const [type, setType] = useState('');
+  const [message, setMessage] = useState('');
+
+  const [filteredResults, setFilteredResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [sortBy, setSortBy] = useState('relevance');
+
+  // Filters
+  const [filters, setFilters] = useState({
+    priceMin: '',
+    priceMax: '',
+    brand: 'all',
+    audience: 'all',
+    movement: 'all',
+    minRating: 0
+  });
+
+  useEffect(() => {
+    if (!products || products?.length === 0) return;
+    setFilteredResults(products);
+  })
+  useEffect(() => {
+    // Simulate API call
+    setLoading(true);
+    const applyFiltersAndSort = () => {
+      let filtered = [...results];
+
+      // Apply filters (logic giữ nguyên)
+      if (filters.priceMin) {
+        filtered = filtered.filter(item => item.detail[0]?.price >= parseFloat(filters.priceMin));
+      }
+      if (filters.priceMax) {
+        filtered = filtered.filter(item => item.detail[0]?.price <= parseFloat(filters.priceMax));
+      }
+      if (filters.brand !== 'all') {
+        filtered = filtered.filter(item => item.brand.name === filters.brand);
+      }
+      if (filters.audience !== 'all') {
+        filtered = filtered.filter(item => item.target_audience === filters.audience);
+      }
+      if (filters.movement !== 'all') {
+        filtered = filtered.filter(item => item.movement_type === filters.movement);
+      }
+      if (filters.minRating > 0) {
+        filtered = filtered.filter(item => item.ratings >= filters.minRating);
+      }
+
+      // Apply sorting (logic giữ nguyên)
+      switch (sortBy) {
+        case 'price-low':
+          filtered.sort((a, b) => a.detail[0]?.price - b.detail[0]?.price);
+          break;
+        case 'price-high':
+          filtered.sort((a, b) => b.detail[0]?.price - a.detail[0]?.price);
+          break;
+        case 'rating':
+          filtered.sort((a, b) => b.ratings - a.ratings);
+          break;
+        case 'newest':
+          filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          break;
+        default:
+          break;
+      }
+
+      setFilteredResults(filtered);
+    };
+
+    setTimeout(() => {
+      applyFiltersAndSort();
+      setLoading(false);
+    }, 500);
+  }, [sortBy, filters, results]);
+
+  useEffect(() => {
+    setFilteredResults([]);
+    if (keyword === ' ') return;
+    const getProducts = async () => {
+      try {
+        setLoading(true);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await productApi.search(keyword);
+        const update = response.product.map((pro) => {
+          const sold = pro.detail?.reduce((t, d) => t + d.sold, 0);
+          const total = pro.detail?.reduce((t, d) => t + d.quantity, 0);
+          const stock = total - sold;
+          const reviewCount = pro.reviews.length;
+          return { ...pro, sold, stock, reviewCount }
+        });
+        setResults(update);
+        setType('success');
+        setMessage(response.message);
+        setShow(true);
+      } catch (err) {
+        if (filteredResults?.length === 0) {
+          setType('error');
+          setMessage(err.response?.data?.message || err.message);
+          setShow(true);
+
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+    getProducts();
+  }, [keyword]);
+
+  useEffect(() => {
+    const getBrands = async () => {
+      try {
+        const response = await brandApi.getBrands();
+        setBrands(response.brands);
+        setType('success');
+        setMessage(response.message);
+        setShow(true);
+      } catch (err) {
+        setType('error');
+        setMessage(err.response?.data?.message || err.message);
+        setShow(true);
+      }
+    }
+    getBrands();
+  }, []);
+
+  const handleFilterChange = (filterName, value) => {
+    setFilters({
+      ...filters,
+      [filterName]: value
+    });
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      priceMin: '',
+      priceMax: '',
+      brand: 'all',
+      audience: 'all',
+      movement: 'all',
+      minRating: 0
+    });
+  };
+
+  const renderStars = (rating) => {
+    const safeRating = Math.max(0, Math.floor(rating));
+    return '⭐'.repeat(safeRating);
+  };
+
+  return (
+    <>
+      <Notification type={type} message={message} show={show} onClose={() => setShow(false)} />
+
+      {/* Container chính, padding nhỏ (p-4) và chữ nhỏ lại (text-sm) */}
+      <div className="container mx-auto p-4 text-sm flex flex-row gap-4 flex-wrap">
+        {/* Sidebar Filter */}
+        <AnimatePresence>
+          <motion.aside
+            // Fixed/Block, z-50/z-auto, p-4 (nhỏ lại), shadow-lg (nhỏ hơn)
+            className=" bg-white dark:bg-gray-800 p-4 lg:p-0 shadow-lg lg:shadow-none rounded-md w-max max-w-[562px]"
+            initial={{ scale: 0.5, opacity: 0, borderRadius: "50%", y: 60 }}
+            animate={{
+              scale: 1,
+              opacity: 1,
+              borderRadius: "6px", // radius nhỏ: rounded-md (6px)
+              y: 0,
+              transition: {
+                type: "spring",
+                stiffness: 120,
+                damping: 15,
+              },
+            }}
+            exit={{
+              scale: 0.5,
+              opacity: 0,
+              borderRadius: "50%",
+              y: 60,
+              transition: {
+                duration: 0.3,
+                ease: "easeInOut",
+              },
+            }}
+          >
+            {/* Price Range */}
+            <div className="mb-3 p-3 border rounded-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600 w-full">
+              <h4 className="text-base font-medium mb-2 text-gray-800 dark:text-gray-200">Price Range</h4>
+              <div className="flex gap-2 ">
+                <input
+                  type="number"
+                  placeholder="Min"
+                  // Kích thước nhỏ: p-1.5, text-sm, rounded-sm
+                  className="w-32 p-1.5 border border-gray-300 rounded-sm text-sm"
+                  value={filters.priceMin}
+                  onChange={(e) => handleFilterChange("priceMin", e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="Max"
+                  className="w-32 p-1.5 border border-gray-300 rounded-sm text-sm "
+                  value={filters.priceMax}
+                  onChange={(e) => handleFilterChange("priceMax", e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Brand & Movement Type */}
+            <div className="mb-3 space-y-3 p-3 border rounded-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+              <div>
+                <h4 className="text-base font-medium mb-1 text-gray-800 dark:text-gray-200">Brand</h4>
+                <select
+                  className="w-full p-1.5 border border-gray-300 rounded-sm text-sm "
+                  value={filters.brand}
+                  onChange={(e) => handleFilterChange("brand", e.target.value)}
+                >
+                  <option value="all">All Brands</option>
+                  {brands?.map((brand) => (
+                    <option key={brand._id} value={brand.name}>
+                      {brand.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* Movement Type */}
+              <div>
+                <h4 className="text-base font-medium mb-1 text-gray-800 dark:text-gray-200">Movement Type</h4>
+                <select
+                  className="w-full p-1.5 border border-gray-300 rounded-sm text-sm"
+                  value={filters.movement}
+                  onChange={(e) => handleFilterChange('movement', e.target.value)}
+                >
+                  <option value="all">All Types</option>
+                  <option value="Automatic">Automatic</option>
+                  <option value="Quartz">Quartz</option>
+                  <option value="Mechanical">Mechanical</option>
+                </select>
+              </div>
+            </div>
+
+
+            {/* Target Audience */}
+            <div className="mb-3 p-3 border rounded-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+              <div>
+                <h4 className="text-base font-medium mb-2 text-gray-800 dark:text-gray-200">For</h4>
+                <div className="flex flex-wrap gap-x-3 gap-y-1">
+                  {['all', 'Male', 'Female', 'Unisex'].map(val => (
+                    <label key={val} className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 text-sm cursor-pointer">
+                      <input
+                        type="radio"
+                        name="audience"
+                        value={val}
+                        checked={filters.audience === val}
+                        onChange={(e) => handleFilterChange('audience', e.target.value)}
+                        // Kích thước nhỏ hơn: h-3 w-3
+                        className="form-radio text-indigo-600 focus:ring-indigo-500 h-3 w-3"
+                      />
+                      <span>{val === 'all' ? 'All' : val}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Rating Filter */}
+            <div className="mb-4 p-3 border rounded-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+              <h4 className="text-base font-medium mb-2 text-gray-800 dark:text-gray-200">Min Rating</h4>
+              <div className="space-y-1">
+                {[4, 3, 2, 1].map(rating => (
+                  <label key={rating} className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 text-sm cursor-pointer">
+                    <input
+                      type="radio"
+                      name="rating"
+                      checked={filters.minRating === rating}
+                      onChange={() => handleFilterChange('minRating', rating)}
+                      // Kích thước nhỏ hơn: h-3 w-3
+                      className="form-radio text-indigo-600 focus:ring-indigo-500 h-3 w-3"
+                    />
+                    <span className='whitespace-nowrap'>{renderStars(rating)} <span className='text-xs'>(and up)</span></span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Clear Filters Button */}
+            <button
+              // Kích thước nhỏ hơn: py-1.5, text-sm, rounded-sm
+              className="w-full py-1.5 text-sm bg-red-500 text-white font-semibold rounded-sm shadow-sm hover:bg-red-600 transition duration-300"
+              onClick={clearFilters}
+            >
+              Clear All Filters
+            </button>
+          </motion.aside>
+        </AnimatePresence>
+
+        {/* Main Content */}
+        <main className="flex-1">
+          {/* Results Header */}
+          <div className="flex justify-between items-center mb-4 p-3 bg-white dark:bg-gray-800 rounded-md shadow-sm border dark:border-gray-700">
+            <div className="results-info">
+              {/* Chữ nhỏ hơn: text-base sm:text-lg */}
+              <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">Results for "<span className="text-indigo-600">{keyword}</span>"</h2>
+              <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">{filteredResults.length} products found</p>
+            </div>
+
+            <div className="results-controls">
+              <select
+                // Kích thước nhỏ hơn: p-1.5, rounded-sm
+                className="p-1.5 border border-gray-300 rounded-sm text-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="relevance">Most Relevant</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+                <option value="newest">Newest First</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Loading State */}
+          {loading && (
+            <div className="min-h-96 flex items-center justify-center">
+              <LoadingAnimations option="skeleton" />
+            </div>
+          )}
+
+          {/* No Results */}
+          {!loading && filteredResults.length === 0 && (
+            <div className="flex flex-col items-center justify-center min-h-[50vh] p-6 bg-white dark:bg-gray-800 rounded-md shadow-lg text-center border dark:border-gray-700">
+              <div className="text-5xl mb-3">🔍</div>
+              <h3 className="text-lg font-bold mb-1 text-gray-900 dark:text-white">No products found</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Try adjusting your filters or search query</p>
+              <button
+                className="py-1.5 px-4 text-sm bg-indigo-600 text-white font-semibold rounded-sm shadow-md hover:bg-indigo-700 transition duration-300"
+                onClick={clearFilters}
+              >
+                Clear All Filters
+              </button>
+            </div>
+          )}
+
+          {/* Results Grid/List */}
+          {!loading && filteredResults.length > 0 &&
+            <div className=' grid lg:grid-cols-3 gap-4'>
+              {
+                filteredResults.map((product, index) => (
+                  <ProductCard key={index} product={product} />
+                ))
+              }
+            </div>
+          }
+        </main>
+      </div>
+    </>
+  )
+}

@@ -1,0 +1,380 @@
+.loader-display {
+    background: white;
+    display: flex;
+    height: 100%;
+    align-items: start;
+    justify-content: left;
+    border-radius: 20px;
+}
+
+.loader-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.loader-container.full-width {
+    width: 100%;
+}
+
+.loader-text {
+    font-size: 12px;
+    color:var(--text-primary);
+    font-weight: 500;
+}
+
+/* Spinner Loader */
+.spinner-loader {
+    width: 30%;
+    height: 30%;
+    border: 6px solid #e2e8f0;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Dots Loader */
+.dots-loader {
+    display: flex;
+    gap: 12px;
+}
+
+.dot {
+    width: 16px;
+    height: 16px;
+    background: #667eea;
+    border-radius: 50%;
+    animation: bouncee 1.4s infinite ease-in-out both;
+}
+
+.dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes bouncee {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+    }
+
+    40% {
+        transform: scale(1);
+    }
+}
+
+/* Bars Loader */
+.bars-loader {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 60px;
+}
+
+.bar-item {
+    width: 8px;
+    background: linear-gradient(180deg, #08b633, var(--brand-color));
+    border-radius: 4px;
+    animation: grow 1.2s infinite ease-in-out;
+}
+
+.bar-item:nth-child(1) {
+    animation-delay: -0.48s;
+}
+
+.bar-item:nth-child(2) {
+    animation-delay: -0.36s;
+}
+
+.bar-item:nth-child(3) {
+    animation-delay: -0.24s;
+}
+
+.bar-item:nth-child(4) {
+    animation-delay: -0.12s;
+}
+
+.bar-item:nth-child(5) {
+    animation-delay: 0s;
+}
+
+@keyframes grow {
+
+    0%,
+    40%,
+    100% {
+        height: 16px;
+    }
+
+    20% {
+        height: 60px;
+    }
+}
+
+/* Pulse Loader */
+.pulse-loader {
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.pulse-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 4px solid #667eea;
+    border-radius: 50%;
+    opacity: 0;
+    animation: pulse 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+.pulse-ring:nth-child(2) {
+    animation-delay: 0.7s;
+}
+
+.pulse-ring:nth-child(3) {
+    animation-delay: 1.4s;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.3);
+        opacity: 0;
+    }
+}
+
+/* Circle Loader */
+.circle-loader {
+    width: 15px;
+    height: 15px;
+    position: relative;
+}
+
+.circle-path {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid #e2e8f0;
+    border-top-color: #667eea;
+    border-right-color: #764ba2;
+    animation: rotate 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(720deg);
+    }
+}
+
+/* Skeleton Loader */
+.skeleton-loader {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    width: 100%;
+    background-color: var(--bg-primary);
+    border-radius: 20px;
+}
+
+.skeleton-card {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 200px;
+    background: var(--bg-shimmer);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+}
+
+.skeleton-content {
+    padding: 20px;
+}
+
+.skeleton-line {
+    height: 12px;
+    background: var(--bg-shimmer);
+    background-size: 200% 100%;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    animation: shimmer 2s infinite;
+}
+
+.skeleton-line.title {
+    height: 20px;
+    width: 70%;
+}
+
+.skeleton-line.short {
+    width: 40%;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Hourglass Loader */
+.hourglass-loader {
+    width: 60px;
+    height: 80px;
+    position: relative;
+}
+
+.hourglass {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    animation: flip 2s infinite;
+}
+
+.hourglass-top,
+.hourglass-bottom {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    border: 4px solid #667eea;
+}
+
+.hourglass-top {
+    top: 0;
+    border-radius: 50% 50% 0 0;
+    clip-path: polygon(20% 0%, 80% 0%, 50% 100%);
+}
+
+.hourglass-bottom {
+    bottom: 0;
+    border-radius: 0 0 50% 50%;
+    clip-path: polygon(50% 0%, 20% 100%, 80% 100%);
+}
+
+@keyframes flip {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+    }
+}
+
+/* Gradient Loader */
+.gradient-loader {
+    width: 80px;
+    height: 80px;
+}
+
+.gradient-spinner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg,
+            #667eea 0deg 90deg,
+            #764ba2 90deg 180deg,
+            #f093fb 180deg 270deg,
+            #667eea 270deg 360deg);
+    animation: spin 1.5s linear infinite;
+    position: relative;
+}
+
+.gradient-spinner::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    background: white;
+    border-radius: 50%;
+}
+
+/* Code Section */
+.code-section {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.code-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 16px;
+}
+
+.code-block {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 24px;
+    border-radius: 12px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .showcase-title {
+        font-size: 32px;
+    }
+
+    .loader-tabs {
+        gap: 8px;
+    }
+
+    .tab-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+
+    .tab-label {
+        display: none;
+    }
+
+    .loader-display {
+        padding: 60px 20px;
+    }
+
+    .skeleton-loader {
+        grid-template-columns: 1fr;
+    }
+
+    .code-section {
+        padding: 20px;
+    }
+
+    .code-block {
+        padding: 16px;
+        font-size: 12px;
+    }
+}
