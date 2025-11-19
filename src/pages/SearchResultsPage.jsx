@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useImageStore } from '../store/imageStore';
 import productApi from '../api/productApi';
 import brandApi from '../api/brandApi';
 import ProductCard from '../components/common/ProductCard';
@@ -14,7 +15,7 @@ export default function SearchResultsPage() {
   const queryParams = new URLSearchParams(location.search);
   const keyword = queryParams.get("keyword");
 
-  const products = location.state?.products;
+  const { formData } = useImageStore();
 
   const [results, setResults] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -38,10 +39,6 @@ export default function SearchResultsPage() {
     minRating: 0
   });
 
-  useEffect(() => {
-    if (!products || products?.length === 0) return;
-    setFilteredResults(products);
-  })
   useEffect(() => {
     // Simulate API call
     setLoading(true);
@@ -97,7 +94,7 @@ export default function SearchResultsPage() {
 
   useEffect(() => {
     setFilteredResults([]);
-    if (keyword === ' ') return;
+    if (!keyword || keyword === '') return;
     const getProducts = async () => {
       try {
         setLoading(true);
@@ -127,6 +124,28 @@ export default function SearchResultsPage() {
     }
     getProducts();
   }, [keyword]);
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        setLoading(true);
+        new Promise(resolve => setTimeout(resolve, 1500));
+        const response = await productApi.postImgToSearch(formData);
+        setResults(response.products);
+        setShow(true);
+        setMessage(response.message);
+        setType('success');
+        useImageStore.getState().clearFormData(formData);
+      } catch (err) {
+        setShow(true);
+        setMessage(err.response?.data?.message || err.message);
+        setType('error');
+      } finally {
+        setLoading(false);
+      }
+    }
+    getProducts();
+  }, [formData]);
 
   useEffect(() => {
     const getBrands = async () => {

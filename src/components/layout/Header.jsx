@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
+import { useImageStore } from '../../store/imageStore';
 import { Search, User, ShoppingCart, Heart, Camera } from 'lucide-react';
 import websiteLogo from '../../assets/website-logo.png'
-import productApi from '../../api/productApi';
-import Notification from '../common/Notification';
 
 export default function Header() {
     // Mock user data for demo
@@ -17,9 +16,6 @@ export default function Header() {
     const [uploadedImage, setUploadedImage] = useState(null);
     const fileInputRef = useRef(null);
 
-    const [show, setShow] = useState(false);
-    const [message, setMessage] = useState('');
-    const [type, setType] = useState('');
 
     useEffect(() => {
         if (infoUser.name !== '') {
@@ -39,36 +35,28 @@ export default function Header() {
 
     const handleImageUpload = async (e) => {
         const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setUploadedImage(event.target.result);
-                setScanning(true);
+        if (!file) return;
 
-                setTimeout(() => {
-                    setScanning(false);
-                }, 2500);
-            };
-            reader.readAsDataURL(file);
+        const reader = new FileReader();
 
-            try {
-                new Promise(resolve => setTimeout(resolve, 2500));
-                const formData = new FormData();
-                formData.append('image', file);
-                const response = await productApi.postImgToSearch(formData);
-                const products = response.products;
-                navigate(`/search`, { state: { products } });
-            } catch (err) {
-                setType('error');
-                setMessage(err.response?.data?.message || err.message);
-                setShow(true);
-            } finally {
-                closeScanModal?.();
-            }
+        reader.onload = async (event) => {
+            setUploadedImage(event.target.result);
+            setScanning(true);
 
-        }
+            await new Promise((resolve) => setTimeout(resolve, 2500));
 
+            closeScanModal();
+
+            const formData = new FormData();
+            formData.append("image", file);
+            useImageStore.getState().setFormData(formData);
+
+            navigate("/search");
+        };
+
+        reader.readAsDataURL(file);
     };
+
 
     const closeScanModal = () => {
         setScanning(false);
