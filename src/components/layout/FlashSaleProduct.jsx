@@ -89,7 +89,7 @@ export default function FlashSale() {
                         </Link>
                     </div>
 
-                    <div className="flex flex-row justify-center items-center gap-2 mt-2">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  justify-center items-center gap-2 mt-2">
                         {flashSaleProducts?.map((product, idx) => (
                             <div
                                 key={product._id}

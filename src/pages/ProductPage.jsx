@@ -297,8 +297,8 @@ export default function ProductPage() {
         </div>
 
         {/* Tabs */}
-        <div className="mt-4 bg-white rounded-xl shadow px-8 py-4">
-          <div className="flex border-b mb-6">
+        <div className="mt-2 bg-white rounded-xl shadow p-2 md:p-3 lg:p-4">
+          <div className="flex border-b mb-6 overflow-y-scroll">
             {['description', 'specifications', 'features', 'reviews'].map((tab) => (
               <button
                 key={tab}

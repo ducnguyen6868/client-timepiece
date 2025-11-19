@@ -23,7 +23,7 @@ export default function CommunitySection() {
             {/* Community */}
             <section className="bg-bg-primary py-4 px-8 transition-colors duration-500">
                 <div className="mx-auto">
-                    <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-8">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-8">
                         {communities?.map((post, idx) => (
                             <div
                                 key={idx}
@@ -33,10 +33,14 @@ export default function CommunitySection() {
                                 {/* Image Container */}
                                 <div className="relative overflow-hidden bg-bg-tertiary">
                                     <img
-                                        src={`${process.env.REACT_APP_API_URL}`+`/${post.image}`}
+                                        src={`${process.env.REACT_APP_API_URL}` + `/${post.image}`}
                                         alt={post.name}
                                         className="w-full aspect-[4/3] object-cover transform hover:scale-110 transition-transform duration-500"
                                         loading="lazy"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = 'https://placehold.co/400x300/94a3b8/ffffff?text=Community+Post';
+                                        }}
                                     />
                                 </div>
 
@@ -46,8 +50,9 @@ export default function CommunitySection() {
                                     <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-3 mb-2">
                                         <img
                                             className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full flex-shrink-0 object-cover"
-                                            src={`${process.env.REACT_APP_API_URL}`+`/${post.avatar}`}
+                                            src={`${process.env.REACT_APP_API_URL}` + `/${post.avatar}`}
                                             alt={post.name}
+                                            loading="lazy"
                                             onError={(e) => {
                                                 e.target.onerror = null;
                                                 e.target.src = 'https://placehold.co/400x300/94a3b8/ffffff?text=Author';
