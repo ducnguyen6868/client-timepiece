@@ -1,11 +1,11 @@
 import axios from "axios";
 const axiosClient = axios.create({
-  baseURL: process.env.API_URL, 
+  baseURL: process.env.REACT_APP_API_URL, 
   headers: {
     "Content-Type": "application/json",
   }
 });
-console.log(process.env.API_URL);
+console.log(process.env.REACT_APP_API_URL);
 
 // Thêm interceptor để tự động gắn token
 axiosClient.interceptors.request.use((config) => {

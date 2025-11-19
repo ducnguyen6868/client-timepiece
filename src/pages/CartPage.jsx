@@ -140,7 +140,7 @@ export default function CartPage() {
                                     className="flex items-center gap-6 p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow"
                                 >
                                     <img
-                                        src={`${process.env.API_URL}`+`/${cart.image}`}
+                                        src={`${process.env.REACT_APP_API_URL}`+`/${cart.image}`}
                                         alt={cart.name}
                                         className="w-28 h-28 object-cover rounded-lg"
                                     />

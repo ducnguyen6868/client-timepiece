@@ -75,7 +75,7 @@ export default function Overview() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {topProducts?.map(product => (
                         <div key={product._id} className="flex flex-col items-center text-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                            <img src={`${process.env.API_URL}`+`/${product.image}`} alt={product.name}
+                            <img src={`${process.env.REACT_APP_API_URL}`+`/${product.image}`} alt={product.name}
                                 className="w-20 h-20 object-cover rounded-lg mb-2 border border-gray-300"
                                 loading="lazy"
                                 onError={(e) => {

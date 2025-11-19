@@ -46,7 +46,7 @@ export default function Review({ code }) {
             <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-brand/20 to-brand/40 flex items-center justify-center text-brand font-bold text-sm uppercase">
               {review?.avatar ? (
                 <img
-                  src={`${process.env.API_URL}`+`/${review.avatar}`}
+                  src={`${process.env.REACT_APP_API_URL}`+`/${review.avatar}`}
                   alt="Avatar"
                   className="w-full h-full object-cover"
                 />
@@ -84,7 +84,7 @@ export default function Review({ code }) {
               {review.images.map((src, index) => (
                 <img
                   key={index}
-                  src={`${process.env.API_URL}`+`${src}`}
+                  src={`${process.env.REACT_APP_API_URL}`+`${src}`}
                   alt="Review"
                   className="w-24 h-24 object-cover rounded-lg shadow hover:scale-105 transition-transform duration-200"
                 />
@@ -98,7 +98,7 @@ export default function Review({ code }) {
               {review.videos.map((src, index) => (
                 <video
                   key={index}
-                  src={`${process.env.API_URL}`+`/${src}`}
+                  src={`${process.env.REACT_APP_API_URL}`+`/${src}`}
                   controls
                   preload="metadata"
                   className="w-40 h-24 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition"

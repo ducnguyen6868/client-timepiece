@@ -106,7 +106,7 @@ export default function CheckoutPage() {
             {productData.map((p, i) => (
               <div key={i} className="flex py-4 gap-4">
                 <img
-                  src={`${process.env.API_URL}`+`/${p.image}`}
+                  src={`${process.env.REACT_APP_API_URL}`+`/${p.image}`}
                   alt={p.name}
                   className="w-20 h-20 rounded-md object-cover border border-gray-200 dark:border-gray-700"
                 />

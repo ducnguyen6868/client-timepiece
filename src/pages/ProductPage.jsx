@@ -131,7 +131,7 @@ export default function ProductPage() {
           <div>
             <div className="border border-gray-200 rounded-xl overflow-hidden bg-white shadow">
               <img
-                src={`${process.env.API_URL}`+`/${product.images[selectedDetailIndex]}`}
+                src={`${process.env.REACT_APP_API_URL}`+`/${product.images[selectedDetailIndex]}`}
                 alt={product.name}
                 loading='lazy'
                 onError={(e) => {
@@ -152,7 +152,7 @@ export default function ProductPage() {
                     }`}
                 >
                   <img
-                    src={`${process.env.API_URL}`+`/${img}`}
+                    src={`${process.env.REACT_APP_API_URL}`+`/${img}`}
                     alt={product.name}
                     title={product.name}
                     loading='lazy'

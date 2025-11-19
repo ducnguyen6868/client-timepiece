@@ -78,7 +78,7 @@ export default function SearchPromotion({ brands }) {
                 {/* Image */}
                 <div className="w-1/3 relative overflow-hidden">
                   <img
-                    src={`${process.env.API_URL}`+`/${promotion.image}`}
+                    src={`${process.env.REACT_APP_API_URL}`+`/${promotion.image}`}
                     alt="Promotion"
                     className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
                   />

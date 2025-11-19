@@ -96,7 +96,7 @@ export default function UserLayout() {
             </button>
 
             <img
-              src={`${process.env.API_URL}`+`/${infoUser.avatar}`}
+              src={`${process.env.REACT_APP_API_URL}`+`/${infoUser.avatar}`}
               onError={(e)=>e.target.src=infoUser.avatar}
               alt="Avatar"
               className="w-8 h-8 rounded-full border border-gray-300 object-cover hover:scale-105 transition-transform"

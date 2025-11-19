@@ -30,7 +30,7 @@ export default function BrandPage() {
             {/* Brand Banner */}
             <div className='relative overflow-hidden w-full mb-4 rounded-2xl'>
                 <img
-                    src={`${process.env.API_URL}`+`/${brand.banner}`}
+                    src={`${process.env.REACT_APP_API_URL}`+`/${brand.banner}`}
                     alt={brand.name}
                     onError={(e) => {
                         e.target.onerror = null;
