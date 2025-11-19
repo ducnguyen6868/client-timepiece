@@ -120,6 +120,10 @@ export default function OrderDetail({ order, onClose }) {
                 <img
                   src={`http://localhost:5000/${product.image}`}
                   alt={product.name}
+                  onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://placehold.co/300x300/e2e8f0/64748b?text=Watch";
+                        }}
                   className="w-16 h-16 object-cover rounded-md border border-gray-200 dark:border-gray-700 mr-4"
                 />
                 <div className="flex-1">

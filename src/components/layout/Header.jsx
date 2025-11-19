@@ -80,7 +80,7 @@ export default function Header() {
 
     return (
         <>
-            <Notification show={show} message={message} type={type} onClose={()=>setShow(false)} />
+            <Notification show={show} message={message} type={type} onClose={() => setShow(false)} />
             <header className="sticky top-0 z-10 border-b bg-white shadow-sm transition-colors duration-500">
                 <div className="max-w-7xl mx-auto px-4 py-3">
                     <div className="flex items-center justify-between gap-6">
@@ -135,10 +135,14 @@ export default function Header() {
                                     {logged ? (
                                         <Link to="/user/profile" className="block">
                                             <img className="w-9 h-9 rounded-ful shadow-sm hover:shadow-md transition-all duration-300"
-                                                src={`http://localhost:5000/${infoUser.avatar}` || infoUser.avatar}
+                                                src={`http://localhost:5000/${infoUser.avatar}`}
                                                 title='Avatar'
                                                 alt='Avatar'
                                                 loading='lazy'
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src =infoUser.avatar;
+                                                }}
 
                                             />
 
