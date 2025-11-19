@@ -23,7 +23,6 @@ export default function ProductManagement() {
             const response = await productApi.getProducts(page, limit);
             setProducts(response.products);
             setTotal(response.total);
-            console.log(response.total);
         } catch (err) {
             console.log(err.response?.data?.message || err.message);
         }
@@ -32,7 +31,7 @@ export default function ProductManagement() {
         getProducts();
     }, [page]);
 
-    const filteredProducts = products.filter(p =>
+    const filteredProducts = products?.filter(p =>
         p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.brand?.name?.toLowerCase().includes(searchTerm.toLowerCase())

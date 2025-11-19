@@ -75,7 +75,7 @@ const CollectionSection = () => {
         <section className="relative py-4 px-4 bg-gray-50 w-full">
             {/* Slides Container - relative with fixed height */}
             <div className="relative max-h-80 h-72 overflow-hidden rounded-2xl">
-                {collections.map((collection, index) => (
+                {collections?.map((collection, index) => (
                     <div
                         key={collection._id}
                         className={`absolute inset-0 transition-all duration-700 ease-in-out ${index === currentIndex
