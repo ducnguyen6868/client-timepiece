@@ -88,7 +88,7 @@ const CollectionSection = () => {
                         <div className="bg-gradient-to-br from-gray-900 via-teal-900 to-gray-900 rounded-2xl text-white relative overflow-hidden w-full h-full">
                             {/* Background Image */}
                             <img
-                                src={`${API_URL}`+`/${collection.banner}`}
+                                src={`${process.env.API_URL}`+`/${collection.banner}`}
                                 alt={collection.name}
                                 onError={(e) => {
                                     e.target.onerror = null;

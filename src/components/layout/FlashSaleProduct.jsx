@@ -112,7 +112,7 @@ export default function FlashSale() {
                                     {/* Product Image */}
                                     <div className="relative overflow-hidden">
                                         <img
-                                            src={`${API_URL}`+`/${product?.images[0]}`}
+                                            src={`${process.env.API_URL}`+`/${product?.images[0]}`}
                                             alt={product.name}
                                             onError={(e) => {
                                                 e.target.onerror = null;

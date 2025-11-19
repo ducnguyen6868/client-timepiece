@@ -30,7 +30,7 @@ export default function CollectionPage() {
             {/* collection Banner */}
             <div className='relative overflow-hidden w-full mb-4 rounded-2xl'>
                 <img
-                    src={`${API_URL}`+`${collection.banner}`}
+                    src={`${process.env.API_URL}`+`${collection.banner}`}
                     alt={collection.name}
                     onError={(e) => {
                         e.target.onerror = null;

@@ -169,7 +169,7 @@ export default function TrendingProduct() {
                                         {getRankTag(idx+1)}
         </div>
         <img
-            src={`${API_URL}`+${product?.images[0]}`}
+            src={`${process.env.API_URL}`+${product?.images[0]}`}
             alt={product.name}
             loading='lazy'
             onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x300/e2e8f0/64748b?text=Watch'; }}

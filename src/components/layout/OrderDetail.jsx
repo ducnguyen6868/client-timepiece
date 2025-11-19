@@ -118,7 +118,7 @@ export default function OrderDetail({ order, onClose }) {
                 className="flex items-center border border-gray-100 dark:border-gray-700 p-3 rounded-lg shadow-sm hover:shadow-md transition"
               >
                 <img
-                  src={`${API_URL}`+`/${product.image}`}
+                  src={`${process.env.API_URL}`+`/${product.image}`}
                   alt={product.name}
                   onError={(e) => {
                             e.target.onerror = null;
