@@ -171,188 +171,182 @@ export default function SearchResultsPage() {
   return (
     <>
       <Notification type={type} message={message} show={show} onClose={() => setShow(false)} />
+      <div className="container mx-auto p-3 sm:p-4 text-sm flex flex-row gap-4 flex-wrap">
 
-      {/* Container chính, padding nhỏ (p-4) và chữ nhỏ lại (text-sm) */}
-      <div className="container mx-auto p-4 text-sm flex flex-row gap-4 flex-wrap">
-        {/* Sidebar Filter */}
+        {/* SIDEBAR */}
         <AnimatePresence>
           <motion.aside
-            // Fixed/Block, z-50/z-auto, p-4 (nhỏ lại), shadow-lg (nhỏ hơn)
-            className=" bg-white dark:bg-gray-800 p-4 lg:p-0 shadow-lg lg:shadow-none rounded-md w-max max-w-[562px]"
-            initial={{ scale: 0.5, opacity: 0, borderRadius: "50%", y: 60 }}
+            className="
+        w-full lg:w-max
+        bg-white dark:bg-gray-800
+        p-4 lg:p-0
+        rounded-md shadow-md lg:shadow-none
+        border border-gray-200 dark:border-gray-700
+        max-w-[560px]
+      "
+            initial={{ scale: 0.6, opacity: 0, y: 60 }}
             animate={{
               scale: 1,
               opacity: 1,
-              borderRadius: "6px", // radius nhỏ: rounded-md (6px)
               y: 0,
-              transition: {
-                type: "spring",
-                stiffness: 120,
-                damping: 15,
-              },
+              transition: { type: "spring", stiffness: 120, damping: 18 }
             }}
             exit={{
-              scale: 0.5,
+              scale: 0.6,
               opacity: 0,
-              borderRadius: "50%",
               y: 60,
-              transition: {
-                duration: 0.3,
-                ease: "easeInOut",
-              },
+              transition: { duration: 0.25 }
             }}
           >
-            {/* Price Range */}
-            <div className="mb-3 p-3 border rounded-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600 w-full">
-              <h4 className="text-base font-medium mb-2 text-gray-800 dark:text-gray-200">Price Range</h4>
-              <div className="flex gap-2 ">
-                <input
-                  type="number"
-                  placeholder="Min"
-                  // Kích thước nhỏ: p-1.5, text-sm, rounded-sm
-                  className="w-32 p-1.5 border border-gray-300 rounded-sm text-sm"
-                  value={filters.priceMin}
-                  onChange={(e) => handleFilterChange("priceMin", e.target.value)}
-                />
-                <input
-                  type="number"
-                  placeholder="Max"
-                  className="w-32 p-1.5 border border-gray-300 rounded-sm text-sm "
-                  value={filters.priceMax}
-                  onChange={(e) => handleFilterChange("priceMax", e.target.value)}
-                />
-              </div>
-            </div>
 
-            {/* Brand & Movement Type */}
-            <div className="mb-3 space-y-3 p-3 border rounded-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-              <div>
-                <h4 className="text-base font-medium mb-1 text-gray-800 dark:text-gray-200">Brand</h4>
-                <select
-                  className="w-full p-1.5 border border-gray-300 rounded-sm text-sm "
-                  value={filters.brand}
-                  onChange={(e) => handleFilterChange("brand", e.target.value)}
-                >
-                  <option value="all">All Brands</option>
-                  {brands?.map((brand) => (
-                    <option key={brand._id} value={brand.name}>
-                      {brand.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {/* Movement Type */}
-              <div>
-                <h4 className="text-base font-medium mb-1 text-gray-800 dark:text-gray-200">Movement Type</h4>
-                <select
-                  className="w-full p-1.5 border border-gray-300 rounded-sm text-sm"
-                  value={filters.movement}
-                  onChange={(e) => handleFilterChange('movement', e.target.value)}
-                >
-                  <option value="all">All Types</option>
-                  <option value="Automatic">Automatic</option>
-                  <option value="Quartz">Quartz</option>
-                  <option value="Mechanical">Mechanical</option>
-                </select>
-              </div>
-            </div>
+            {/* FILTER BLOCK - STANDARDIZED */}
+            <div className="space-y-4">
 
+              {/* PRICE RANGE */}
+              <div className="p-3 rounded-md bg-gray-50 dark:bg-gray-700 border dark:border-gray-600">
+                <h4 className="text-base font-medium mb-2 text-gray-800 dark:text-gray-200">Price Range</h4>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    placeholder="Min"
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
+                    value={filters.priceMin}
+                    onChange={(e) => handleFilterChange("priceMin", e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
+                    value={filters.priceMax}
+                    onChange={(e) => handleFilterChange("priceMax", e.target.value)}
+                  />
+                </div>
+              </div>
 
-            {/* Target Audience */}
-            <div className="mb-3 p-3 border rounded-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-              <div>
+              {/* BRAND & MOVEMENT */}
+              <div className="p-3 rounded-md bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 space-y-3">
+                <div>
+                  <h4 className="text-base font-medium mb-1 text-gray-800 dark:text-gray-200">Brand</h4>
+                  <select
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
+                    value={filters.brand}
+                    onChange={(e) => handleFilterChange("brand", e.target.value)}
+                  >
+                    <option value="all">All Brands</option>
+                    {brands?.map((brand) => (
+                      <option key={brand._id} value={brand.name}>{brand.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <h4 className="text-base font-medium mb-1 text-gray-800 dark:text-gray-200">Movement Type</h4>
+                  <select
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
+                    value={filters.movement}
+                    onChange={(e) => handleFilterChange("movement", e.target.value)}
+                  >
+                    <option value="all">All Types</option>
+                    <option value="Automatic">Automatic</option>
+                    <option value="Quartz">Quartz</option>
+                    <option value="Mechanical">Mechanical</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* AUDIENCE */}
+              <div className="p-3 rounded-md bg-gray-50 dark:bg-gray-700 border dark:border-gray-600">
                 <h4 className="text-base font-medium mb-2 text-gray-800 dark:text-gray-200">For</h4>
-                <div className="flex flex-wrap gap-x-3 gap-y-1">
-                  {['all', 'Male', 'Female', 'Unisex'].map(val => (
-                    <label key={val} className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 text-sm cursor-pointer">
+                <div className="flex flex-wrap gap-3">
+                  {["all", "Male", "Female", "Unisex"].map((val) => (
+                    <label key={val} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                       <input
                         type="radio"
                         name="audience"
                         value={val}
                         checked={filters.audience === val}
-                        onChange={(e) => handleFilterChange('audience', e.target.value)}
-                        // Kích thước nhỏ hơn: h-3 w-3
-                        className="form-radio text-indigo-600 focus:ring-indigo-500 h-3 w-3"
+                        onChange={(e) => handleFilterChange("audience", e.target.value)}
+                        className="h-4 w-4 text-indigo-600"
                       />
-                      <span>{val === 'all' ? 'All' : val}</span>
+                      {val === "all" ? "All" : val}
                     </label>
                   ))}
                 </div>
               </div>
-            </div>
 
-            {/* Rating Filter */}
-            <div className="mb-4 p-3 border rounded-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-              <h4 className="text-base font-medium mb-2 text-gray-800 dark:text-gray-200">Min Rating</h4>
-              <div className="space-y-1">
-                {[4, 3, 2, 1].map(rating => (
-                  <label key={rating} className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 text-sm cursor-pointer">
-                    <input
-                      type="radio"
-                      name="rating"
-                      checked={filters.minRating === rating}
-                      onChange={() => handleFilterChange('minRating', rating)}
-                      // Kích thước nhỏ hơn: h-3 w-3
-                      className="form-radio text-indigo-600 focus:ring-indigo-500 h-3 w-3"
-                    />
-                    <span className='whitespace-nowrap'>{renderStars(rating)} <span className='text-xs'>(and up)</span></span>
-                  </label>
-                ))}
+              {/* RATING */}
+              <div className="p-3 rounded-md bg-gray-50 dark:bg-gray-700 border dark:border-gray-600">
+                <h4 className="text-base font-medium mb-2 text-gray-800 dark:text-gray-200">Min Rating</h4>
+                <div className="space-y-2">
+                  {[4, 3, 2, 1].map((rating) => (
+                    <label key={rating} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                      <input
+                        type="radio"
+                        name="rating"
+                        checked={filters.minRating === rating}
+                        onChange={() => handleFilterChange("minRating", rating)}
+                        className="h-4 w-4 text-indigo-600"
+                      />
+                      <span className="whitespace-nowrap">{renderStars(rating)} <span className="text-xs">(and up)</span></span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Clear Filters Button */}
-            <button
-              // Kích thước nhỏ hơn: py-1.5, text-sm, rounded-sm
-              className="w-full py-1.5 text-sm bg-red-500 text-white font-semibold rounded-sm shadow-sm hover:bg-red-600 transition duration-300"
-              onClick={clearFilters}
-            >
-              Clear All Filters
-            </button>
+              {/* CLEAR BUTTON */}
+              <button
+                className="w-full py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-md shadow-sm transition"
+                onClick={clearFilters}
+              >
+                Clear All Filters
+              </button>
+
+            </div>
           </motion.aside>
         </AnimatePresence>
 
-        {/* Main Content */}
+        {/* MAIN CONTENT */}
         <main className="flex-1">
-          {/* Results Header */}
-          <div className="flex justify-between items-center mb-4 p-3 bg-white dark:bg-gray-800 rounded-md shadow-sm border dark:border-gray-700">
-            <div className="results-info">
-              {/* Chữ nhỏ hơn: text-base sm:text-lg */}
-              <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">Results for "<span className="text-indigo-600">{keyword}</span>"</h2>
-              <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">{filteredResults.length} products found</p>
+
+          {/* HEADER */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 p-3 bg-white dark:bg-gray-800 rounded-md shadow-sm border dark:border-gray-700">
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
+                Results for "<span className="text-indigo-600">{keyword}</span>"
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                {filteredResults.length} products found
+              </p>
             </div>
 
-            <div className="results-controls">
-              <select
-                // Kích thước nhỏ hơn: p-1.5, rounded-sm
-                className="p-1.5 border border-gray-300 rounded-sm text-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-              >
-                <option value="relevance">Most Relevant</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Highest Rated</option>
-                <option value="newest">Newest First</option>
-              </select>
-            </div>
+            <select
+              className="p-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 dark:text-white"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="relevance">Most Relevant</option>
+              <option value="price-low">Price: Low → High</option>
+              <option value="price-high">Price: High → Low</option>
+              <option value="rating">Highest Rated</option>
+              <option value="newest">Newest First</option>
+            </select>
           </div>
 
-          {/* Loading State */}
+          {/* LOADING */}
           {loading && (
-            <div className="min-h-96 flex items-center justify-center">
+            <div className="min-h-80 flex items-center justify-center">
               <LoadingAnimations option="skeleton" />
             </div>
           )}
 
-          {/* No Results */}
+          {/* NO RESULTS */}
           {!loading && filteredResults.length === 0 && (
-            <div className="flex flex-col items-center justify-center min-h-[50vh] p-6 bg-white dark:bg-gray-800 rounded-md shadow-lg text-center border dark:border-gray-700">
+            <div className="flex flex-col items-center justify-center min-h-[50vh] p-6 bg-white dark:bg-gray-800 rounded-md shadow-md border dark:border-gray-700 text-center">
               <div className="text-5xl mb-3">🔍</div>
               <h3 className="text-lg font-bold mb-1 text-gray-900 dark:text-white">No products found</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Try adjusting your filters or search query</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Try adjusting your filters or search query</p>
               <button
-                className="py-1.5 px-4 text-sm bg-indigo-600 text-white font-semibold rounded-sm shadow-md hover:bg-indigo-700 transition duration-300"
+                className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md shadow-md transition"
                 onClick={clearFilters}
               >
                 Clear All Filters
@@ -360,18 +354,18 @@ export default function SearchResultsPage() {
             </div>
           )}
 
-          {/* Results Grid/List */}
-          {!loading && filteredResults.length > 0 &&
-            <div className=' grid lg:grid-cols-3 gap-4'>
-              {
-                filteredResults.map((product, index) => (
-                  <ProductCard key={index} product={product} />
-                ))
-              }
+          {/* GRID */}
+          {!loading && filteredResults.length > 0 && (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredResults.map((product, index) => (
+                <ProductCard key={index} product={product} />
+              ))}
             </div>
-          }
+          )}
+
         </main>
       </div>
+
     </>
   )
 }

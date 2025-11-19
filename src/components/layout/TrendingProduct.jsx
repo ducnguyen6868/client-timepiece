@@ -139,7 +139,7 @@ export default function TrendingProduct() {
         <>
             {/* Trending Products */}
             <section className=" min-w-96 flex justify-center py-6 transition-colors duration-500" id='trending-container'>
-                <div className="mx-auto py-4 px-12 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg">
+                <div className="mx-auto py-4 px-4 md:px-8 lg:px-12 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg">
                     <div
                         id="trending-header"
                         data-animate
@@ -149,7 +149,7 @@ export default function TrendingProduct() {
                         <p className="text-sm">Our top-selling timepieces, trusted by the TIMEPIECE community</p>
                     </div>
 
-                    <div className="grid lg:grid-cols-5 md:grid-cols-3 gap-4">
+                    <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 gap-4">
                         {trendingProducts.map((product, idx) => (
                             <div
                                 key={product._id}
