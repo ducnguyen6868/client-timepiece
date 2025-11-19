@@ -328,11 +328,13 @@ export default function SearchResultsPage() {
         <main className="flex-1">
 
           {/* HEADER */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 p-3 bg-white dark:bg-gray-800 rounded-md shadow-sm border dark:border-gray-700">
+          <div className="flex sm:flex-row justify-between items-center sm:items-center gap-3 mb-4 p-3 bg-white dark:bg-gray-800 rounded-md shadow-sm border dark:border-gray-700">
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
-                Results for "<span className="text-indigo-600">{keyword}</span>"
-              </h2>
+              {keyword && (
+                <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
+                  Results for "<span className="text-indigo-600">{keyword}</span>"
+                </h2>
+              )}
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 {filteredResults.length} products found
               </p>

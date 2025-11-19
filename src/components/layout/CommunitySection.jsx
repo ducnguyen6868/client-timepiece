@@ -23,7 +23,7 @@ export default function CommunitySection() {
             {/* Community */}
             <section className="bg-bg-primary py-4 px-8 transition-colors duration-500">
                 <div className="mx-auto">
-                    <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-8">
+                    <div className="grid grid-cols-1 gap-2 sm:gap-3 sm:grid-cols-2 lg:grid-cols-4 md:gap-4 lg:gap-6 mb-8">
                         {communities?.map((post, idx) => (
                             <div
                                 key={idx}
