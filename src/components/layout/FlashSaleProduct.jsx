@@ -42,7 +42,6 @@ export default function FlashSale() {
                 const limit = 5;
                 const response = await productApi.getFlashSale(page, limit);
                 let updatedProducts = response.flashsales;
-                console.log(updatedProducts);
 
                 updatedProducts = updatedProducts.map(product => {
                     const detail = product.detail;

@@ -22,12 +22,7 @@ export default function TrendingProduct() {
                 const page = 1;
                 const limit = 5;
                 const response = await productApi.getTrending(page, limit);
-                console.log(response.products);
-                const rank = [2, 1, 3];
-                const updatedProducts = response.products.map((product, index) => {
-                    return { ...product, rank: rank[index] }
-                })
-                setTrendingProducts(updatedProducts);
+                setTrendingProducts(response.products);
             } catch (err) {
                 console.log(err.response?.data?.message || err.message);
             }

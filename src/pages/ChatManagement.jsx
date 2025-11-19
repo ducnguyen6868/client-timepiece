@@ -8,7 +8,10 @@ import chatApi from '../api/chatApi';
 import io from "socket.io-client";
 import avatarError from '../assets/avatar-error.png';
 
-const socket = io("http://localhost:5000");
+const socket = io(process.env.REACT_APP_SOCKET_URL, {
+  transports: ["websocket"],
+  withCredentials: true,
+});
 
 const Message = () => {
     // Dữ liệu giả định cho Chat
