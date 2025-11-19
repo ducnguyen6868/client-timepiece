@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import {  AlertCircle,Loader2,Home,Building2,User,Phone,MapPin,Save,X,} from "lucide-react";
+import { AlertCircle, Loader2, Home, Building2, User, Phone, MapPin, Save, X, } from "lucide-react";
 import { isValidPhoneNumber } from "../../utils/isValidPhoneNumber";
 import addressApi from "../../api/addressApi";
 
@@ -101,9 +101,8 @@ export default function Address({ onClose, onChange, addressData }) {
               value={address.name}
               onChange={handleChange}
               placeholder="e.g. John Doe"
-              className={`w-full pl-10 pr-3 py-2 rounded-lg border ${
-                errors.name ? "border-red-500" : "border-gray-300"
-              } focus:outline-none focus:ring-2 focus:ring-brand/50 dark:bg-gray-800 dark:text-white`}
+              className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.name ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-brand/50 dark:bg-gray-800 dark:text-white`}
             />
             <User
               size={16}
@@ -130,9 +129,8 @@ export default function Address({ onClose, onChange, addressData }) {
               value={address.phone}
               onChange={handleChange}
               placeholder="e.g. +84 912 345 678"
-              className={`w-full pl-10 pr-3 py-2 rounded-lg border ${
-                errors.phone ? "border-red-500" : "border-gray-300"
-              } focus:outline-none focus:ring-2 focus:ring-brand/50 dark:bg-gray-800 dark:text-white`}
+              className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.phone ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-brand/50 dark:bg-gray-800 dark:text-white`}
             />
             <Phone
               size={16}
@@ -158,9 +156,8 @@ export default function Address({ onClose, onChange, addressData }) {
             value={address.address}
             onChange={handleChange}
             placeholder="Enter detailed address..."
-            className={`w-full px-3 py-2 rounded-lg border ${
-              errors.address ? "border-red-500" : "border-gray-300"
-            } focus:outline-none focus:ring-2 focus:ring-brand/50 dark:bg-gray-800 dark:text-white`}
+            className={`w-full px-3 py-2 rounded-lg border ${errors.address ? "border-red-500" : "border-gray-300"
+              } focus:outline-none focus:ring-2 focus:ring-brand/50 dark:bg-gray-800 dark:text-white`}
           />
           {errors.address && (
             <p className="flex items-center gap-1 text-xs text-red-500 mt-1">

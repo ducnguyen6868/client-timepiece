@@ -26,7 +26,7 @@ export const UserProvider = ({ children }) => {
             const token = localStorage.getItem('token') || sessionStorage.getItem("token");
             if (token) {
                 try {
-                    const response = await axios.get("http://localhost:5000/profile", {
+                    const response = await axios.get("profile", {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }

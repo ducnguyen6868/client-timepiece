@@ -61,7 +61,7 @@ export default function PromotionPage() {
             {/* Left Side */}
             <div className="relative w-[140px] bg-[var(--brand-color)] text-[var(--announcement-text)] text-center">
               <img
-                src={`http://localhost:5000/${promotion.image}`}
+                src={`${API_URL}`+`/${promotion.image}`}
                 alt="Promotion"
                 className="w-full h-full object-cover opacity-80"
               />

@@ -85,7 +85,7 @@ export default function ProductCard2({ product, onChange }) {
                         {/* Selected Color with Price */}
                         <div className="flex items-center justify-between p-3 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-lg border border-cyan-200">
                             <div >
-                                <img className='w-10 rounded' src={`http://localhost:5000/${product.images[selectedIndex]}`}
+                                <img className='w-10 rounded' src={`${API_URL}`+`/${product.images[selectedIndex]}`}
                                     alt={product?.name} title={product?.name}
                                     onError={(e) => {
                                         e.target.onerror = null;

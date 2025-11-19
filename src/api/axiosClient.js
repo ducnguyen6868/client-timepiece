@@ -1,7 +1,5 @@
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL||'https://server-timepiece.onrender.com';
-
 const axiosClient = axios.create({
   baseURL: API_URL, 
   headers: {

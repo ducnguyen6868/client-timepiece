@@ -189,7 +189,7 @@ export default function VibeFinder() {
                             >
                                 <div className="relative bg-bg-secondary overflow-hidden">
                                     <img
-                                        src={`http://localhost:5000${product.images[0]}`}
+                                        src={`${API_URL}`+`/${product.images[0]}`}
                                         alt={product.name}
                                         onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x300/e2e8f0/64748b?text=Vibe+Watch'; }}
                                         className="w-full aspect-square object-cover transform hover:scale-110 transition-transform duration-500"

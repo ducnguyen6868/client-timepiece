@@ -30,7 +30,7 @@ export default function BrandPage() {
             {/* Brand Banner */}
             <div className='relative overflow-hidden w-full mb-4 rounded-2xl'>
                 <img
-                    src={`http://localhost:5000/${brand.banner}` || "https://placehold.co/1200x400/e2e8f0/64748b?text=Brand+Banner"}
+                    src={`${API_URL}`+`/${brand.banner}`}
                     alt={brand.name}
                     onError={(e) => {
                         e.target.onerror = null;

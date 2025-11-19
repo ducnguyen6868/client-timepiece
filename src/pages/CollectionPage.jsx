@@ -30,7 +30,7 @@ export default function CollectionPage() {
             {/* collection Banner */}
             <div className='relative overflow-hidden w-full mb-4 rounded-2xl'>
                 <img
-                    src={`http://localhost:5000${collection.banner}` || "https://placehold.co/1200x400/e2e8f0/64748b?text=Collection+Banner"}
+                    src={`${API_URL}`+`${collection.banner}`}
                     alt={collection.name}
                     onError={(e) => {
                         e.target.onerror = null;

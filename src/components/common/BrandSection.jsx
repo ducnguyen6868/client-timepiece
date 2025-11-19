@@ -57,7 +57,7 @@ export default function BrandListSection() {
             >
               <div className="aspect-square">
                 <img
-                  src={`http://localhost:5000/${brand.thumbnail}`}
+                  src={`${API_URL}`+`/${brand.thumbnail}`}
                   alt={brand.name}
                   onError={(e) => {
                     e.target.onerror = null;

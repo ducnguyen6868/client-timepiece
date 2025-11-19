@@ -78,7 +78,7 @@ export default function SearchPromotion({ brands }) {
                 {/* Image */}
                 <div className="w-1/3 relative overflow-hidden">
                   <img
-                    src={`http://localhost:5000/${promotion.image}`}
+                    src={`${API_URL}`+`/${promotion.image}`}
                     alt="Promotion"
                     className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
                   />

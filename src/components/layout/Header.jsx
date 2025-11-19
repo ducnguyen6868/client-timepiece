@@ -135,7 +135,7 @@ export default function Header() {
                                     {logged ? (
                                         <Link to="/user/profile" className="block">
                                             <img className="w-9 h-9 rounded-ful shadow-sm hover:shadow-md transition-all duration-300"
-                                                src={`http://localhost:5000/${infoUser.avatar}`}
+                                                src={`${API_URL}`+`/${infoUser.avatar}`}
                                                 title='Avatar'
                                                 alt='Avatar'
                                                 loading='lazy'

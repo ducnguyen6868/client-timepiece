@@ -20,7 +20,7 @@ export default function ProductCard({ product }) {
             >
                 <div className="relative overflow-hidden">
                     <img
-                        src={`http://localhost:5000/${product.images[0]}`}
+                        src={`${API_URL}`+`/${product.images[0]}`}
                         alt={product.name}
                         loading="lazy"
                         className="object-cover w-full aspect-square group-hover:scale-105 transition-transform duration-500"

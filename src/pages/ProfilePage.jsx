@@ -53,7 +53,7 @@ export default function ProfilePage() {
                 {/* User Card */}
                 <div className="flex items-center space-x-6 pb-6 border-b border-gray-100">
                     <div className='relative rounded-full overflow-hidden'>
-                        <img src={`http://localhost:5000/${user?.avatar}`}
+                        <img src={`${API_URL}`+`/${user?.avatar}`}
                             alt={user.name} className="w-24 h-24 rounded-full object-cover border-4 border-teal-500"
                             onError={(e) => e.target.src = user?.avatar} />
                         <button className='w-full absolute bottom-0 flex justify-center backdrop-blur-[2px]'>
