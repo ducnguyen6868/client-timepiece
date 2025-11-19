@@ -5,7 +5,6 @@ const axiosClient = axios.create({
     "Content-Type": "application/json",
   }
 });
-console.log(process.env.REACT_APP_API_URL);
 
 // Thêm interceptor để tự động gắn token
 axiosClient.interceptors.request.use((config) => {
