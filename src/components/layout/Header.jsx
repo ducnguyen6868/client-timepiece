@@ -68,7 +68,6 @@ export default function Header() {
 
     return (
         <>
-            <Notification show={show} message={message} type={type} onClose={() => setShow(false)} />
             <header className="sticky top-0 z-10 border-b bg-white shadow-sm transition-colors duration-500">
                 <div className="max-w-7xl mx-auto px-4 py-3">
                     <div className="flex items-center justify-between gap-6">
