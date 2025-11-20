@@ -7,6 +7,7 @@ import {
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import websiteLogo from '../../assets/website-logo.png';
+import ImageError from '../../assets/imageError.jpg';
 
 // Sidebar Menu
 const sidebarMenu = [
@@ -103,7 +104,7 @@ export default function UserLayout() {
               loading='lazy'
               onError={(e) => {
                 e.target.onerror = null;
-                e.target.src = '';
+                e.target.src = ImageError;
               }}
               className="w-8 h-8 rounded-full border border-gray-300 object-cover hover:scale-105 transition-transform"
             />

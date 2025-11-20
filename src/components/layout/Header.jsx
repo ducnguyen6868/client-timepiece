@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import { useImageStore } from '../../store/imageStore';
 import { Search, User, ShoppingCart, Heart, Camera } from 'lucide-react';
-import websiteLogo from '../../assets/website-logo.png'
+import websiteLogo from '../../assets/website-logo.png';
+import ImageError from '../../assets/imageError.jpg';
 
 export default function Header() {
     // Mock user data for demo
@@ -128,7 +129,7 @@ export default function Header() {
                                                 loading='lazy'
                                                 onError={(e) => {
                                                     e.target.onerror = null;
-                                                    e.target.src ='';
+                                                    e.target.src =ImageError;
                                                 }}
 
                                             />

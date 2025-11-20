@@ -1,9 +1,11 @@
 import {
     ShoppingCart, MapPin, Zap, Heart, Award, BarChart2, Tag, Camera
 } from 'lucide-react';
-import { useState, useEffect ,useContext} from 'react';
-import {UserContext} from '../contexts/UserContext';
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import profileApi from '../api/profileApi';
+import Notification from '../components/common/Notification';
+import ImageError from '../assets/imageError.jpg';
 
 // ************************************************
 // Main Component: Profile Page
@@ -11,7 +13,12 @@ import profileApi from '../api/profileApi';
 export default function ProfilePage() {
 
     const [user, setUser] = useState({});
-    const {setInfoUser}  = useContext(UserContext);
+    const { setInfoUser } = useContext(UserContext);
+
+    const [loading, setLoading] = useState(false);
+    const [type, setType] = useState('');
+    const [message, setMessage] = useState('');
+    const [show, setShow] = useState(false);
 
     useEffect(() => {
         const getProfile = async () => {
@@ -33,13 +40,23 @@ export default function ProfilePage() {
         formData.append('avatar', file);
 
         try {
+            setLoading(true);
+            await new Promise(resolve=>setTimeout(resolve,1500));
+
             const response = await profileApi.patchAvatar(formData);
 
             // Update user avatar locally
             setUser(prev => ({ ...prev, avatar: response.avatar }));
             setInfoUser(prev => ({ ...prev, avatar: response.avatar }));
+            setShow(true);
+            setType('success');
+            setMessage(response.message);
         } catch (err) {
-            console.error(err.response?.data?.message||err.message);
+            setMessage(err.response?.data?.message || err.message);
+            setShow(true);
+            setType('error');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -47,18 +64,24 @@ export default function ProfilePage() {
         <>
             {/* 1. Profile Overview (Default Content) */}
             <>
-
+                <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
                 {/* User Card */}
                 <div className="flex items-center space-x-6 pb-6 border-b border-gray-100">
                     <div className='relative rounded-full overflow-hidden'>
-                        <img src={`${process.env.REACT_APP_API_URL}`+`/${user?.avatar}`}
-                            alt={user.name} 
+                        <img src={`${process.env.REACT_APP_API_URL}` + `/${user?.avatar}`}
+                            alt={user.name}
+                            title={user.name}
                             className="w-24 h-24 rounded-full object-cover border-4 border-teal-500"
-                            onError={(e) => e.target.src = ''} />
+                            onError={(e) => e.target.src = ImageError} />
                         <button className='w-full absolute bottom-0 flex justify-center backdrop-blur-[2px]'>
                             <Camera className='w-6 h-6 text-gray-400' />
                         </button>
                         <input name='avatar' type='file' acept='.png , .jpg , .jpeg' className='absolute inset-0 visibility opacity-0 cursor-pointer' onChange={(e) => handleAvatarChange(e)} />
+                        {loading && (
+                            <div className='absolute inset-0 p-8 z-50 flex justify-center items-center'>
+                                <div className='border-b-2 rounded-full w-full h-full border-brand animate-spin'></div>
+                            </div>
+                        )}
                     </div>
                     <div className='flex flex-col justify-center gap-1'>
                         <h2 className="text-xl font-bold text-gray-900 flex gap-4 items-end">

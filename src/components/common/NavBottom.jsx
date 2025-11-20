@@ -1,8 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import { Link , useNavigate, useLocation } from 'react-router-dom';
-import { Home, MessageSquare, Package, User } from 'lucide-react';
+import { Home, MessageSquare , Gift, Package, User } from 'lucide-react';
+import ImageError from '../../assets/imageError.jpg';
 import ChatModal from '../layout/ChatModal';
+
 // --- New NavBar Component ---
 export default function NavBottom() {
     const [activeTab, setActiveTab] = useState('');
@@ -52,9 +54,7 @@ export default function NavBottom() {
                             : 'text-gray-500 hover:text-gray-700'
                             } rounded-md`}
                     >
-                        <Home className="h-6 w-6" />
-                        {/* Show text label on smaller screens too for clarity, or hide for minimalism */}
-                        <span className="text-[10px] sm:text-xs mt-0.5">Home</span>
+                        <Home className="h-8 w-8" />
                     </button>
                     <button
                         onClick={() => handleActiveTab('wallet')}
@@ -63,9 +63,16 @@ export default function NavBottom() {
                             : 'text-gray-500 hover:text-gray-700'
                             } rounded-md`}
                     >
-                        <Package className="h-6 w-6" />
-                        {/* Show text label on smaller screens too for clarity, or hide for minimalism */}
-                        <span className="text-[10px] sm:text-xs mt-0.5">Order</span>
+                        <Package className="h-8 w-8" />
+                    </button>
+                    <button
+                        onClick={() => handleActiveTab('user/promotions')}
+                        className={`flex flex-col flex-1 items-center justify-center p-1 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'order'
+                            ? `text-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-gray-500 hover:text-gray-700'
+                            } rounded-md`}
+                    >
+                        <Gift className="h-8 w-8" />
                     </button>
                     <button
                         onClick={() => handleActiveTab('chat')}
@@ -74,18 +81,16 @@ export default function NavBottom() {
                             : 'text-gray-500 hover:text-gray-700'
                             } rounded-md`}
                     >
-                        <MessageSquare className="h-6 w-6" />
-                        {/* Show text label on smaller screens too for clarity, or hide for minimalism */}
-                        <span className="text-[10px] sm:text-xs mt-0.5">Chat</span>
+                        <MessageSquare className="h-8 w-8" />
                     </button>
                     {login ? (
                         <>
-                            <Link to='/user/profile'>
+                            <Link to='/user/profile' className='flex flex-col gap-1'>
                                 <img src={`${process.env.REACT_APP_API_URL}`+`/${infoUser.avatar}` || infoUser.avatar} alt='Avatar' title='Avatar'
                                     onError={(e) => {
-                                        e.target.src = ''
+                                        e.target.src = ImageError
                                     }}
-                                    className='w-8 h-8 md:w-10 md:h-10 object-cover'
+                                    className='w-10 h-10 md:w-10 md:h-10 rounded-full object-cover'
                                 />
                             </Link>
                         </>
@@ -98,9 +103,7 @@ export default function NavBottom() {
                                 : 'text-gray-500 hover:text-gray-700'
                                 } rounded-md`}
                         >
-                            <User className="h-6 w-6" />
-                            {/* Show text label on smaller screens too for clarity, or hide for minimalism */}
-                            <span className="text-[10px] sm:text-xs mt-0.5">Account</span>
+                            <User className="h-8 w-8" />
                         </button>
                     )}
 
