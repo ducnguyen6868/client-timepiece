@@ -48,7 +48,7 @@ export default function PointPage() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen text-[var(--brand-color)] font-medium animate-pulse">
+      <div className="flex justify-center items-center h-screen text-brand font-medium animate-pulse">
         Loading points...
       </div>
     );
@@ -61,17 +61,17 @@ export default function PointPage() {
     );
 
   return (
-    <div className="min-h-screen bg-[var(--bg-secondary)] p-6">
+    <div className="min-h-screen bg-bg-secondary p-2 md:p-3 xl:p-4 lg:p-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-6 border-b border-[var(--input-border)] pb-4">
-        <div className="flex items-center gap-3">
-          <History className="w-8 h-8 text-[var(--brand-color)]" />
-          <h3 className="text-xl font-semibold text-[var(--brand-color)]">
+      <div className="flex flex-row items-center justify-between mb-6 border-b border-brand pb-4">
+        <div className="flex flex-row items-center gap-3">
+          <History className="w-5 h-5 md:w-6 md:h-6 text-brand" />
+          <h3 className="text-base md:text-lg font-semibold text-brand">
             Point History
           </h3>
         </div>
 
-        <div className="flex items-center gap-2 bg-[var(--bg-primary)] border border-[var(--brand-color)] text-[var(--brand-color)] px-4 py-2 rounded-full shadow-sm">
+        <div className="flex items-center gap-2 bg-bg-primary border border-brand text-brand px-2 py-1 md:px-3 md:py-2 xl:px-4 rounded-full shadow-sm">
           <Coins className="w-4 h-4" />
           <span className="font-semibold text-sm">
             {point.quantity ?? 0} pts
@@ -88,12 +88,12 @@ export default function PointPage() {
             .map((item, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between bg-[var(--bg-primary)] rounded-xl border border-[var(--input-border)] shadow-sm px-4 py-3 hover:shadow-md transition-all duration-300 animate-fadeIn"
+                className="flex items-center justify-between bg-bg-primary rounded-xl border border-brand shadow-sm px-4 py-3 hover:shadow-md transition-all duration-300 animate-fadeIn"
               >
                 <div className="flex items-center gap-3">
-                  <div className="bg-[var(--brand-color)]/10 p-2 rounded-full">
+                  <div className="bg-brand/10 p-2 rounded-full">
                     <Star
-                      className="text-[var(--brand-color)]"
+                      className="text-brand"
                       size={18}
                       fill="currentColor"
                     />

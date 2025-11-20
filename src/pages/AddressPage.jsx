@@ -59,8 +59,8 @@ export default function AddressPage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8 border-b pb-4 border-gray-200">
-        <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+      <div className="flex justify-between items-center my-2 md:my-4 xl:my-6 border-b pb-4 border-gray-200">
+        <h2 className="text-base md:text-lg xl:text-xl lg:text-2xl font-semibold text-gray-800 flex items-center gap-2">
           <MapPin className="text-brand w-6 h-6" />
           Delivery Addresses
         </h2>

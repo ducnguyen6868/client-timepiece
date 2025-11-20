@@ -52,8 +52,9 @@ export default function ProfilePage() {
                 <div className="flex items-center space-x-6 pb-6 border-b border-gray-100">
                     <div className='relative rounded-full overflow-hidden'>
                         <img src={`${process.env.REACT_APP_API_URL}`+`/${user?.avatar}`}
-                            alt={user.name} className="w-24 h-24 rounded-full object-cover border-4 border-teal-500"
-                            onError={(e) => e.target.src = user?.avatar} />
+                            alt={user.name} 
+                            className="w-24 h-24 rounded-full object-cover border-4 border-teal-500"
+                            onError={(e) => e.target.src = ''} />
                         <button className='w-full absolute bottom-0 flex justify-center backdrop-blur-[2px]'>
                             <Camera className='w-6 h-6 text-gray-400' />
                         </button>

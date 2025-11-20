@@ -1,18 +1,17 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../../contexts/UserContext';
+import { Link , useNavigate, useLocation } from 'react-router-dom';
 import { Home, MessageSquare, Package, User } from 'lucide-react';
 import ChatModal from '../layout/ChatModal';
 // --- New NavBar Component ---
 export default function NavBottom() {
     const [activeTab, setActiveTab] = useState('');
+    const [login, setLogin] = useState(false);
+
     const navigate = useNavigate();
 
-    const navItems = [
-        { name: 'Home', Icon: Home, key: '' },
-        { name: 'Order', Icon: Package, key: 'order' },
-        { name: 'Chat', Icon: MessageSquare, key: 'chat' },
-        { name: 'Account', Icon: User, key: 'user/profile' }, // Highlight User/Admin profile
-    ];
+    const { infoUser } = useContext(UserContext);
+
     const location = useLocation();
     const queryParams = location?.pathname.split('/')[1];
 
@@ -20,10 +19,15 @@ export default function NavBottom() {
         setActiveTab(queryParams);
     }, [queryParams]);
 
-    const handleActiveTab= (item)=>{
-        setActiveTab(item.key);
-        if(item.key==='chat') return;
-        navigate(`/${item.key}`);
+    useEffect(() => {
+        if (!infoUser || !infoUser.fullName) return;
+        setLogin(true);
+    }, [infoUser]);
+
+    const handleActiveTab = (item) => {
+        setActiveTab(item);
+        if (item === 'chat') return;
+        navigate(`/${item}`);
     }
 
     return (
@@ -37,20 +41,65 @@ export default function NavBottom() {
             >
                 {/* Center content on wide screens, ensure spacing on mobile */}
                 <div className="flex justify-around items-center h-16 max-w-xl mx-auto px-2">
-                    {navItems.map((item) => (
+                    <button
+                        onClick={() => handleActiveTab('')}
+                        className={`flex flex-col flex-1 items-center justify-center p-1 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === ''
+                            ? `text-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-gray-500 hover:text-gray-700'
+                            } rounded-md`}
+                    >
+                        <Home className="h-6 w-6" />
+                        {/* Show text label on smaller screens too for clarity, or hide for minimalism */}
+                        <span className="text-[10px] sm:text-xs mt-0.5">Home</span>
+                    </button>
+                    <button
+                        onClick={() => handleActiveTab('wallet')}
+                        className={`flex flex-col flex-1 items-center justify-center p-1 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'order'
+                            ? `text-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-gray-500 hover:text-gray-700'
+                            } rounded-md`}
+                    >
+                        <Package className="h-6 w-6" />
+                        {/* Show text label on smaller screens too for clarity, or hide for minimalism */}
+                        <span className="text-[10px] sm:text-xs mt-0.5">Order</span>
+                    </button>
+                    <button
+                        onClick={() => handleActiveTab('chat')}
+                        className={`flex flex-col flex-1 items-center justify-center p-1 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'chat'
+                            ? `text-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-gray-500 hover:text-gray-700'
+                            } rounded-md`}
+                    >
+                        <MessageSquare className="h-6 w-6" />
+                        {/* Show text label on smaller screens too for clarity, or hide for minimalism */}
+                        <span className="text-[10px] sm:text-xs mt-0.5">Chat</span>
+                    </button>
+                    {login ? (
+                        <>
+                            <Link to='/user/profile'>
+                                <img src={`${process.env.REACT_APP_API_URL}`+`/${infoUser.avatar}` || infoUser.avatar} alt='Avatar' title='Avatar'
+                                    onError={(e) => {
+                                        e.target.src = ''
+                                    }}
+                                    className='w-8 h-8 md:w-10 md:h-10 object-cover'
+                                />
+                            </Link>
+                        </>
+
+                    ) : (
                         <button
-                            key={item.name}
-                            onClick={()=>handleActiveTab(item)}
-                            className={`flex flex-col items-center justify-center p-1 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === item.key
+                            onClick={() => handleActiveTab('user/profile')}
+                            className={`flex flex-col flex-1 items-center justify-center p-1 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'user/profile'
                                 ? `text-brand` // Active link color (User is active for Admin Login context)
                                 : 'text-gray-500 hover:text-gray-700'
                                 } rounded-md`}
                         >
-                            <item.Icon className="h-6 w-6" />
+                            <User className="h-6 w-6" />
                             {/* Show text label on smaller screens too for clarity, or hide for minimalism */}
-                            <span className="text-[10px] sm:text-xs mt-0.5">{item.name}</span>
+                            <span className="text-[10px] sm:text-xs mt-0.5">Account</span>
                         </button>
-                    ))}
+                    )}
+
                 </div>
             </nav>
         </>

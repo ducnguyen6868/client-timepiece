@@ -1,15 +1,7 @@
 import { useState } from "react";
 import {
-  Lock,
-  LockKeyhole,
-  Eye,
-  EyeOff,
-  ShieldCheck,
-  CheckCircle,
-  Circle,
-  AlertCircle,
-  Loader2,
-  X,
+  Lock, LockKeyhole, Eye, EyeOff, ShieldCheck,
+  CheckCircle, Circle, AlertCircle, Loader2, X,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import userApi from "../../api/userApi";
@@ -102,7 +94,7 @@ export default function PasswordChangeModal({ onClose }) {
     <div className="w-full transition-all duration-300 ">
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="flex gap-6">
+        <div className="flex flex-col md:flex-row gap-6">
           <div className='flex-1'>
             {/* Current Password */}
             <div>
@@ -213,7 +205,7 @@ export default function PasswordChangeModal({ onClose }) {
           </div>
 
           {/* Password Requirements */}
-          <div className="w-72 mt-5 bg-gray-50 dark:bg-gray-800/60 rounded-lg p-3 border border-gray-200 dark:border-gray-700">
+          <div className="flex-1 max-w-80 mt-5 bg-gray-50 dark:bg-gray-800/60 rounded-lg p-3 border border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-2 font-medium text-sm text-gray-700 dark:text-gray-300">
               <ShieldCheck size={16} /> Password Requirements
             </div>

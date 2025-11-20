@@ -20,10 +20,10 @@ export default function PromotionPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[var(--bg-secondary)] p-4">
+    <div className="min-h-screen bg-bg-secondary md:px-3 xl:px-4">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-4">
-        <span className="text-[var(--brand-color)] text-sm font-medium">
+      <div className="flex flex-row justify-between items-center gap-2 mb-4">
+        <span className="text-brand hidden md:inline font-medium mb-2">
           Find a new promotion ?
         </span>
 
@@ -34,21 +34,21 @@ export default function PromotionPage() {
             name="search"
             id="search"
             placeholder="Enter promotion code..."
-            className="flex-1 outline-none border border-[var(--input-border)] bg-[var(--input-bg)] rounded-[10px] py-2 px-4 pr-10 text-[var(--text-primary)] text-sm transition-all duration-300 focus:border-[var(--brand-color)] focus:shadow-[0_0_6px_var(--brand-color)]"
+            className="flex-1 outline-none border border-[var(--input-border)] bg-[var(--input-bg)] rounded-[10px] py-2 px-4 pr-10 text-text-primary text-sm transition-all duration-300 focus:border-brand focus:shadow-[0_0_6px_var(--brand-color)]"
           />
-          <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] cursor-pointer hover:text-[var(--brand-color)] transition-colors duration-200" />
+          <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] cursor-pointer hover:text-brand transition-colors duration-200" />
         </div>
 
-        {/* Filter */}
-        <select
-          name="promotion-type"
-          className="w-[150px] px-3 py-2 border border-[var(--input-border)] rounded-[10px] text-[var(--text-primary)] bg-[var(--input-bg)] text-sm transition-all duration-300 focus:border-[var(--brand-color)] focus:shadow-[0_0_6px_var(--brand-color)]"
-        >
-          <option value="All">All</option>
-          <option value="used">Used</option>
-          <option value="not used">Not Used</option>
-          <option value="expired">Expired</option>
-        </select>
+      {/* Filter */}
+      <select
+        name="promotion-type"
+        className="w-[150px] px-3 py-2 border border-[var(--input-border)] rounded-[10px] text-text-primary bg-[var(--input-bg)] text-sm transition-all duration-300 focus:border-brand focus:shadow-[0_0_6px_var(--brand-color)]"
+      >
+        <option value="All">All</option>
+        <option value="used">Used</option>
+        <option value="not used">Not Used</option>
+        <option value="expired">Expired</option>
+      </select>
       </div>
 
       {/* Promotions grid */}
@@ -59,9 +59,9 @@ export default function PromotionPage() {
             className="flex bg-[var(--bg-primary)] rounded-xl shadow-sm border border-transparent overflow-hidden transition-all duration-300 hover:-translate-y-[3px] hover:shadow-lg"
           >
             {/* Left Side */}
-            <div className="relative w-[140px] bg-[var(--brand-color)] text-[var(--announcement-text)] text-center">
+            <div className="relative w-[140px] bg-brand text-[var(--announcement-text)] text-center">
               <img
-                src={`${process.env.REACT_APP_API_URL}`+`/${promotion.image}`}
+                src={`${process.env.REACT_APP_API_URL}` + `/${promotion.image}`}
                 alt="Promotion"
                 className="w-full h-full object-cover opacity-80"
               />
@@ -70,7 +70,7 @@ export default function PromotionPage() {
                 {[...Array(12)].map((_, i) => (
                   <span
                     key={i}
-                    className="block w-[10px] h-[10px] bg-[var(--bg-secondary)] rounded-full my-[3px]"
+                    className="block w-[10px] h-[10px] bg-bg-secondary rounded-full my-[3px]"
                   />
                 ))}
               </div>
@@ -79,15 +79,15 @@ export default function PromotionPage() {
             {/* Right Side */}
             <div className="flex flex-col justify-between flex-1 p-4 gap-1">
               <div>
-                <h3 className="text-base font-semibold text-[var(--text-primary)]">
+                <h3 className="text-base font-semibold text-text-primary">
                   {promotion.title}
                 </h3>
-                <p className="text-[13px] text-[var(--text-secondary)]">
+                <p className="text-[13px] text-text-secondary">
                   {promotion.subtitle}
                 </p>
               </div>
 
-              <span className="text-[12px] font-semibold text-[var(--brand-color)] border border-dashed border-[var(--brand-color)] px-2 py-1 rounded bg-[var(--bg-tertiary)] w-max">
+              <span className="text-[12px] font-semibold text-brand border border-dashed border-brand px-2 py-1 rounded bg-[var(--bg-tertiary)] w-max">
                 {promotion.code}
               </span>
 

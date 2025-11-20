@@ -14,7 +14,7 @@ export default function Public() {
 
     useEffect(() => {
         const loadingAnimation = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 2500));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
             setLoading(false);
         }
         loadingAnimation();
@@ -23,7 +23,6 @@ export default function Public() {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-16 sm:py-20 select-none">
-
                 {/* Logo + Spinner */}
                 <div className="relative flex justify-center items-center w-20 h-20 sm:w-24 sm:h-24 mb-3">
                     <img
@@ -36,8 +35,7 @@ export default function Public() {
                     <div className="
             absolute inset-0 
             rounded-full 
-            border-2 sm:border-3 
-            border-transparent 
+            border-b-2 sm:border-b-3 
             border-b-brand 
             animate-spin
         " />
@@ -55,7 +53,7 @@ export default function Public() {
 
                 {/* Subtitle (tùy chọn, giúp UI cân hơn) */}
                 <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                    Premium Watch Store
+                    Luxury Watches
                 </p>
             </div>
         );

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
@@ -8,10 +7,16 @@ import { isValidEmail } from '../utils/isValidEmail';
 import ForgotPasswordModal from '../components/common/ForgotPasswordModal';
 import authApi from '../api/authApi';
 import loginImage from '../assets/login.png';
+import Notification from '../components/common/Notification';
 
 export default function LoginPage() {
 
   const { setInfoUser } = useContext(UserContext);
+
+  const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const [message, setMessage] = useState('');
+  const [type, setType] = useState('');
 
   const [isModal, setIsModal] = useState(false);
   const navigate = useNavigate();
@@ -49,6 +54,7 @@ export default function LoginPage() {
     }
     // API login
     try {
+      setLoading(true);
       const response = await authApi.login(loginData);
       if (loginData.rememberMe) {
         //Save token to localstorage 
@@ -56,24 +62,31 @@ export default function LoginPage() {
       } else {
         sessionStorage.setItem("token", response.token);
       }
-      toast.success(response.message);
       await setInfoUser(prev => ({
-        ...prev, name: response.user.name,
+        ...prev,
+        fullName: response.user.fullName,
         email: response.user.email,
         avatar: response.user.avatar,
         cart: response.user.carts?.length,
         wishlist: response.user.wishlist?.length
       }));
+      setType('success');
+      setShow(true);
+      setMessage(response.message);
+      await new Promise(resolve => setTimeout(resolve, 1000));
       navigate('/');
-
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
+      setMessage(err.response?.data?.message || err.message);
+      setType('error');
+      setShow(true);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
-
+      <Notification type={type} message={message} show={show} onClose={() => setShow(false)} />
       <div className="min-h-screen relative flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 px-4"
       >
         <img className='fixed w-full h-full' src={loginImage} alt='Login' title='Login' />
@@ -172,9 +185,19 @@ export default function LoginPage() {
           {/* Submit button */}
           <button
             onClick={handleLoginSubmit}
-            className="w-full py-2 bg-brand hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition"
+            className="w-full py-2 bg-brand hover:bg-brand-hover
+             text-white font-semibold rounded-lg shadow-md transition"
+            disabled={loading}
           >
-            Login
+            {loading ? (
+              <div className="flex gap-1 md:gap-2 xl:gap-3 lg:gap-4 justify-center items-center">
+                <div className="w-4 h-4 border-b-2 border-white rounded-full animate-spin mr-2"></div>
+                <span>Logging...</span>
+              </div>
+            ) : (
+              <span>Login</span>
+            )}
+
           </button>
 
           {/* Divider */}

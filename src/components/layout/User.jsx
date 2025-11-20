@@ -23,18 +23,18 @@ const sidebarMenu = [
 const SidebarLink = ({ item, isActive, onClick }) => (
   <button
     onClick={onClick}
-    className={`relative flex items-center space-x-3 w-full text-left px-4 py-2.5 rounded-lg transition-all group text-white hover:text-black
+    className={`relative flex items-center space-x-3 w-max text-left px-4 py-2.5 rounded-lg transition-all group text-white hover:text-black
       ${isActive
         ? 'bg-white text-brand font-semibold shadow-sm'
         : 'text-white hover:bg-gray-50 '
       }`}
   >
     <item.icon
-      className={`w-5 h-5 transition-transform duration-300 ${isActive ? 'text-brand scale-110' : ' group-hover:scale-105'
+      className={`w-5 h-5 transition-transform duration-300 ${isActive ? 'text-brand' : ''
         }`}
     />
-    <span className={`text-sm ${isActive
-      ? 'bg-white text-brand font-semibold shadow-sm'
+    <span className={`hidden md:block text-sm ${isActive
+      ? 'text-brand font-semibold shadow-sm'
       : ''
       }`}>{item.name}</span>
   </button>
@@ -65,7 +65,7 @@ export default function UserLayout() {
   return (
     <>
       {/* HEADER */}
-      <header className="sticky top-0 border-b border-gray-100 bg-white/80 backdrop-blur-md z-40 shadow-sm">
+      <header className="hidden xl:block sticky top-0 border-b border-gray-100 bg-white/80 backdrop-blur-md z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link
             to="/"
@@ -102,7 +102,7 @@ export default function UserLayout() {
               loading='lazy'
               onError={(e) => {
                 e.target.onerror = null;
-                e.target.src = infoUser.avatar || '';
+                e.target.src = '';
               }}
               className="w-8 h-8 rounded-full border border-gray-300 object-cover hover:scale-105 transition-transform"
             />
@@ -111,11 +111,15 @@ export default function UserLayout() {
       </header>
 
       {/* MAIN */}
-      <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="relative max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-2 md:gap-4 xl:gap-6 lg:gap-8">
         {/* SIDEBAR */}
-        <aside className="lg:col-span-3 bg-white rounded-xl shadow-md border border-gray-100 p-5 bg-gradient-to-bl from-blue-500 to-pink-600">
-          <h2 className="text-xs uppercase text-white mb-3 tracking-wide font-medium">Dashboard</h2>
-          <nav className="flex flex-col space-y-1.5">
+        <aside className="fixed bottom-0 z-50 left-0 right-0 md:relative p-2 md:p-0 lg:p-0 lg:col-span-3 md:col-span-2
+         bg-white shadow-md border border-gray-100 xl:p-0
+          
+          ">
+          <div className='rounded-xl md:p-2 xl:p-3 lg:p-4 bg-gradient-to-bl from-brand to-brand-hover overflow-y-auto'>
+            <h2 className="hidden xl:block text-xs uppercase text-white xl:pl-4 xl:pt-2 mb-3 tracking-wide font-medium">Dashboard</h2>
+          <nav className="flex flex-row md:flex-col overflow-y-auto">
             {sidebarMenu.map(item => (
               <SidebarLink
                 key={item.key}
@@ -126,7 +130,7 @@ export default function UserLayout() {
             ))}
           </nav>
 
-          <div className="mt-8 pt-4 border-t border-gray-100">
+          {/* <div className="mt-8 pt-4 border-t border-gray-100">
             <button
               onClick={() => setLogout(true)}
               className="flex items-center space-x-3 w-full px-4 py-2.5 rounded-lg text-sm text-orange-600 bg-red-50 transition-all"
@@ -134,11 +138,12 @@ export default function UserLayout() {
               <LogOut className="w-5 h-5" />
               <span>Logout</span>
             </button>
+          </div> */}
           </div>
         </aside>
 
         {/* CONTENT */}
-        <main className="lg:col-span-9 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <main className="md:col-span-6 lg:col-span-9 bg-white rounded-xl shadow-sm border border-gray-100 p-1 md:p-2 xl:p-3 lg:p-4">
           <Outlet />
         </main>
       </div>

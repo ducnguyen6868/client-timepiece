@@ -18,7 +18,7 @@ export default function Header() {
 
 
     useEffect(() => {
-        if (infoUser.name !== '') {
+        if (infoUser.fullName !== '') {
             setLogged(true);
         }
     }, [infoUser]);
@@ -128,7 +128,7 @@ export default function Header() {
                                                 loading='lazy'
                                                 onError={(e) => {
                                                     e.target.onerror = null;
-                                                    e.target.src =infoUser.avatar||'';
+                                                    e.target.src ='';
                                                 }}
 
                                             />

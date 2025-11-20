@@ -217,15 +217,15 @@ export default function SettingPage() {
     const CurrentContent = settingTabs.find(tab => tab.key === activeSetting)?.content;
 
     return (
-        <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+        <div className="pt-2">
+            <h2 className="hidden md:text-xl lg:text-2xl font-bold text-gray-900 md:flex items-center mb-2 md:mb-3 xl:mb-4">
                 <Settings className="w-6 h-6 mr-3 text-teal-600" />
                 Account Settings
             </h2>
 
-            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200">
                 {/* Internal Tabs Navigation */}
-                <div className="flex space-x-4 border-b border-gray-200">
+                <div className="flex space-x-4 justify-between overflow-y-auto border-b border-gray-200">
                     {settingTabs.map(tab => (
                         <button
                             key={tab.key}

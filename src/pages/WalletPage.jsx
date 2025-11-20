@@ -1,26 +1,10 @@
 import { useState } from 'react';
 import {
-    Wallet,
-    TrendingUp,
-    TrendingDown,
-    Plus,
-    Minus,
-    ArrowUpRight,
-    ArrowDownLeft,
-    Clock,
-    AlertCircle,
-    RefreshCw,
-    Eye,
-    EyeOff,
-    CreditCard,
-    DollarSign,
-    Calendar,
-    Filter,
-    Download,
-    Search
+    Wallet, TrendingUp, Plus, Minus, ArrowUpRight, ArrowDownLeft,
+    Clock, AlertCircle, RefreshCw, Eye, EyeOff, CreditCard, Download, Search
 } from 'lucide-react';
 
-export default function WalletPage () {
+export default function WalletPage() {
     const [showBalance, setShowBalance] = useState(true);
     const [activeTab, setActiveTab] = useState('all'); // all, deposit, withdraw
     const [searchQuery, setSearchQuery] = useState('');
@@ -78,9 +62,9 @@ export default function WalletPage () {
     ];
 
     const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('vi-VN', {
+        return new Intl.NumberFormat('en-US', {
             style: 'currency',
-            currency: 'VND'
+            currency: 'USD'
         }).format(amount);
     };
 
@@ -93,85 +77,84 @@ export default function WalletPage () {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <div className="bg-gradient-to-br from-[#00bcd4] via-[#00acc1] to-[#0097a7] text-white">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="p-2 sm:p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                            <Wallet className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
-                        </div>
-                        <div>
-                            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">My Wallet</h1>
-                            <p className="text-xs sm:text-sm text-white/80 mt-0.5">Manage your balance and transactions</p>
+
+            <div className="container text-white mx-auto px-4 rounded-lg md:rounded-xl xl:rounded-2xl sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10 bg-gradient-to-tr from-green-500 to-brand">
+                <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 sm:p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                        <Wallet className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
+                    </div>
+                    <div>
+                        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold ">My Wallet</h1>
+                        <p className="text-xs sm:text-sm text-white/80 mt-0.5">Manage your balance and transactions</p>
+                    </div>
+                </div>
+
+                {/* Beta Notice */}
+                <div className="bg-yellow-500/20 backdrop-blur-sm border border-yellow-400/30 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-6">
+                    <div className="flex gap-2 sm:gap-3">
+                        <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300 flex-shrink-0 mt-0.5" />
+                        <div className="flex-1 min-w-0">
+                            <h3 className="text-xs sm:text-sm font-semibold text-yellow-100 mb-1">
+                                Feature in Development
+                            </h3>
+                            <p className="text-[10px] sm:text-xs text-yellow-50/90 leading-relaxed">
+                                This wallet feature is currently in beta testing. Please use with caution and report any issues to our support team. Some features may be limited or subject to change.
+                            </p>
                         </div>
                     </div>
+                </div>
 
-                    {/* Beta Notice */}
-                    <div className="bg-yellow-500/20 backdrop-blur-sm border border-yellow-400/30 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-6">
-                        <div className="flex gap-2 sm:gap-3">
-                            <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300 flex-shrink-0 mt-0.5" />
-                            <div className="flex-1 min-w-0">
-                                <h3 className="text-xs sm:text-sm font-semibold text-yellow-100 mb-1">
-                                    Feature in Development
-                                </h3>
-                                <p className="text-[10px] sm:text-xs text-yellow-50/90 leading-relaxed">
-                                    This wallet feature is currently in beta testing. Please use with caution and report any issues to our support team. Some features may be limited or subject to change.
-                                </p>
+                {/* Balance Card */}
+                <div className="bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/20 shadow-xl">
+                    <div className="flex items-start justify-between mb-4 sm:mb-6">
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-2">
+                                <p className="text-xs sm:text-sm text-white/80">Available Balance</p>
+                                <button
+                                    onClick={() => setShowBalance(!showBalance)}
+                                    className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+                                    aria-label={showBalance ? "Hide balance" : "Show balance"}
+                                >
+                                    {showBalance ? (
+                                        <Eye className="w-4 h-4" />
+                                    ) : (
+                                        <EyeOff className="w-4 h-4" />
+                                    )}
+                                </button>
                             </div>
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+                                {showBalance ? formatCurrency(walletBalance) : '••••••••'}
+                            </h2>
                         </div>
+                        <button
+                            className="p-2 hover:bg-white/10 rounded-lg transition-colors flex-shrink-0"
+                            aria-label="Refresh balance"
+                        >
+                            <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </button>
                     </div>
 
-                    {/* Balance Card */}
-                    <div className="bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/20 shadow-xl">
-                        <div className="flex items-start justify-between mb-4 sm:mb-6">
-                            <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <p className="text-xs sm:text-sm text-white/80">Available Balance</p>
-                                    <button
-                                        onClick={() => setShowBalance(!showBalance)}
-                                        className="p-1 hover:bg-white/10 rounded-lg transition-colors"
-                                        aria-label={showBalance ? "Hide balance" : "Show balance"}
-                                    >
-                                        {showBalance ? (
-                                            <Eye className="w-4 h-4" />
-                                        ) : (
-                                            <EyeOff className="w-4 h-4" />
-                                        )}
-                                    </button>
-                                </div>
-                                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-                                    {showBalance ? formatCurrency(walletBalance) : '••••••••'}
-                                </h2>
-                            </div>
-                            <button
-                                className="p-2 hover:bg-white/10 rounded-lg transition-colors flex-shrink-0"
-                                aria-label="Refresh balance"
-                            >
-                                <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
-                            </button>
-                        </div>
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-white/80 mb-4 sm:mb-6">
+                        <Clock className="w-4 h-4 flex-shrink-0" />
+                        <span>Pending: {showBalance ? formatCurrency(pendingAmount) : '••••••'}</span>
+                    </div>
 
-                        <div className="flex items-center gap-2 text-xs sm:text-sm text-white/80 mb-4 sm:mb-6">
-                            <Clock className="w-4 h-4 flex-shrink-0" />
-                            <span>Pending: {showBalance ? formatCurrency(pendingAmount) : '••••••'}</span>
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                            <button className="flex items-center justify-center gap-2 bg-white text-[#00bcd4] hover:bg-gray-50 font-semibold rounded-lg sm:rounded-xl py-3 sm:py-3.5 transition-all hover:scale-105 active:scale-95 shadow-lg">
-                                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-                                <span className="text-sm sm:text-base">Deposit</span>
-                            </button>
-                            <button className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm font-semibold rounded-lg sm:rounded-xl py-3 sm:py-3.5 transition-all hover:scale-105 active:scale-95 border border-white/30">
-                                <Minus className="w-4 h-4 sm:w-5 sm:h-5" />
-                                <span className="text-sm sm:text-base">Withdraw</span>
-                            </button>
-                        </div>
+                    {/* Action Buttons */}
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                        <button className="flex items-center justify-center gap-2 bg-white text-[#00bcd4] hover:bg-gray-50 font-semibold rounded-lg sm:rounded-xl py-3 sm:py-3.5 transition-all hover:scale-105 active:scale-95 shadow-lg">
+                            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                            <span className="text-sm sm:text-base">Deposit</span>
+                        </button>
+                        <button className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm font-semibold rounded-lg sm:rounded-xl py-3 sm:py-3.5 transition-all hover:scale-105 active:scale-95 border border-white/30">
+                            <Minus className="w-4 h-4 sm:w-5 sm:h-5" />
+                            <span className="text-sm sm:text-base">Withdraw</span>
+                        </button>
                     </div>
                 </div>
             </div>
 
             {/* Quick Stats */}
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
+            <div className="container mx-auto sm:px-4 lg:px-6 mt-2 md:mt-4 xl:mt-6 lg:mt-8">
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-lg border border-gray-100">
                         <div className="flex items-center gap-2 sm:gap-3">
@@ -232,7 +215,7 @@ export default function WalletPage () {
             </div>
 
             {/* Transactions Section */}
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div className="container mx-auto sm:px-4 lg:px-6 py-6 sm:py-8">
                 <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
                     {/* Section Header */}
                     <div className="p-4 sm:p-6 border-b border-gray-100">
@@ -265,31 +248,28 @@ export default function WalletPage () {
                             <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
                                 <button
                                     onClick={() => setActiveTab('all')}
-                                    className={`px-4 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${
-                                        activeTab === 'all'
+                                    className={`px-4 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${activeTab === 'all'
                                             ? 'bg-white text-[#00bcd4] shadow-sm'
                                             : 'text-gray-600 hover:text-gray-900'
-                                    }`}
+                                        }`}
                                 >
                                     All
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('deposit')}
-                                    className={`px-4 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${
-                                        activeTab === 'deposit'
+                                    className={`px-4 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${activeTab === 'deposit'
                                             ? 'bg-white text-[#00bcd4] shadow-sm'
                                             : 'text-gray-600 hover:text-gray-900'
-                                    }`}
+                                        }`}
                                 >
                                     Deposits
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('withdraw')}
-                                    className={`px-4 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${
-                                        activeTab === 'withdraw'
+                                    className={`px-4 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${activeTab === 'withdraw'
                                             ? 'bg-white text-[#00bcd4] shadow-sm'
                                             : 'text-gray-600 hover:text-gray-900'
-                                    }`}
+                                        }`}
                                 >
                                     Withdrawals
                                 </button>
@@ -316,11 +296,10 @@ export default function WalletPage () {
                                     <div className="flex items-center gap-3 sm:gap-4">
                                         {/* Icon */}
                                         <div
-                                            className={`flex-shrink-0 p-2 sm:p-3 rounded-lg sm:rounded-xl ${
-                                                transaction.type === 'deposit'
+                                            className={`flex-shrink-0 p-2 sm:p-3 rounded-lg sm:rounded-xl ${transaction.type === 'deposit'
                                                     ? 'bg-green-100'
                                                     : 'bg-red-100'
-                                            }`}
+                                                }`}
                                         >
                                             {transaction.type === 'deposit' ? (
                                                 <ArrowDownLeft className={`w-5 h-5 sm:w-6 sm:h-6 text-green-600`} />
@@ -339,11 +318,10 @@ export default function WalletPage () {
                                                     {transaction.date} • {transaction.time}
                                                 </p>
                                                 <span
-                                                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                                                        transaction.status === 'completed'
+                                                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${transaction.status === 'completed'
                                                             ? 'bg-green-100 text-green-700'
                                                             : 'bg-yellow-100 text-yellow-700'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {transaction.status}
                                                 </span>
@@ -353,11 +331,10 @@ export default function WalletPage () {
                                         {/* Amount */}
                                         <div className="text-right flex-shrink-0">
                                             <p
-                                                className={`text-sm sm:text-base md:text-lg font-bold ${
-                                                    transaction.type === 'deposit'
+                                                className={`text-sm sm:text-base md:text-lg font-bold ${transaction.type === 'deposit'
                                                         ? 'text-green-600'
                                                         : 'text-red-600'
-                                                }`}
+                                                    }`}
                                             >
                                                 {transaction.type === 'deposit' ? '+' : '-'}
                                                 {formatCurrency(transaction.amount)}
