@@ -59,7 +59,7 @@ export default function AdminLogin() {
       }
       toast.success(response.message);
       await setInfoUser(prev => ({
-        ...prev, name: response.user.name,
+        ...prev, name: response.user.fullName,
         email: response.user.email,
         avatar: response.user.avatar,
         cart: response.user.carts?.length,

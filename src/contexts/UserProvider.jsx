@@ -32,7 +32,7 @@ export const UserProvider = ({ children }) => {
                         }
                     });
                     setInfoUser({
-                        fullNname: response.data.user.fullName,
+                        fullName: response.data.user.fullName,
                         email: response.data.user.email,
                         avatar: response.data.user.avatar,
                         wishlist: response.data.user.wishlist?.length || 0,

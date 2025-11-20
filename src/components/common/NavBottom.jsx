@@ -7,6 +7,7 @@ import ChatModal from '../layout/ChatModal';
 export default function NavBottom() {
     const [activeTab, setActiveTab] = useState('');
     const [login, setLogin] = useState(false);
+    const [show,setShow] = useState(false);
 
     const navigate = useNavigate();
 
@@ -26,14 +27,17 @@ export default function NavBottom() {
 
     const handleActiveTab = (item) => {
         setActiveTab(item);
-        if (item === 'chat') return;
+        if (item === 'chat'){
+            setShow(true);
+            return;
+        } 
         navigate(`/${item}`);
     }
 
     return (
         <>
-            {activeTab === 'chat' && (
-                <ChatModal />
+            {activeTab === 'chat' && show && (
+                <ChatModal onClose={()=>setShow(false)}/>
             )}
             <nav
                 // Position: Fixed at the bottom, spanning full width

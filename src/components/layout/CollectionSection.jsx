@@ -14,15 +14,15 @@ const CollectionSection = () => {
     const navigate = useNavigate();
 
     // Auto-play slider
-    useEffect(() => {
-        if (!isAutoPlaying || collections.length <= 1) return;
+    // useEffect(() => {
+    //     if (!isAutoPlaying || collections.length <= 1) return;
 
-        const interval = setInterval(() => {
-            setCurrentIndex((prev) => (prev + 1) % collections.length);
-        }, 5000);
+    //     const interval = setInterval(() => {
+    //         setCurrentIndex((prev) => (prev + 1) % collections.length);
+    //     }, 5000);
 
-        return () => clearInterval(interval);
-    }, [isAutoPlaying, collections]);
+    //     return () => clearInterval(interval);
+    // }, [isAutoPlaying, collections]);
 
     const nextSlide = () => {
         setCurrentIndex((currentIndex + 1) % collections.length);
@@ -68,18 +68,8 @@ const CollectionSection = () => {
     return (
         <section className="relative py-2 sm:py-3 md:py-4 px-2 sm:px-3 md:px-4 bg-gray-50 w-full">
             <div
-                className="
-            relative mx-auto
-            overflow-hidden
-            rounded-xl shadow-xl
-
-            h-[160px]
-            xs:h-[200px]
-            sm:h-[220px]
-            md:h-[240px]
-            lg:h-[260px]
-            xl:h-[280px]
-        "
+                className="relative mx-auto overflow-hidden rounded-xl shadow-xl
+            h-[160px] xs:h-[200px] sm:h-[220px] md:h-[240px] lg:h-[260px] xl:h-[280px] "
             >
                 {collections.map((collection, index) => (
                     <div
@@ -111,13 +101,13 @@ const CollectionSection = () => {
                             absolute inset-0 z-0 w-full
                             px-3 xs:px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16
                             py-3 xs:py-4 sm:py-5 md:py-6 lg:py-8
-                            flex flex-col justify-center gap-2
+                            flex flex-col justify-center gap-2 
                         "
                             >
                                 {/* Featured Label */}
-                                <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2">
+                                <div className="flex items-center space-x-1 sm:space-x-2">
                                     <Sparkles className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-teal-400" />
-                                    <span className="text-[9px] xs:text-[10px] sm:text-xs md:text-sm font-semibold uppercase tracking-wide text-teal-400">
+                                    <span className="text-sm sm:text-base md:text-lg font-semibold uppercase tracking-wide text-teal-400">
                                         Featured Collection
                                     </span>
                                 </div>
@@ -125,8 +115,8 @@ const CollectionSection = () => {
                                 {/* Title */}
                                 <h2
                                     className="
-                                font-bold leading-tight mb-1 sm:mb-2
-                                text-[10px] xs:text-xs sm:text-lg md:text-xl lg:text-2xl xl:text-3xl
+                                font-bold leading-tight
+                                text-xs xs:text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl
                                 line-clamp-1 sm:line-clamp-2
                             "
                                 >
@@ -136,30 +126,20 @@ const CollectionSection = () => {
                                 {/* Description */}
                                 <p
                                     className="
-                                hidden md:block leading-relaxed
+                                text-xs max-w-xs md:text-sm xl:text-base leading-relaxed
                                 md:max-w-lg lg:max-w-xl
-                                line-clamp-2 md:line-clamp-3
+                                line-clamp-1 md:line-clamp-2 xl:line-clamp-3
                                 mb-2 sm:mb-3 md:mb-4
                             "
                                 >
                                     {collection.description}
                                 </p>
 
-                                {/* Stats */}
-                                <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 mb-2 sm:mb-3 md:mb-4">
-                                    <div className="flex items-center space-x-1 text-[9px] xs:text-[10px] sm:text-xs md:text-sm">
-                                        <Star className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-400 fill-yellow-400" />
-                                        <span className="font-semibold">Premium</span>
-                                    </div>
-                                    <div className="flex items-center space-x-1 text-[9px] xs:text-[10px] sm:text-xs md:text-sm">
-                                        <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-teal-400" />
-                                        <span className="font-semibold">{collection.products?.length || 0} Products</span>
-                                    </div>
-                                </div>
+                                <div className='flex gap-2 items-end  '>
 
-                                {/* Button */}
-                                <button
-                                    className=" w-max
+                                    {/* Button */}
+                                    <button
+                                        className=" w-max
                                 bg-brand hover:to-brand-hover text-white font-bold rounded-full
                                 px-4 xs:px-5 sm:px-6 md:px-8 lg:px-10
                                 py-1.5 xs:py-2 sm:py-2.5 md:py-3
@@ -168,11 +148,28 @@ const CollectionSection = () => {
                                 flex items-center justify-center space-x-2
                                 shadow-lg hover:shadow-xl hover:scale-105
                             "
-                                    onClick={() => handleCollection(collection.slug)}
-                                >
-                                    <ShoppingCart className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
-                                    <span>Shop Now</span>
-                                </button>
+                                        onClick={() => handleCollection(collection.slug)}
+                                    >
+                                        <ShoppingCart className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
+                                        <span>Shop Now</span>
+                                    </button>
+
+                                    {/* Stats */}
+                                    <button className="flex items-center space-x-1 text-[9px] xs:text-[10px] sm:text-xs md:text-sm rounded-full
+                                    px-4 xs:px-5 sm:px-6 md:px-8 lg:px-10 py-1.5 xs:py-2 sm:py-2.5 md:py-3 xs:text-xs 
+                                transition-all duration-300 justify-center shadow-lg hover:shadow-xl hover:scale-105
+                                    ">
+                                        <Star className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-400 fill-yellow-400" />
+                                        <span className="font-semibold">Premium</span>
+                                    </button>
+                                    <button className="flex items-center space-x-1 text-[9px] xs:text-[10px] sm:text-xs md:text-sm rounded-full
+                                    px-4 xs:px-5 sm:px-6 md:px-8 lg:px-10 py-1.5 xs:py-2 sm:py-2.5 md:py-3
+                                    xs:text-xs  transition-all duration-300 justify-center 
+                                    shadow-lg hover:shadow-xl hover:scale-105">
+                                        <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-teal-400" />
+                                        <span className="font-semibold">{collection.products?.length || 0} Products</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -180,7 +177,7 @@ const CollectionSection = () => {
 
                 {/* Indicators */}
                 {collections.length > 1 && (
-                    <div className="absolute bottom-2 sm:bottom-3 md:bottom-4 w-full flex justify-center items-center space-x-2 z-0">
+                    <div className="absolute bottom-0.5 sm:bottom-1 md:bottom-2 w-full flex justify-center items-center space-x-2 z-0">
                         {collections.map((collection, index) => (
                             <button
                                 key={collection._id}
@@ -221,12 +218,12 @@ const CollectionSection = () => {
                     absolute left-1 xs:left-2 sm:left-3 md:left-4 lg:left-6
                     top-1/2 -translate-y-1/2
                     bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white
-                    p-1 xs:p-1.5 sm:p-2 md:p-2.5 rounded-full
+                    p-0.5 xs:p-1 sm:p-1.5 md:p-2 rounded-full
                     shadow-lg hover:shadow-xl
                     group z-0 transition-all
                 "
                     >
-                        <ChevronLeft className="w-4 h-4 xs:w-5 sm:w-5 md:w-6 group-hover:scale-110 transition-transform" />
+                        <ChevronLeft className="w-3 h-3 xs:w-4 sm:w-4 sm:h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" />
                     </button>
 
                     <button
@@ -235,12 +232,12 @@ const CollectionSection = () => {
                     absolute right-1 xs:right-2 sm:right-3 md:right-4 lg:right-6
                     top-1/2 -translate-y-1/2
                     bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white
-                    p-1 xs:p-1.5 sm:p-2 md:p-2.5 rounded-full
+                    p-0.5 xs:p-1 sm:p-1.5 md:p-2 rounded-full
                     shadow-lg hover:shadow-xl
                     group z-0 transition-all
                 "
                     >
-                        <ChevronRight className="w-4 h-4 xs:w-5 sm:w-5 md:w-6 group-hover:scale-110 transition-transform" />
+                        <ChevronRight className="w-3 h-3 xs:w-4 sm:w-4 sm:h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" />
                     </button>
                 </>
             )}

@@ -22,7 +22,7 @@ export default function Public() {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center py-16 sm:py-20 select-none">
+            <div className="flex flex-col items-center justify-center py-40 sm:py-44 select-none">
                 {/* Logo + Spinner */}
                 <div className="relative flex justify-center items-center w-20 h-20 sm:w-24 sm:h-24 mb-3">
                     <img
