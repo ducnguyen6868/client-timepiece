@@ -5,20 +5,20 @@ import CollectionSection from '../components/layout/CollectionSection';
 import CommunitySection from '../components/layout/CommunitySection';
 
 export default function HomePage() {
-
+ 
   return (
     <div className="min-h-screen bg-white ">
-      
-      <CollectionSection/>
+
+      <CollectionSection />
 
       <FlashSaleProduct />
 
-      <BrandSection/>
+      <BrandSection />
 
       <TrendingProduct />
 
       {/* Community */}
-      <CommunitySection/>
+      <CommunitySection />
 
     </div>
   );

@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 import {
     Plus, Search, Filter, ChevronDown, ChevronLeftCircle, ChevronRightCircle,
 } from 'lucide-react';
-import ProductCard2 from '../components/common/ProductCard2';
-import AddProduct from '../components/layout/AddProduct';
-import productApi from '../api/productApi';
+import ProductCard2 from '../../components/common/ProductCard2';
+import AddProduct from '../../components/layout/AddProduct';
+import productApi from '../../api/productApi';
 
 export default function ProductManagement() {
     const [products, setProducts] = useState([]);

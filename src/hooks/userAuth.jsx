@@ -19,5 +19,5 @@ export default function UserAuth({ children }) {
     return <div>Đang tải...</div>;
   }
 
-  return isAuthenticated ? children : <Navigate to="/" replace />;
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 }

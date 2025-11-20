@@ -185,9 +185,9 @@ export default function OrderPage() {
 
     return (
         <>
-            <div className={logged ? `space-y-6` : 'px-10'}>
+            <div className={logged ? `space-y-6` : 'px-4 md:px-5 xl:px-6 lg:px-8' }>
                 {/* Status Filter Tabs */}
-                <div className="flex space-x-2 border-b border-gray-200 overflow-x-auto">
+                <div className="flex space-x-2 space-y-2 border-b border-gray-200 overflow-x-auto">
                     {statusFilters.map(filter => (
                         <button
                             key={filter}

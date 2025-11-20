@@ -133,7 +133,7 @@ export default function FlashSale() {
 
 
                                 <div className="p-4 flex flex-col items-center text-center">
-                                    <div className="text-2xl font-black text-red-600">
+                                    <div className="text-lg xl:text-xl lg:text-2xl font-black text-red-600">
                                         {formatCurrency(product.detail[0]?.flashSalePrice, 'en-Us', 'USD')}
                                     </div>
                                     <div
@@ -149,7 +149,7 @@ export default function FlashSale() {
                                         </div>
                                         {/* Hiển thị văn bản "Đã bán" */}
                                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                            <span className="text-xs font-semibold text-gray-800">
+                                            <span className="text-[10px] md:text-xs lg:text-sm font-semibold text-gray-800">
                                                 SOLD <span className='text-red-700'>{product.sold}</span>
                                             </span>
                                         </div>

@@ -12,7 +12,7 @@ const socket = io(process.env.REACT_APP_SOCKET_URL, {
   withCredentials: true,
 });
 
-const ChatModal = ({ onClose }) => {
+export default function ChatModal ({ onClose }) {
   const { infoUser, setInfoUser } = useContext(UserContext);
   const [logged, setLogged] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -126,7 +126,8 @@ const ChatModal = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed bottom-20 right-4 w-[95%] max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl h-[400px] sm:h-[450px] bg-white rounded-xl shadow-2xl flex flex-col z-50 border border-gray-300">
+    <div className="fixed bottom-20 right-4 w-[95%] max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl 
+    h-[450px] sm:h-[500px] bg-white rounded-xl shadow-2xl flex flex-col z-50 border border-gray-300">
 
       {/* Header */}
       <div className="p-3 flex justify-between items-center rounded-t-xl bg-brand hover:bg-brand-hover text-white">
@@ -181,21 +182,3 @@ const ChatModal = ({ onClose }) => {
     </div>
   );
 };
-
-export default function Chat() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <>
-      {isOpen && <ChatModal onClose={() => setIsOpen(false)} />}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 p-4 rounded-full shadow-2xl z-50 bg-brand hover:bg-brand-hover text-white transition-transform
-          ${isOpen ? 'rotate-90 scale-90' : 'hover:scale-105'}`}
-        title={isOpen ? 'Minimize Chat' : 'Open Live Chat'}
-      >
-        {!isOpen && <MessageSquare className="w-7 h-7 text-white" />}
-      </button>
-    </>
-  );
-}

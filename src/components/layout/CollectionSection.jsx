@@ -60,7 +60,7 @@ const CollectionSection = () => {
     if (loading) {
         return (
             <div className="flex items-center justify-center py-20">
-                <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-teal-600"></div>
+                <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-brand"></div>
             </div>
         );
     }
@@ -73,11 +73,11 @@ const CollectionSection = () => {
             overflow-hidden
             rounded-xl shadow-xl
 
-            h-[140px]
-            xs:h-[165px]
-            sm:h-[190px]
-            md:h-[220px]
-            lg:h-[250px]
+            h-[160px]
+            xs:h-[200px]
+            sm:h-[220px]
+            md:h-[240px]
+            lg:h-[260px]
             xl:h-[280px]
         "
             >
@@ -87,7 +87,7 @@ const CollectionSection = () => {
                         className={`
                     absolute inset-0 transition-all duration-700 ease-in-out
                     ${index === currentIndex
-                                ? "opacity-100 translate-x-0 z-10"
+                                ? "opacity-100 translate-x-0 z-0"
                                 : index < currentIndex
                                     ? "opacity-0 -translate-x-full z-0"
                                     : "opacity-0 translate-x-full z-0"
@@ -108,7 +108,7 @@ const CollectionSection = () => {
 
                             <div
                                 className="
-                            absolute inset-0 z-10 w-full
+                            absolute inset-0 z-0 w-full
                             px-3 xs:px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16
                             py-3 xs:py-4 sm:py-5 md:py-6 lg:py-8
                             flex flex-col justify-center gap-2
@@ -180,7 +180,7 @@ const CollectionSection = () => {
 
                 {/* Indicators */}
                 {collections.length > 1 && (
-                    <div className="absolute bottom-2 sm:bottom-3 md:bottom-4 w-full flex justify-center items-center space-x-2 z-20">
+                    <div className="absolute bottom-2 sm:bottom-3 md:bottom-4 w-full flex justify-center items-center space-x-2 z-0">
                         {collections.map((collection, index) => (
                             <button
                                 key={collection._id}
@@ -217,13 +217,13 @@ const CollectionSection = () => {
                 <>
                     <button
                         onClick={prevSlide}
-                        className="
+                        className="hidden md:block
                     absolute left-1 xs:left-2 sm:left-3 md:left-4 lg:left-6
                     top-1/2 -translate-y-1/2
                     bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white
                     p-1 xs:p-1.5 sm:p-2 md:p-2.5 rounded-full
                     shadow-lg hover:shadow-xl
-                    group z-20 transition-all
+                    group z-0 transition-all
                 "
                     >
                         <ChevronLeft className="w-4 h-4 xs:w-5 sm:w-5 md:w-6 group-hover:scale-110 transition-transform" />
@@ -231,13 +231,13 @@ const CollectionSection = () => {
 
                     <button
                         onClick={nextSlide}
-                        className="
+                        className="hidden md:block
                     absolute right-1 xs:right-2 sm:right-3 md:right-4 lg:right-6
                     top-1/2 -translate-y-1/2
                     bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white
                     p-1 xs:p-1.5 sm:p-2 md:p-2.5 rounded-full
                     shadow-lg hover:shadow-xl
-                    group z-20 transition-all
+                    group z-0 transition-all
                 "
                     >
                         <ChevronRight className="w-4 h-4 xs:w-5 sm:w-5 md:w-6 group-hover:scale-110 transition-transform" />

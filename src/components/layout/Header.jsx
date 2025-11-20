@@ -73,15 +73,15 @@ export default function Header() {
                     <div className="flex items-center justify-between gap-6">
 
                         {/* Logo & Brand */}
-                        <Link to="/" className="flex items-center gap-2 shrink-0">
+                        <Link to="/" className="items-center gap-2 shrink-0 hidden sm:flex ">
                             <img className='w-8' src={websiteLogo} title="Website Logo" alt="Website Logo" />
-                            <span className="hidden sm:inline text-sm  md:text-xl font-extrabold tracking-wider bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                            <span className="text-sm  md:text-xl font-extrabold tracking-wider bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
                                 TIMEPIECE
                             </span>
                         </Link>
 
                         {/* Search & Actions */}
-                        <div className="flex flex-1 items-center justify-end gap-4">
+                        <div className="flex flex-1 items-center justify-end sm:gap-1 md:gap-2 xl:gap-3 lg:gap-4">
 
                             {/* Search Bar */}
                             <div className="relative flex-1 max-w-2xl">
@@ -115,27 +115,27 @@ export default function Header() {
                             </div>
 
                             {/* User Actions */}
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2 md:gap-3">
 
                                 {/* User Avatar / Login */}
                                 <div className="relative group flex items-center">
                                     {logged ? (
-                                        <Link to="/user/profile" className="block">
-                                            <img className="w-9 h-9 rounded-ful shadow-sm hover:shadow-md transition-all duration-300"
-                                                src={`${process.env.REACT_APP_API_URL}`+`/${infoUser.avatar}`}
+                                        <Link to="/user/profile" className="hidden sm:block ">
+                                            <img className="w-9 h-9 rounded-full shadow-sm hover:shadow-md transition-all duration-300"
+                                                src={`${process.env.REACT_APP_API_URL}`+`/${infoUser.avatar}`||`http://localhost:5000/${infoUser.avatar}`}
                                                 title='Avatar'
                                                 alt='Avatar'
                                                 loading='lazy'
                                                 onError={(e) => {
                                                     e.target.onerror = null;
-                                                    e.target.src =infoUser.avatar;
+                                                    e.target.src =infoUser.avatar||'';
                                                 }}
 
                                             />
 
                                         </Link>
                                     ) : (
-                                        <Link to="/login">
+                                        <Link to="/login" className='hidden sm:inline'>
                                             <User className="w-6 h-6 text-gray-600" />
                                         </Link>
                                     )}

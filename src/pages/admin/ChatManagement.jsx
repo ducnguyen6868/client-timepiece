@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import {
     MessageSquare, Send, Search,
 } from 'lucide-react';
-import {formatDate} from '../utils/formatDate';
-import {formatTime} from '../utils/formatTime';
-import chatApi from '../api/chatApi';
+import {formatDate} from '../../utils/formatDate';
+import {formatTime} from '../../utils/formatTime';
+import chatApi from '../../api/chatApi';
 import io from "socket.io-client";
-import avatarError from '../assets/avatar-error.png';
+import avatarError from '../../assets/avatar-error.png';
 
 const socket = io(process.env.REACT_APP_SOCKET_URL, {
   transports: ["websocket"],
@@ -135,26 +135,6 @@ const Message = () => {
 
         setText('');
         setMessages(prev => ([...prev, message]));
-    };
-
-    // Hàm tạo màu cố định dựa theo tên
-    const getColorFromName = (name) => {
-        if (!name) return 'gray';
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        const r = (hash >> 24) & 255;
-        const g = (hash >> 16) & 255;
-        const b = (hash >> 8) & 255;
-        return `rgb(${Math.abs(r) % 200}, ${Math.abs(g) % 200}, ${Math.abs(b) % 200})`;
-    };
-
-    const getName = (name = '') => {
-        if (!name.trim()) return '?';
-        const parts = name.trim().split(/\s+/);
-        const initials = parts.map(part => part[0].toUpperCase()).join('');
-        return initials;
     };
 
     return (

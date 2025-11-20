@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Users, UserPlus, Shield, Search, Filter, ChevronLeftCircle, ChevronRightCircle } from 'lucide-react';
-import CustomerList from '../components/common/CustomerList';
-import StaffList from '../components/common/StaffList';
-import userApi from '../api/userApi';
+import CustomerList from '../../components/common/CustomerList';
+import StaffList from '../../components/common/StaffList';
+import userApi from '../../api/userApi';
 
 // ************************************************
 // Main Component: User Management Page

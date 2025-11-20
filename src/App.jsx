@@ -1,4 +1,4 @@
-import { Route, Routes, BrowserRouter ,Navigate } from 'react-router-dom';
+import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 //Notification
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,19 +23,21 @@ import OrderPage from './pages/OrderPage';
 import User from './components/layout/User';
 import UserAuth from './hooks/userAuth';
 import ProfilePage from './pages/ProfilePage';
+import WalletPage from './pages/WalletPage';
 import PointPage from './pages/PointPage';
 import PromotionPage from './pages/PromotionPage';
 import SettingPage from './pages/SettingPage';
 
 
 import Admin from './components/layout/Admin';
-import OverviewDashboard from './pages/OverviewDashboard';
-import ProductManagement from './pages/ProductManagement';
-import OrderManagement from './pages/OrderManagement';
-import PromotionManagement from './pages/PromotionManagement';
-import UserManagement from './pages/UserManagement';
-import ChatManagement from './pages/ChatManagement';
-import AdminSettingPage from './pages/AdminSettingPage';
+import AdminLogin from './pages/admin/AdminLogin';
+import OverviewDashboard from './pages/admin/OverviewDashboard';
+import ProductManagement from './pages/admin/ProductManagement';
+import OrderManagement from './pages/admin/OrderManagement';
+import PromotionManagement from './pages/admin/PromotionManagement';
+import UserManagement from './pages/admin/UserManagement';
+import ChatManagement from './pages/admin/ChatManagement';
+import AdminSettingPage from './pages/admin/AdminSettingPage';
 
 function App() {
   return (
@@ -63,6 +65,7 @@ function App() {
           <Route path="/user" element={<User />}>
             <Route index path='profile' element={<UserAuth><ProfilePage /></UserAuth>}></Route>
             <Route path='point' element={<UserAuth><PointPage /></UserAuth>}></Route>
+            <Route path='wallet' element={<UserAuth><WalletPage /></UserAuth>}></Route>
             <Route path='promotions' element={<UserAuth><PromotionPage /></UserAuth>}></Route>
             <Route path='orders' element={<UserAuth><OrderPage /></UserAuth>}></Route>
             <Route path='address' element={<UserAuth><AddressPage /></UserAuth>}></Route>
@@ -72,8 +75,8 @@ function App() {
 
 
           {/* Các route dành cho admin */}
+          <Route path='/admin/login' element={<AdminLogin />}></Route>
           <Route path='/admin' element={<Admin />}>
-            <Route index element={<Navigate to="overview" replace />} />
             <Route path='overview' element={<OverviewDashboard />}></Route>
             <Route path='products' element={<ProductManagement />}></Route>
             <Route path='orders' element={<OrderManagement />}></Route>

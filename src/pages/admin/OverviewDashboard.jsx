@@ -1,7 +1,7 @@
 import { AlertTriangle, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import orderApi from '../api/orderApi';
-import RevenueChart from '../components/layout/RevenueChart';
+import orderApi from '../../api/orderApi';
+import RevenueChart from '../../components/layout/RevenueChart';
 
 
 const topCustomers = [

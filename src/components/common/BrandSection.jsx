@@ -71,7 +71,7 @@ export default function BrandListSection() {
               <div className={`absolute bottom-0 left-0 right-0 p-1 bg-white/95 
                 backdrop-blur-sm transform group-hover:translate-y-0
                 transition-transform duration-300 ${index === activeIndex ?'translate-y-0':'translate-y-full'}`}>
-                <h4 className="font-semibold text-center text-[10px] sm:text-xs text-gray-900">{brand.name}</h4>
+                <h4 className="font-semibold text-center text-[8px] sm:text-xs text-gray-900">{brand.name}</h4>
               </div>
               {index === activeIndex && (
                 <div className="absolute top-2 right-2 w-3 h-3 bg-brand rounded-full animate-pulse ring-2 ring-white" />

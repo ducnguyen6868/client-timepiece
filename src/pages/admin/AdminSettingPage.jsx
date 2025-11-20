@@ -4,14 +4,11 @@ import {
   ChevronRight, Palette, KeyRound, LogOut
 } from 'lucide-react';
 
-const BRAND_COLOR = 'text-teal-600';
-const BRAND_BUTTON = 'bg-teal-500 hover:bg-teal-600 text-white shadow-md transition-all';
-
 // Card Component
 const SettingCard = ({ icon: Icon, title, children }) => (
   <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-all">
     <div className="flex items-center space-x-3 mb-4">
-      <Icon className={`w-6 h-6 ${BRAND_COLOR}`} />
+      <Icon className={`w-6 h-6 text-brand`} />
       <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
     </div>
     <div className="space-y-3">{children}</div>
@@ -29,12 +26,13 @@ export default function AdminSettingsPage() {
       <div className="flex justify-between items-center border-b pb-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-            <Settings className={`w-7 h-7 mr-2 ${BRAND_COLOR}`} />
+            <Settings className={`w-7 h-7 mr-2 text-brand`} />
             Admin Settings
           </h1>
           <p className="text-gray-500 text-sm">Manage system preferences and admin configurations</p>
         </div>
-        <button className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold ${BRAND_BUTTON}`}>
+        <button className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold
+           bg-brand hover:bg-brand-hover text-white shadow-md transition-all`}>
           <Save className="w-4 h-4" />
           <span>Save Changes</span>
         </button>
@@ -110,14 +108,14 @@ export default function AdminSettingsPage() {
         <SettingCard icon={ShieldCheck} title="Account Security">
           <div className="flex justify-between items-center hover:bg-gray-50 p-2 rounded-lg transition">
             <div className="flex items-center space-x-2">
-              <KeyRound className={`w-4 h-4 ${BRAND_COLOR}`} />
+              <KeyRound className={`w-4 h-4 text-brand`} />
               <span className="text-gray-700 font-medium">Change Password</span>
             </div>
             <ChevronRight className="w-5 h-5 text-gray-400" />
           </div>
           <div className="flex justify-between items-center hover:bg-gray-50 p-2 rounded-lg transition">
             <div className="flex items-center space-x-2">
-              <UserCog className={`w-4 h-4 ${BRAND_COLOR}`} />
+              <UserCog className={`w-4 h-4 text-brand`} />
               <span className="text-gray-700 font-medium">Manage Profile</span>
             </div>
             <ChevronRight className="w-5 h-5 text-gray-400" />

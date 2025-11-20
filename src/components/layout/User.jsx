@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import {
   User, ShoppingCart, MapPin, Zap, Gift, Heart, Settings,
-  LogOut, Bell, Search, XCircle
+  LogOut, Bell, Search, XCircle, Wallet
 } from 'lucide-react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
@@ -11,6 +11,7 @@ import websiteLogo from '../../assets/website-logo.png';
 const sidebarMenu = [
   { name: 'Profile Overview', icon: User, key: 'profile' },
   { name: 'My Orders', icon: ShoppingCart, key: 'orders' },
+  { name: 'My Wallet', icon: Wallet, key: 'wallet' },
   { name: 'Address Book', icon: MapPin, key: 'address' },
   { name: 'Points & Rewards', icon: Zap, key: 'point' },
   { name: 'Promotions', icon: Gift, key: 'promotions' },
@@ -29,13 +30,12 @@ const SidebarLink = ({ item, isActive, onClick }) => (
       }`}
   >
     <item.icon
-      className={`w-5 h-5 transition-transform duration-300 ${
-        isActive ? 'text-brand scale-110' : ' group-hover:scale-105'
-      }`}
+      className={`w-5 h-5 transition-transform duration-300 ${isActive ? 'text-brand scale-110' : ' group-hover:scale-105'
+        }`}
     />
     <span className={`text-sm ${isActive
-        ? 'bg-white text-brand font-semibold shadow-sm'
-        : ''
+      ? 'bg-white text-brand font-semibold shadow-sm'
+      : ''
       }`}>{item.name}</span>
   </button>
 );
@@ -59,7 +59,7 @@ export default function UserLayout() {
     navigate('/');
   };
 
-  const handleChangeTab = (tab)=>{
+  const handleChangeTab = (tab) => {
     navigate(`/user/${tab}`);
   }
   return (
@@ -96,9 +96,14 @@ export default function UserLayout() {
             </button>
 
             <img
-              src={`${process.env.REACT_APP_API_URL}`+`/${infoUser.avatar}`}
-              onError={(e)=>e.target.src=infoUser.avatar}
-              alt="Avatar"
+              src={`${process.env.REACT_APP_API_URL}` + `/${infoUser.avatar}` || `http://localhost:5000/${infoUser.avatar}`}
+              title='Avatar'
+              alt='Avatar'
+              loading='lazy'
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = infoUser.avatar || '';
+              }}
               className="w-8 h-8 rounded-full border border-gray-300 object-cover hover:scale-105 transition-transform"
             />
           </div>

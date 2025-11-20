@@ -4,7 +4,7 @@ import {
     Wallet, QrCode, Award, History, Sparkles, CheckCircle, Clock
 } from 'lucide-react';
 
-export default function NavBar() {
+export default function NavHeader() {
     const [show, setShow] = useState(false);
     const [userData, setUserData] = useState({
         scoreBoard: [1, 1, 1, 1, 1, 1, 2],
