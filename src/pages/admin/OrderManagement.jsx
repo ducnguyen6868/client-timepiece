@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
-    ShoppingCart,
-    Plus, Filter, ChevronUp, ChevronDown, Eye, XCircle, CheckCircle, Search,Clock ,SquarePen
+    ShoppingCart, Plus, Filter, ChevronUp, ChevronDown,
+     Eye, XCircle, CheckCircle, Search,Clock ,SquarePen
 } from 'lucide-react';
 import { formatDate } from '../../utils/formatDate';
 import orderApi from '../../api/orderApi';
@@ -145,9 +145,9 @@ export default function OrderManagementPage() {
     return (
         <>
             {/* Actions and Filters Bar */}
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-brand">All Orders ({total})</h2>
-                <div className="flex space-x-3">
+            <div className="flex justify-between flex-wrap gap-2 items-center mb-2 md:mb-4 xl:mb-6">
+                <h2 className="text-xl xl:text-2xl font-bold text-brand">All Orders ({total})</h2>
+                <div className="flex space-x-3 justify-center ">
                     <div className="relative hidden sm:block animate-fadeInUp">
                         <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
@@ -158,13 +158,13 @@ export default function OrderManagementPage() {
                             className="w-64 pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-teal-500 bg-gray-50"
                         />
                     </div>
-                    <button className="animate-fadeInUp flex items-center space-x-2 px-4 py-2 text-sm font-semibold border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                    <button className="animate-fadeInUp flex items-center px-4 py-2 text-sm font-semibold border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
                         <Filter className="w-4 h-4" />
-                        <span>Filter Status</span>
+                        <span className='hidden sm:block sm:ml-2'>Filter Status</span>
                     </button>
-                    <button className={`animate-fadeInUp flex items-center space-x-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all bg-brand hover:bg-brand-hover text-white shadow-md`}>
+                    <button className={`animate-fadeInUp flex items-center px-4 py-2 text-sm font-semibold rounded-lg transition-all bg-brand hover:bg-brand-hover text-white shadow-md`}>
                         <Plus className="w-4 h-4" />
-                        <span>Create New Order</span>
+                        <span className='hidden sm:block sm:ml-2'>Create New Order</span>
                     </button>
                 </div>
             </div>

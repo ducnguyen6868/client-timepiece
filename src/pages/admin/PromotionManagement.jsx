@@ -56,12 +56,6 @@ const loyaltyTiers = [
     { name: 'Platinum', minSpend: 15000, multiplier: 2, color: 'text-teal-700 bg-teal-100' },
 ];
 
-// Màu thương hiệu (Teal/Xanh ngọc)
-const BRAND_COLOR_CLASSES = 'bg-teal-500 hover:bg-teal-600 text-white';
-const BRAND_TEXT_COLOR = 'text-teal-600 hover:text-teal-700';
-
-
-
 // ************************************************
 // Reusable Component: Promotion Status Badge
 // ************************************************
@@ -98,29 +92,26 @@ export default function PromotionLoyaltyManagementPage() {
     // --- Content for Promotions Tab ---
     const PromotionsContent = () => (
         <div className="space-y-2">
-            <div className='float-right mb-4'>
-                <div className="flex gap-4 flex-row">
+            <div className='flex justify-end mb-4 gap-4 flex-row'>
                     <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
                         name='order'
                         value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
                         type="text"
                         placeholder="Search promotions..."
-                        className="w-64 pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-teal-500 bg-gray-50"
+                        className="flex-1 max-w-72 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-teal-500 bg-gray-50"
                     />
                     <button className="flex items-center space-x-2 px-4 py-2 text-sm font-semibold border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
                         <Filter className="w-4 h-4" />
-                        <span>Filter Type</span>
+                        <span className='hidden sm:block sm:ml-2' >Filter Type</span>
                     </button>
-                    <button className={`flex items-center space-x-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all ${BRAND_COLOR_CLASSES} shadow-md`}>
+                    <button className={`flex items-center space-x-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all bg-brand hover:bg-brand-hover text-white shadow-md`}>
                         <Plus className="w-4 h-4" />
-                        <span>Create New Promo</span>
+                        <span className='hidden sm:block sm:ml-2'>Create New Promo</span>
                     </button>
 
                 </div>
 
-            </div>
-            <div className='clear-right'></div>
             {/* Promotions Table */}
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto" >
@@ -172,12 +163,12 @@ export default function PromotionLoyaltyManagementPage() {
 
     // --- Content for Loyalty Tab ---
     const LoyaltyContent = () => (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h3 className="text-xl font-bold text-gray-900">Loyalty Tiers & Rewards Setup</h3>
+        <div className="">
+            <div className="flex justify-between items-center mb-2 md:mb-3 xl:mb-4">
+                <h3 className="text-base font-bold text-brand">Loyalty Tiers & Rewards Setup</h3>
                 <button className={`flex items-center space-x-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all border border-teal-500 text-teal-600 hover:bg-teal-50 shadow-md`}>
                     <Settings className="w-4 h-4" />
-                    <span>Manage Tier Logic</span>
+                    <span className='hidden sm:block sm:ml-2'>Manage Tier Logic</span>
                 </button>
             </div>
 
@@ -220,7 +211,7 @@ export default function PromotionLoyaltyManagementPage() {
             <div className="bg-white p-5 rounded-xl shadow-lg border border-gray-200">
                 <div className="flex justify-between items-start mb-3">
                     <p className="text-sm font-medium text-gray-500">{title}</p>
-                    <div className={`p-2 rounded-full ${BRAND_COLOR_CLASSES}`}>
+                    <div className={`p-2 rounded-full bg-brand hover:bg-brand-hover text-white`}>
                         <Icon className="w-4 h-4 text-white" />
                     </div>
                 </div>
@@ -240,20 +231,22 @@ export default function PromotionLoyaltyManagementPage() {
                 <button
                     onClick={() => setActiveTab('promotions')}
                     className={`px-4 py-2 text-lg font-semibold transition-colors ${activeTab === 'promotions'
-                        ? `border-b-4 border-teal-500 ${BRAND_TEXT_COLOR}`
+                        ? `border-b-4 border-brand text-brand hover:text-brand-hover`
                         : 'text-gray-500 hover:text-gray-700'
                         }`}
                 >
-                    <Zap className="w-5 h-5 inline mr-2" /> Promotions
+                    <Zap className="w-5 h-5 inline" />
+                    <span className='hidden sm:block sm:ml-2'>Promotions</span> 
                 </button>
                 <button
                     onClick={() => setActiveTab('loyalty')}
                     className={`px-4 py-2 text-lg font-semibold transition-colors ${activeTab === 'loyalty'
-                        ? `border-b-4 border-teal-500 ${BRAND_TEXT_COLOR} ml-4`
+                        ? `border-b-4 border-brand text-brand hover:text-brand-hover`
                         : 'text-gray-500 hover:text-gray-700 ml-4'
                         }`}
                 >
-                    <Award className="w-5 h-5 inline mr-2" /> Loyalty Program
+                    <Award className="w-5 h-5 inline" />
+                    <span className='hidden sm:block sm:ml-2'>Loyalty Program</span>
                 </button>
             </div>
 

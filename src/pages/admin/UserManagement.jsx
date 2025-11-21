@@ -39,17 +39,17 @@ export default function UserManagement() {
         <div className="space-y-6">
 
             {/* Tab Navigation */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 animate-fadeInUp" style={{ animationDelay: '400ms' }}>
-                <div className="flex border-b-2 border-gray-200 rounded-lg overflow-hidden bg-white shadow-md">
+            <div className="flex flex-row flex-wrap justify-between items-start md:items-center gap-4 animate-fadeInUp" style={{ animationDelay: '400ms' }}>
+                <div className="flex flex-1 min-w-44 border-b-2 border-gray-200 rounded-lg overflow-hidden bg-white shadow-md">
                     <button
                         onClick={() => setActiveTab('customers')}
-                        className={`px-6 py-3 text-sm font-bold transition-all duration-300 flex items-center space-x-2 ${activeTab === 'customers'
+                        className={`flex-1 justify-center px-6 py-3 text-sm font-bold transition-all duration-300 flex items-center space-x-2 ${activeTab === 'customers'
                             ? `bg-gradient-to-r from-[#00bcd4] to-[#00acc1] text-white shadow-lg transform scale-105`
                             : 'text-gray-600 hover:bg-gray-50'
                             }`}
                     >
                         <Users className="w-5 h-5" />
-                        <span>Customers</span>
+                        <span className='hidden sm:block'>Customers</span>
                         <span className={`px-2 py-1 rounded-full text-xs font-bold ${activeTab === 'customers' ? 'bg-white text-[#00bcd4]' : 'bg-gray-200 text-gray-700'
                             }`}>
                             {totalUser}
@@ -57,13 +57,13 @@ export default function UserManagement() {
                     </button>
                     <button
                         onClick={() => setActiveTab('staff')}
-                        className={`px-6 py-3 text-sm font-bold transition-all duration-300 flex items-center space-x-2 ${activeTab === 'staff'
+                        className={`flex-1 justify-center px-6 py-3 text-sm font-bold transition-all duration-300 flex items-center space-x-2 ${activeTab === 'staff'
                             ? `bg-gradient-to-r from-[#00bcd4] to-[#00acc1] text-white shadow-lg transform scale-105`
                             : 'text-gray-600 hover:bg-gray-50'
                             }`}
                     >
                         <Shield className="w-5 h-5" />
-                        <span>Admin & Staff</span>
+                        <span className='hidden sm:block'>Admin & Staff</span>
                         <span className={`px-2 py-1 rounded-full text-xs font-bold ${activeTab === 'staff' ? 'bg-white text-[#00bcd4]' : 'bg-gray-200 text-gray-700'
                             }`}>
                             {totalStaff}
@@ -71,7 +71,7 @@ export default function UserManagement() {
                     </button>
                 </div>
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex gap-3">
                     <div className="relative">
                         <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
@@ -79,7 +79,7 @@ export default function UserManagement() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                             type="text"
                             placeholder="Search users..."
-                            className="w-64 pl-10 pr-4 py-2.5 text-sm border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#00bcd4] bg-white shadow-sm transition-all duration-300"
+                            className="pl-10 pr-4 py-2.5 text-sm border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#00bcd4] bg-white shadow-sm transition-all duration-300"
                         />
                     </div>
                     <button
@@ -90,12 +90,12 @@ export default function UserManagement() {
                             }`}
                     >
                         <Filter className="w-4 h-4" />
-                        <span>Filters</span>
+                        <span className='hidden sm:block sm:ml-2'>Filters</span>
                     </button>
 
                     <button className={`flex items-center space-x-2 px-5 py-2.5 text-sm font-bold rounded-lg transition-all duration-300 transform hover:scale-105 bg-brand hover:bg-brand-hover text-white shadow-lg hover:shadow-xl`}>
                         <UserPlus className="w-4 h-4" />
-                        <span>{activeTab === 'customers' ? 'Add Customer' : 'Add Staff'}</span>
+                        <span className='hidden sm:block sm:ml-2'>{activeTab === 'customers' ? 'Add Customer' : 'Add Staff'}</span>
                     </button>
                 </div>
             </div>

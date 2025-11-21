@@ -184,7 +184,7 @@ export default function FlashSale() {
                 
                 {flashSaleProducts?.length > 0 && (
                     <div className='text-center mt-4'>
-                        <button className='text-base
+                        <button className='text-base md:text-lg xl:text-xl md:px-5 xl:px-6
                              text-white border-white border-2 rounded-full px-4'>
                             Show more
                         </button>

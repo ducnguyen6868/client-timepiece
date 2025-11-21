@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import {
-    MessageSquare, Send, Search,
+    MessageSquare, Send, Search, ArrowLeft, MoreVertical
 } from 'lucide-react';
 import {formatDate} from '../../utils/formatDate';
 import {formatTime} from '../../utils/formatTime';
@@ -24,9 +24,10 @@ const Message = () => {
     const [activeConversation, setActiveConversation] = useState(null);
     const [conversations, setConversations] = useState([]);
     const [messages, setMessages] = useState([]);
+    const [showMobileChat, setShowMobileChat] = useState(false);
 
     const messagesEndRef = useRef(null);
-    // Cuộn xuống cuối tin nhắn khi có tin nhắn mới
+    
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
@@ -39,10 +40,11 @@ const Message = () => {
             console.log(err.response?.data?.message || err.message);
         }
     }
+    
     useEffect(() => {
         getConversations();
     }, []);
-    // Kết nối socket
+    
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
@@ -101,6 +103,7 @@ const Message = () => {
 
     const handleActiveConversation = (conver) => {
         setActiveConversation(conver);
+        setShowMobileChat(true);
 
         setConversations(prev => {
             const updated = [...prev];
@@ -116,6 +119,10 @@ const Message = () => {
         });
     }
 
+    const handleBackToList = () => {
+        setShowMobileChat(false);
+        setActiveConversation(null);
+    }
 
     const sendMessage = async () => {
         if (!user || !text.trim() || !messages) return;
@@ -128,20 +135,18 @@ const Message = () => {
             createdAt: new Date()
         };
 
-        // Gửi đến server qua socket
         socket.emit("sendMessage", message);
-
         await chatApi.postMessage(message);
 
         setText('');
         setMessages(prev => ([...prev, message]));
     };
 
-    return (
-        // Điều chỉnh chiều cao để lấp đầy không gian main content
-        <div className="h-[calc(100vh-6rem)] flex rounded-xl overflow-hidden shadow-2xl bg-white border border-gray-200">
-            {/* 1. Contact List Sidebar (Cột Trái) - Thiết kế cố định 320px cho PC */}
-            <div className="w-80 border-r border-gray-200 flex flex-col bg-gray-50 flex-shrink-0 " >
+    // Desktop View
+    const DesktopView = () => (
+        <div className="hidden lg:flex h-[100vh] flex-row rounded-xl overflow-hidden shadow-2xl bg-white border border-gray-200">
+            {/* Contact List Sidebar */}
+            <div className="w-80 border-r border-gray-200 flex flex-col bg-gray-50">
                 <div className="p-4 border-b border-gray-200">
                     <h2 className="text-xl font-bold text-gray-800">Chats ({conversations?.length})</h2>
                     <div className="mt-3 relative">
@@ -154,137 +159,269 @@ const Message = () => {
                     </div>
                 </div>
 
-                {/* Danh sách Liên hệ */}
-                <div className="flex-1 overflow-y-auto">
-                    {conversations.map((conver, index) => (
-                        <div
-                            key={index}
-                            className={`flex items-center p-4 cursor-pointer border-b border-gray-100 transition-colors 
-                                ${activeConversation?._id === conver._id ? 'bg-teal-50 border-l-4 border-teal-600' : 'hover:bg-gray-100'}
-                            `}
-                            onClick={() => handleActiveConversation(conver)}
-                        >
-                            {
-                                conver.participants[0]?.code === user.code ? (
-                                    <div className='flex gap-4 flex-start items-center'>
-                                        <p className={`w-14 h-14 rounded-full flex items-center justify-center text-white relative`}
-                                        >
-                                            <img className='w-full h-full rounded-full' src={conver.participants[1].avatar} alt="Avatar" title='Avatar' />
-                                            <span className={`absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white 
-                                    ${conver?.status === 'online' ? 'bg-green-400' : 'bg-gray-400'}`}
-                                            ></span>
-                                        </p>
-                                        <div>
-                                            <p className='font-bold'>{conver.participants[1]?.fullName}</p>
-                                            <p className={conver.isRead ? 'text-gray-500' : 'text-black'}>{conver.lastMessage?.text}</p>
-                                        </div>
+                <div className="overflow-y-auto">
+                    {conversations.map((conver, index) => {
+                        const otherUser = conver.participants[0]?.code === user.code 
+                            ? conver.participants[1] 
+                            : conver.participants[0];
+                        
+                        return (
+                            <div
+                                key={index}
+                                className={`flex items-center p-4 cursor-pointer border-b border-gray-100 transition-colors 
+                                    ${activeConversation?._id === conver._id ? 'bg-teal-50 border-l-4 border-teal-600' : 'hover:bg-gray-100'}
+                                `}
+                                onClick={() => handleActiveConversation(conver)}
+                            >
+                                <div className='flex gap-3 items-center w-full'>
+                                    <div className='relative flex-shrink-0'>
+                                        <img 
+                                            className='w-12 h-12 rounded-full object-cover' 
+                                            src={otherUser.avatar} 
+                                            alt="Avatar" 
+                                        />
+                                        <span className={`absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white 
+                                            ${conver?.status === 'online' ? 'bg-green-400' : 'bg-gray-400'}`}
+                                        ></span>
                                     </div>
-                                ) : (
-                                    <div className='flex gap-4 flex-start items-center'>
-                                        <p className={`w-14 h-14 rounded-full flex items-center justify-center text-white relative`}
-                                        >
-                                            <img className='w-full h-full rounded-full' src={conver.participants[0].avatar} alt="Avatar" title='Avatar' />
-                                            <span className={`absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white 
-                                    ${conver?.status === 'online' ? 'bg-green-400' : 'bg-gray-400'}`}
-                                            ></span>
+                                    <div className='flex-1 min-w-0'>
+                                        <p className='font-semibold text-gray-800 truncate'>{otherUser?.fullName}</p>
+                                        <p className={`text-sm truncate ${conver.isRead ? 'text-gray-500' : 'text-gray-900 font-medium'}`}>
+                                            {conver.lastMessage?.text}
                                         </p>
-                                        <div>
-                                            <p className='font-bold'>{conver.participants[0]?.fullName}</p>
-                                            <p className={conver.isRead ? 'text-gray-500' : 'text-black'}>{conver.lastMessage?.text}</p>
-                                        </div>
                                     </div>
-                                )
-                            }
-                        </div>
-                    ))}
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
 
-            {/* 2. Chat Window (Cột Phải) - Chiếm phần không gian còn lại */}
+            {/* Chat Window */}
             <div className="flex-1 flex flex-col">
                 {activeConversation ? (
                     <>
-                        {/* Chat Header */}
                         <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-white">
-
-                            {activeConversation.participants[0]?.id === user.code ? (
-                                <div className='flex justify-start items-center'>
-                                    <img src={activeConversation.participants[1].avatar || avatarError} alt={activeConversation.participants[1].fullName || 'Unknown'} className="w-14 h-14 rounded-full object-cover" />
-                                    <div className="ml-3">
-                                        <h3 className="text-lg font-semibold text-gray-900">{activeConversation.participants[1].fullName}</h3>
-                                        <p className={`text-xs ${activeConversation.status === 'online' ? 'text-green-500' : 'text-gray-500'}`}>
-                                            {activeConversation.status === 'online' ? 'Online' : 'Last seen yesterday'}
-                                        </p>
+                            {(() => {
+                                const otherUser = activeConversation.participants[0]?.code === user.code 
+                                    ? activeConversation.participants[1] 
+                                    : activeConversation.participants[0];
+                                
+                                return (
+                                    <div className='flex items-center gap-3'>
+                                        <img 
+                                            src={otherUser.avatar || avatarError} 
+                                            alt={otherUser.fullName || 'Unknown'} 
+                                            className="w-12 h-12 rounded-full object-cover" 
+                                        />
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900">{otherUser?.fullName}</h3>
+                                            <p className={`text-xs ${activeConversation.status === 'online' ? 'text-green-500' : 'text-gray-500'}`}>
+                                                {activeConversation.status === 'online' ? 'Online' : 'Offline'}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            ) : (
-                                <div className='flex justify-start items-center '>
-                                    <img src={activeConversation.participants[0].avatar || avatarError} alt={activeConversation.participants[0].fullName || 'Unknown'} className="w-14 h-14 rounded-full object-cover" />
-                                    <div className="ml-3">
-                                        <h3 className="text-lg font-semibold text-gray-900">{activeConversation.participants[0]?.fullName}</h3>
-                                        <p className={`text-xs ${activeConversation.status === 'online' ? 'text-green-500' : 'text-gray-500'}`}>
-                                            {activeConversation.status === 'online' ? 'Online' : 'Last seen yesterday'}
-                                        </p>
-                                    </div>
-                                </div>
-                            )}
-
-
+                                );
+                            })()}
+                            <button className="p-2 hover:bg-gray-100 rounded-full">
+                                <MoreVertical className="w-5 h-5 text-gray-600" />
+                            </button>
                         </div>
-                        <div className="flex-1 p-6 overflow-y-auto space-y-4 bg-gray-100">
+
+                        <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
                             {messages?.map((msg, index) => (
-                                <div key={index} className={`flex ${msg.sender?.code === user.code ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`max-w-xs lg:max-w-md p-3 rounded-xl shadow-md 
+                                <div key={index} className={`flex mb-4 ${msg.sender?.code === user.code ? 'justify-end' : 'justify-start'}`}>
+                                    <div className={`max-w-xs lg:max-w-md p-3 rounded-2xl shadow-sm 
                                         ${msg.sender?.code === user.code
                                             ? 'bg-teal-500 text-white rounded-br-none'
                                             : 'bg-white text-gray-800 rounded-tl-none border border-gray-200'
                                         }`}
                                     >
-                                        <p className="text-sm">{msg.text}</p>
-                                        <span className={`block mt-1 text-right text-xs ${msg.sender?.code === user.code ? 'text-teal-200' : 'text-gray-400'}`}>
-                                            {formatDate(msg.createdAt)} • {formatTime(msg.createdAt)}
+                                        <p className="text-sm break-words">{msg.text}</p>
+                                        <span className={`block mt-1 text-right text-xs ${msg.sender?.code === user.code ? 'text-teal-100' : 'text-gray-400'}`}>
+                                            {formatDate(msg.createdAt)} - {formatTime(msg.createdAt)}
                                         </span>
                                     </div>
                                 </div>
                             ))}
+                            <div ref={messagesEndRef} />
+                        </div>
 
-                            <div className='h-0.5' ref={messagesEndRef} /></div>
-                        {/* Input Area */}
-                        <div className="p-4 border-t border-gray-200 bg-white flex items-center space-x-3">
-                            <input
-                                type="text"
-                                placeholder="Type your message..."
-                                value={text}
-                                onChange={(e) => setText(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                                className="flex-1 p-3 border border-gray-300 rounded-full focus:ring-teal-500 focus:border-teal-500 transition"
-                            />
-                            <button className={`p-3 rounded-full text-white bg-brand hover:bg-brand-hover transition-colors shadow-lg shadow-teal-500/50`}>
-                                <Send className="w-5 h-5" onClick={() => sendMessage()} />
-                            </button>
+                        <div className="p-4 border-t border-gray-200 bg-white">
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="text"
+                                    placeholder="Type your message..."
+                                    value={text}
+                                    onChange={(e) => setText(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                                    className="flex-1 p-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition"
+                                />
+                                <button 
+                                    onClick={sendMessage}
+                                    className="p-3 rounded-full text-white bg-teal-500 hover:bg-teal-600 transition-colors shadow-lg"
+                                >
+                                    <Send className="w-5 h-5" />
+                                </button>
+                            </div>
                         </div>
                     </>
                 ) : (
                     <div className="flex flex-col items-center justify-center h-full bg-gray-50 p-8 text-center">
-                        <MessageSquare className="w-16 h-16 text-teal-400 mb-4" />
+                        <MessageSquare className="w-20 h-20 text-teal-400 mb-4" />
                         <h2 className="text-2xl font-semibold text-gray-700">Select a Chat</h2>
-                        <p className="text-gray-500 mt-2">Choose a chat from the sidebar to start a conversation.</p>
+                        <p className="text-gray-500 mt-2">Choose a conversation to start messaging</p>
                     </div>
                 )}
             </div>
         </div>
     );
-};
 
-// ************************************************
-// 3. Main Component: App (Dashboard Layout)
-// ************************************************
-export default function ChatManagement() {
+    // Mobile View
+    const MobileView = () => (
+        <div className="lg:hidden h-[100vh] flex flex-col bg-white">
+            {!showMobileChat ? (
+                // Conversations List
+                <div className="flex flex-col h-full">
 
-    const userId = "admin_user_2025";
+                    <div className="p-3 bg-white border-b">
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Search conversations..."
+                                className="w-full p-3 pl-10 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                            />
+                            <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
+                        </div>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto bg-gray-50">
+                        {conversations.map((conver, index) => {
+                            const otherUser = conver.participants[0]?.code === user.code 
+                                ? conver.participants[1] 
+                                : conver.participants[0];
+                            
+                            return (
+                                <div
+                                    key={index}
+                                    className="flex items-center p-4 bg-white border-b border-gray-100 active:bg-gray-50"
+                                    onClick={() => handleActiveConversation(conver)}
+                                >
+                                    <div className='relative flex-shrink-0'>
+                                        <img 
+                                            className='w-14 h-14 rounded-full object-cover' 
+                                            src={otherUser.avatar} 
+                                            alt="Avatar" 
+                                        />
+                                        <span className={`absolute bottom-0 right-0 block h-3.5 w-3.5 rounded-full ring-2 ring-white 
+                                            ${conver?.status === 'online' ? 'bg-green-400' : 'bg-gray-400'}`}
+                                        ></span>
+                                    </div>
+                                    <div className='flex-1 ml-3 min-w-0'>
+                                        <div className="flex justify-between items-start mb-1">
+                                            <p className='font-semibold text-gray-800 truncate'>{otherUser?.fullName}</p>
+                                            <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
+                                                {formatDate(conver.lastMessage?.createdAt)} - {formatTime(conver.lastMessage?.createdAt)}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <p className={`text-sm truncate flex-1 ${conver.isRead ? 'text-gray-500' : 'text-gray-900 font-medium'}`}>
+                                                {conver.lastMessage?.text}
+                                            </p>
+                                            {!conver.isRead && (
+                                                <span className="ml-2 w-2 h-2 bg-teal-500 rounded-full flex-shrink-0"></span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            ) : (
+                // Chat Window
+                <div className="flex flex-col h-full">
+                    <div className="p-4 bg-teal-500 text-white flex items-center gap-3">
+                        <button onClick={handleBackToList} className="p-1 hover:bg-teal-600 rounded-full">
+                            <ArrowLeft className="w-6 h-6" />
+                        </button>
+                        {(() => {
+                            const otherUser = activeConversation.participants[0]?.code === user.code 
+                                ? activeConversation.participants[1] 
+                                : activeConversation.participants[0];
+                            
+                            return (
+                                <div className='flex items-center gap-3 flex-1'>
+                                    <img 
+                                        src={otherUser.avatar || avatarError} 
+                                        alt={otherUser.fullName || 'Unknown'} 
+                                        className="w-10 h-10 rounded-full object-cover" 
+                                    />
+                                    <div className="flex-1">
+                                        <h3 className="font-semibold">{otherUser?.fullName}</h3>
+                                        <p className="text-xs text-teal-100">
+                                            {activeConversation.status === 'online' ? 'Online' : 'Offline'}
+                                        </p>
+                                    </div>
+                                    <button className="p-2 hover:bg-teal-600 rounded-full">
+                                        <MoreVertical className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            );
+                        })()}
+                    </div>
+
+                    <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
+                        {messages?.map((msg, index) => (
+                            <div key={index} className={`flex mb-3 ${msg.sender?.code === user.code ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`max-w-[75%] p-3 rounded-2xl shadow-sm 
+                                    ${msg.sender?.code === user.code
+                                        ? 'bg-teal-500 text-white rounded-br-none'
+                                        : 'bg-white text-gray-800 rounded-tl-none border border-gray-200'
+                                    }`}
+                                >
+                                    <p className="text-sm break-words">{msg.text}</p>
+                                    <span className={`block mt-1 text-right text-xs ${msg.sender?.code === user.code ? 'text-teal-100' : 'text-gray-400'}`}>
+                                        {formatTime(msg.createdAt)} - {formatTime(msg.createdAt)}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
+                        <div ref={messagesEndRef} />
+                    </div>
+
+                    <div className="p-3 bg-white border-t border-gray-200">
+                        <div className="flex items-end gap-2">
+                            <input
+                                type="text"
+                                placeholder="Type a message..."
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                                className="flex-1 p-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm"
+                            />
+                            <button 
+                                onClick={sendMessage}
+                                className="p-3 rounded-full text-white bg-teal-500 active:bg-teal-600 shadow-lg flex-shrink-0"
+                            >
+                                <Send className="w-5 h-5" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 
     return (
-        <Message userId={userId} />
-    )
+        <>
+            <DesktopView />
+            <MobileView />
+        </>
+    );
 };
 
+export default function ChatManagement() {
+    const userId = "admin_user_2025";
+    return <Message userId={userId} />;
+};

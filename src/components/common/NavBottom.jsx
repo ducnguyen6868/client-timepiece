@@ -43,7 +43,7 @@ export default function NavBottom() {
             )}
             <nav
                 // Position: Fixed at the bottom, spanning full width
-                className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-2xl z-50"
+                className="fixed bottom-0 left-0 m-2 w-full bg-white border-t border-gray-200 shadow-2xl z-50"
             >
                 {/* Center content on wide screens, ensure spacing on mobile */}
                 <div className="flex justify-around items-center h-16 max-w-xl mx-auto px-2">

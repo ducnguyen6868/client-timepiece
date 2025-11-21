@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
-    LayoutDashboard, Package, ShoppingCart, Gift, Settings,
-    Bell, MessageSquare, Users,MessagesSquare
+    LayoutDashboard, Package, ShoppingBag, Gift, Settings,
+    Bell, MessageSquare, Users, MessagesSquare
 } from 'lucide-react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import websiteLogo from '../../assets/website-logo.png';
@@ -40,7 +40,7 @@ export default function Admin() {
     const sidebarItems = [
         { name: 'Overview', icon: LayoutDashboard, key: 'overview' },
         { name: 'Products', icon: Package, key: 'products' },
-        { name: 'Orders', icon: ShoppingCart, key: 'orders' },
+        { name: 'Orders', icon: ShoppingBag, key: 'orders' },
         { name: 'Users', icon: Users, key: 'users' },
         { name: 'Chats', icon: MessagesSquare, key: 'chats' },
         { name: 'Promotions and Loyalty ', icon: Gift, key: 'promotions' },
@@ -51,8 +51,7 @@ export default function Admin() {
     return (
         <div className="min-h-screen flex bg-gray-50">
             {/* Left Column: Sidebar */}
-            <aside className="w-64 flex flex-col border-r border-gray-200 bg-white shadow-xl lg:static z-40">
-
+            <aside className="hidden w-64 md:flex flex-col border-r border-gray-200 bg-white shadow-xl lg:static z-40">
                 {/* Tên Công Ty và Slogan */}
                 <div className="flex flex-row space-x-3 gap-1 pl-7 py-4 border-b border-gray-300 ">
                     <img className='w-7' src={websiteLogo} alt='Logo' title='Logo' />
@@ -95,6 +94,58 @@ export default function Admin() {
                 </div>
             </aside>
 
+            {/* Navigation */}
+             <nav
+                // Position: Fixed at the bottom, spanning full width
+                className="md:hidden fixed bottom-0 right-0 left-0 w-full p-2 shadow-2xl z-50"
+            >
+                {/* Center content on wide screens, ensure spacing on mobile */}
+                <div className="flex justify-around items-center h-16 max-w-xl mx-auto px-2 bg-gray-100 rounded-lg">
+                    <Link to='/admin/overview'
+                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeMenu === 'overview'
+                            ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-brand hover:text-brand-hover'
+                            } rounded-md`}
+                    >
+                        <LayoutDashboard className="h-8 w-8" />
+                    </Link>
+                    <Link to='/admin/orders'
+                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeMenu === 'orders'
+                            ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-brand hover:text-brand-hover'
+                            } rounded-md`}
+                    >
+                        <ShoppingBag className="h-8 w-8" />
+                    </Link>
+                    <Link to='/admin/users'
+                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeMenu === 'users'
+                            ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-brand hover:text-brand-hover'
+                            } rounded-md`}
+                    >
+                        <Users className="h-8 w-8" />
+                    </Link>
+                    <Link to='/admin/promotions'
+                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeMenu === 'promotions'
+                            ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-brand hover:text-brand-hover'
+                            } rounded-md`}
+                    >
+                        <Gift className="h-8 w-8" />
+                    </Link>
+                    <Link to='/admin/chats'
+                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeMenu === 'chats'
+                            ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-brand hover:text-brand-hover'
+                            } rounded-md`}
+                    >
+                        <MessageSquare className="h-8 w-8" />
+                    </Link>
+                
+
+                </div>
+            </nav>
+
             {/* Right Column: Main Content */}
             <div className="flex-1 flex flex-col overflow-hidden">
 
@@ -109,7 +160,7 @@ export default function Admin() {
                     </div>
                 </header>
                 {/* Main Content Area */}
-                <main className="flex-1 p-4">
+                <main className="flex-1 p-4 mb-20 md:mb-0">
                     <Outlet />
                 </main>
             </div>

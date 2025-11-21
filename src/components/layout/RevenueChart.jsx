@@ -40,32 +40,35 @@ export default function RevenueChart() {
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-teal-50">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="mb-4 flex flex-row justify-between items-center">
+        <div className="mb-4 flex flex-row flex-wrap justify-between items-center">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-200">
-              <TrendingUp className="text-white" size={24} />
+            <div className="w-10 h-10 p-1 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-200">
+              <TrendingUp className="text-white w-full h-full" />
             </div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
+              <h1 className="text-xl xl:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
                 Sales Analytics
               </h1>
               <p className="text-gray-600 text-sm">Track and analyze your business performance</p>
             </div>
           </div>
-          <select name='optionRange'
-            className="h-max cursor-pointer px-4 py-2 rounded-lg bg-brand hover:bg-brand-hover text-white  focus:outline-none focus:ring-2 focus:ring-brand-hover transition-all duration-200  shadow-sm"
-            onChange={(e) => setTimeRange(e.target.value)}>
-            {timeRangeOptions.map((option) => {
-              return (
-                <option value={option.value}
-                  key={option.value}
-                 className="text-black bg-white"
-                >
-                  {option.label}
-                </option>
-              );
-            })}
-          </select>
+          <div className='flex-1 text-right'>
+            <select name='optionRange'
+              className="h-max cursor-pointer px-4 py-2 rounded-lg bg-brand hover:bg-brand-hover text-white  focus:outline-none focus:ring-2 focus:ring-brand-hover transition-all duration-200  shadow-sm"
+              onChange={(e) => setTimeRange(e.target.value)}>
+              {timeRangeOptions.map((option) => {
+                return (
+                  <option value={option.value}
+                    key={option.value}
+                    className="text-black bg-white"
+                  >
+                    {option.label}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
         </div>
 
 
