@@ -1,29 +1,53 @@
 import { useState, useEffect } from "react";
 import { Heart } from 'lucide-react';
 import communityApi from '../../api/communityApi';
+import Notification from '../common/Notification';
+import LoadingAnimations from '../common/LoadingAnimations';
 
 export default function CommunitySection() {
     const [communities, setCommunities] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const [show, setShow] = useState(false);
+    const [type, setType] = useState('');
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
         const getCommunites = async () => {
             try {
+                setLoading(true);
+                await new Promise(resolve => setTimeout(resolve, 1000));
                 const page = 1;
                 const limit = 4;
                 const response = await communityApi.getCommunities(page, limit);
                 setCommunities(response.communities);
             } catch (err) {
-                console.log(err.response?.data?.message || err.message);
+                setShow(true);
+                setType('error');
+                setMessage(err.response?.data?.message || err.message);
+            } finally {
+                setLoading(false);
             }
         }
         getCommunites();
     }, []);
     return (
         <>
+            {/* Notification */}
+            {show && (
+                <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
+            )}
+
             {/* Community */}
-            <section className="bg-bg-primary py-4 px-8 transition-colors duration-500">
+            <section className="bg-bg-primary py-2 px-4 md:py-3 md:px-6 xl:py-4 xl:px-8 transition-colors duration-500">
+                <h2 className='text-center text-white bg-gradient-to-br from-brand to-brand-hover
+                text-base p-2 md:text-lg md:p-3 xl:text-xl xl:p-4 rounded-md mb-2 md:rounded-lg md:mb-3 xl:rounded-xl xl:mb-4
+                '>Timepiece Community</h2>
                 <div className="mx-auto">
                     <div className="grid grid-cols-1 gap-2 sm:gap-3 sm:grid-cols-2 lg:grid-cols-4 md:gap-4 lg:gap-6 mb-8">
+                        {loading && (
+                            <LoadingAnimations option='skeleton' />
+                        )}
                         {communities?.map((post, idx) => (
                             <div
                                 key={idx}
@@ -64,7 +88,7 @@ export default function CommunitySection() {
                                     </div>
 
                                     {/* Comment */}
-                                    <p className="text-[9px] sm:text-[10px] md:text-xs text-text-secondary leading-relaxed mb-2 sm:mb-3 line-clamp-2 sm:line-clamp-3 min-h-[2rem] sm:min-h-[2.5rem] md:min-h-[3rem]">
+                                    <p className="text-xs sm:text-base  text-text-secondary leading-relaxed mb-2 sm:mb-3 line-clamp-3 sm:line-clamp-4 min-h-[2rem] sm:min-h-[2.5rem] md:min-h-[3rem]">
                                         {post.comment}
                                     </p>
 

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import { Link , useNavigate, useLocation } from 'react-router-dom';
-import { Home, MessageSquare , Gift, Package, User } from 'lucide-react';
+import { Home, MessageSquare , Gift, ShoppingBag, User } from 'lucide-react';
 import ImageError from '../../assets/imageError.jpg';
 import ChatModal from '../layout/ChatModal';
 
@@ -57,13 +57,13 @@ export default function NavBottom() {
                         <Home className="h-8 w-8" />
                     </button>
                     <button
-                        onClick={() => handleActiveTab('wallet')}
+                        onClick={() => handleActiveTab('user/orders')}
                         className={`flex flex-col flex-1 items-center justify-center p-1 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'order'
                             ? `text-brand` // Active link color (User is active for Admin Login context)
                             : 'text-gray-500 hover:text-gray-700'
                             } rounded-md`}
                     >
-                        <Package className="h-8 w-8" />
+                        <ShoppingBag className="h-8 w-8" />
                     </button>
                     <button
                         onClick={() => handleActiveTab('user/promotions')}

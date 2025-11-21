@@ -51,56 +51,12 @@ export default function LoadingAnimations({ option }) {
 
             {/* Skeleton Loader */}
             {chooseLoader.skeleton && (
-                <div className="loader-container full-width">
-                    <div className="skeleton-loader">
-                        <div className="skeleton-card">
-                            <div className="skeleton-image"></div>
-                            <div className="skeleton-content">
-                                <div className="skeleton-line title"></div>
-                                <div className="skeleton-line"></div>
-                                <div className="skeleton-line short"></div>
-                            </div>
-                        </div>
-                        <div className="skeleton-card">
-                            <div className="skeleton-image"></div>
-                            <div className="skeleton-content">
-                                <div className="skeleton-line title"></div>
-                                <div className="skeleton-line"></div>
-                                <div className="skeleton-line short"></div>
-                            </div>
-                        </div>
-                        <div className="skeleton-card">
-                            <div className="skeleton-image"></div>
-                            <div className="skeleton-content">
-                                <div className="skeleton-line title"></div>
-                                <div className="skeleton-line"></div>
-                                <div className="skeleton-line short"></div>
-                            </div>
-                        </div>
-                        <div className="skeleton-card">
-                            <div className="skeleton-image"></div>
-                            <div className="skeleton-content">
-                                <div className="skeleton-line title"></div>
-                                <div className="skeleton-line"></div>
-                                <div className="skeleton-line short"></div>
-                            </div>
-                        </div>
-                        <div className="skeleton-card">
-                            <div className="skeleton-image"></div>
-                            <div className="skeleton-content">
-                                <div className="skeleton-line title"></div>
-                                <div className="skeleton-line"></div>
-                                <div className="skeleton-line short"></div>
-                            </div>
-                        </div>
-                        <div className="skeleton-card">
-                            <div className="skeleton-image"></div>
-                            <div className="skeleton-content">
-                                <div className="skeleton-line title"></div>
-                                <div className="skeleton-line"></div>
-                                <div className="skeleton-line short"></div>
-                            </div>
-                        </div>
+                <div className="skeleton-card">
+                    <div className="skeleton-image"></div>
+                    <div className="skeleton-content">
+                        <div className="skeleton-line title"></div>
+                        <div className="skeleton-line"></div>
+                        <div className="skeleton-line short"></div>
                     </div>
                 </div>
             )}
