@@ -86,7 +86,7 @@ export default function NavBottom() {
                     {login ? (
                         <>
                             <Link to='/user/profile' className='flex flex-col flex-1 justify-center items-center gap-1'>
-                                <img src={`${process.env.REACT_APP_API_URL}`+`/${infoUser.avatar}` || infoUser.avatar} alt='Avatar' title='Avatar'
+                                <img src={infoUser.avatar} alt='Avatar' title='Avatar'
                                     onError={(e) => {
                                         e.target.src = ImageError
                                     }}

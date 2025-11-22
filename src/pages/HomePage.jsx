@@ -4,22 +4,24 @@ import FlashSaleProduct from '../components/layout/FlashSaleProduct';
 import CollectionSection from '../components/layout/CollectionSection';
 import CommunitySection from '../components/layout/CommunitySection';
 
+
 export default function HomePage() {
- 
+
   return (
-    <div className="min-h-screen bg-white ">
+      <div className="min-h-screen bg-white ">
 
-      <CollectionSection />
+        <CollectionSection />
 
-      <FlashSaleProduct />
+        <FlashSaleProduct />
 
-      <BrandSection />
+        <BrandSection />
 
-      <TrendingProduct />
+        <TrendingProduct />
 
-      {/* Community */}
-      <CommunitySection />
+        {/* Community */}
+        <CommunitySection />
 
-    </div>
+      </div>
+
   );
 }

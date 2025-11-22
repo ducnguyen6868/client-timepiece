@@ -123,7 +123,7 @@ export default function Header() {
                                     {logged ? (
                                         <Link to="/user/profile" className="hidden sm:block ">
                                             <img className="w-9 h-9 rounded-full shadow-sm hover:shadow-md transition-all duration-300"
-                                                src={`${process.env.REACT_APP_API_URL}`+`/${infoUser.avatar}`||`http://localhost:5000/${infoUser.avatar}`}
+                                                src={infoUser.avatar}
                                                 title='Avatar'
                                                 alt='Avatar'
                                                 loading='lazy'
