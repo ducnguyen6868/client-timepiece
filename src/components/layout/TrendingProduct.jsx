@@ -27,7 +27,7 @@ export default function TrendingProduct() {
                 setLoading(true);
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 const page = 1;
-                const limit = 4;
+                const limit = 6;
                 const response = await productApi.getTrending(page, limit);
                 setTrendingProducts(response.products);
             } catch (err) {
