@@ -91,7 +91,7 @@ export default function UserLayout() {
             </button>
 
             <img
-              src={`${process.env.REACT_APP_API_URL}` + `/${infoUser.avatar}` || `http://localhost:5000/${infoUser.avatar}`}
+              src={infoUser.avatar}
               title='Avatar'
               alt='Avatar'
               loading='lazy'
