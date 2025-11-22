@@ -7,7 +7,7 @@ import io from 'socket.io-client';
 import profileApi from '../../api/profileApi';
 import chatApi from '../../api/chatApi';
 
-const socket = io(process.env.REACT_APP_SOCKET_URL, {
+const socket = io(process.env.REACT_APP_SOCKET_URL||'http://localhost:5000', {
   transports: ["websocket"],
   withCredentials: true,
 });

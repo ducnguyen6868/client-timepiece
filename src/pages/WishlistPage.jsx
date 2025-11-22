@@ -43,19 +43,21 @@ export default function WishlistPage() {
     return (
         <>
             {products.length > 0 ? (
-                <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 lg:grid-cols-4
-                py-2 md:py-3 xl:py-4 
-                gap-4 md:gap-6 xl:gap-8 '>
-                    {products.map((product, index) => 
-                        (
-                            <ProductCard key={index} product={product} onChange={()=>setChange(!change)} />
-                        )
+                <div
+                    className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 lg:grid-cols-4
+                py-2 md:py-3 xl:py-4 gap-4 md:gap-6 xl:gap-8 p-4 md:p-6 xl:p-8'>
+                    {products.map((product, index) =>
+                    (
+                        <ProductCard key={index} product={product} onChange={() => setChange(!change)} />
+                    )
                     )}
                 </div>
             ) : (
-                <div className='empty-container'>
-                    <img className='empty-image' src={wishlist404} alt='Wishlit Emty' title='Wishlist Emty' />
-                    <Link to='/' className='shopping-btn'>Shopping now</Link>
+                <div className='flex flex-col gap-2 justify-center items-center pb-4'>
+                    <img className='w-full h-auto' src={wishlist404} alt='Wishlit Emty' title='Wishlist Emty' />
+                    <button className='py-2 px-6 md:py-3 md:px-8 md:text-lg cursor-pointer text-white bg-brand rounded-xl'>
+                        <Link to='/'>Discovery now</Link>
+                    </button>
                 </div>
             )}
         </>

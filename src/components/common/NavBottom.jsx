@@ -43,49 +43,49 @@ export default function NavBottom() {
             )}
             <nav
                 // Position: Fixed at the bottom, spanning full width
-                className="fixed bottom-0 left-0 m-2 w-full bg-white border-t border-gray-200 shadow-2xl z-50"
+                className="fixed bottom-0 left-0 right-0 m-2 w-ful shadow-2xl z-50"
             >
                 {/* Center content on wide screens, ensure spacing on mobile */}
-                <div className="flex justify-around items-center h-16 max-w-xl mx-auto px-2">
+                <div className="flex w-full justify-around items-center h-16 max-w-xl mx-auto px-2 bg-gray-100 rounded-lg">
                     <button
                         onClick={() => handleActiveTab('')}
-                        className={`flex flex-col flex-1 items-center justify-center p-1 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === ''
-                            ? `text-brand` // Active link color (User is active for Admin Login context)
-                            : 'text-gray-500 hover:text-gray-700'
-                            } rounded-md`}
+                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === ''
+                            ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-brand hover:text-brand-hover'
+                            } rounded-lg`}
                     >
                         <Home className="h-8 w-8" />
                     </button>
                     <button
                         onClick={() => handleActiveTab('user/orders')}
-                        className={`flex flex-col flex-1 items-center justify-center p-1 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'order'
-                            ? `text-brand` // Active link color (User is active for Admin Login context)
-                            : 'text-gray-500 hover:text-gray-700'
-                            } rounded-md`}
+                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'order'
+                            ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-brand hover:text-brand-hover'
+                            } rounded-lg`}
                     >
                         <ShoppingBag className="h-8 w-8" />
                     </button>
                     <button
                         onClick={() => handleActiveTab('user/promotions')}
-                        className={`flex flex-col flex-1 items-center justify-center p-1 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'order'
-                            ? `text-brand` // Active link color (User is active for Admin Login context)
-                            : 'text-gray-500 hover:text-gray-700'
-                            } rounded-md`}
+                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'order'
+                            ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-brand hover:text-brand-hover'
+                            } rounded-lg`}
                     >
                         <Gift className="h-8 w-8" />
                     </button>
                     <button
                         onClick={() => handleActiveTab('chat')}
-                        className={`flex flex-col flex-1 items-center justify-center p-1 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'chat'
-                            ? `text-brand` // Active link color (User is active for Admin Login context)
-                            : 'text-gray-500 hover:text-gray-700'
-                            } rounded-md`}
+                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'chat'
+                            ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
+                            : 'text-brand hover:text-brand-hover'
+                            } rounded-lg`}
                     >
                         <MessageSquare className="h-8 w-8" />
                     </button>
                     {login ? (
                         <>
-                            <Link to='/user/profile' className='flex flex-col gap-1'>
+                            <Link to='/user/profile' className='flex flex-col flex-1 justify-center items-center gap-1'>
                                 <img src={`${process.env.REACT_APP_API_URL}`+`/${infoUser.avatar}` || infoUser.avatar} alt='Avatar' title='Avatar'
                                     onError={(e) => {
                                         e.target.src = ImageError
@@ -98,10 +98,10 @@ export default function NavBottom() {
                     ) : (
                         <button
                             onClick={() => handleActiveTab('user/profile')}
-                            className={`flex flex-col flex-1 items-center justify-center p-1 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'user/profile'
-                                ? `text-brand` // Active link color (User is active for Admin Login context)
-                                : 'text-gray-500 hover:text-gray-700'
-                                } rounded-md`}
+                            className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'user/profile'
+                                ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
+                                : 'text-brand hover:text-brand-hover'
+                                } rounded-lg`}
                         >
                             <User className="h-8 w-8" />
                         </button>

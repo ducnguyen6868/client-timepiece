@@ -16,7 +16,7 @@ export default function ProductCard({ product }) {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden group hover:shadow-lg transition max-w-96"
+                className="bg-whit rounded-2xl shadow-md overflow-hidden group hover:shadow-lg transition"
             >
                 <div className="relative overflow-hidden">
                     <img

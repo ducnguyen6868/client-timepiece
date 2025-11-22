@@ -1,8 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import {
-  User, ShoppingCart, MapPin, Zap, Gift, Heart, Settings,
-  LogOut, Bell, Search, XCircle, Wallet,
-  Home
+  User, ShoppingCart, MapPin, Zap, Gift, Heart, Settings, Bell, Search, XCircle, Wallet, Home
 } from 'lucide-react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
@@ -55,11 +53,6 @@ export default function UserLayout() {
     setActiveTab(queryParams);
   }, [queryParams]);
 
-  const confirmLogout = () => {
-    localStorage.removeItem('token');
-    setInfoUser({ name: '', email: '', avatar: '' });
-    navigate('/');
-  };
 
   const handleChangeTab = (tab) => {
     navigate(`/user/${tab}`);
@@ -113,7 +106,7 @@ export default function UserLayout() {
       </header>
 
       {/* MAIN */}
-      <div className="relative max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-2 md:gap-4 xl:gap-6 lg:gap-8">
+      <div className="relative max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-2 md:gap-4 xl:gap-6 lg:gap-8">
         {/* SIDEBAR */}
         <aside className="hidden xl:block md:relative p-2 md:p-0 lg:p-0 lg:col-span-3 md:col-span-2
          bg-white shadow-md border border-gray-100 xl:p-0
@@ -144,62 +137,30 @@ export default function UserLayout() {
           </div>
         </aside>
 
-        <div className='xs:hidden md:hiden xl:hidden lg:hidden fixed bottom-0 right-0 left-0 z-50 flex justify-between text-brand m-2 rounded-md bg-gray-100'>
-          <Link to='/' className={`p-2 flex flex-1 items-center justify-center rounded-md  ${activeTab==='home'?('text-white bg-brand'):('')}` }>
+        <div className='xs:hidden md:hiden xl:hidden lg:hidden fixed bottom-0 right-0 left-0 z-50 flex p-2 justify-between text-brand m-2 rounded-md bg-gray-100'>
+          <Link to='/' className={`p-2 flex flex-1 items-center justify-center rounded-lg  ${activeTab==='home'?('text-white bg-brand'):('')}` }>
             <Home className='w-8 h-8'/>
           </Link>
-          <Link to='/user/profile' className={`p-2 flex flex-1 items-center justify-center rounded-md  ${activeTab==='profile'?('bg-brand text-white'):('')}` }>
+          <Link to='/user/profile' className={`p-2 flex flex-1 items-center justify-center rounded-lg  ${activeTab==='profile'?('bg-brand text-white'):('')}` }>
             <User className='w-8 h-8'/>
           </Link>
-          <Link to='/user/orders' className={`p-2 flex flex-1 items-center justify-center rounded-md  ${activeTab==='orders'?('text-white bg-brand'):('')}` }>
+          <Link to='/user/orders' className={`p-2 flex flex-1 items-center justify-center rounded-lg  ${activeTab==='orders'?('text-white bg-brand'):('')}` }>
             <ShoppingCart className='w-8 h-8'/>
           </Link>
-          <Link to='/user/wallet' className={`p-2 flex flex-1 items-center justify-center rounded-md  ${activeTab==='wallet'?('text-white bg-brand'):('')}` }>
+          <Link to='/user/wallet' className={`p-2 flex flex-1 items-center justify-center rounded-lg  ${activeTab==='wallet'?('text-white bg-brand'):('')}` }>
             <Wallet className='w-8 h-8'/>
           </Link>
-          <Link to='/user/address' className={`p-2 flex flex-1 items-center justify-center rounded-md  ${activeTab==='address'?('text-white bg-brand'):('')}` }>
+          <Link to='/user/address' className={`p-2 flex flex-1 items-center justify-center rounded-lg  ${activeTab==='address'?('text-white bg-brand'):('')}` }>
             <MapPin className='w-8 h-8'/>
           </Link>
           
         </div>
 
         {/* CONTENT */}
-        <main className="md:col-span-6 lg:col-span-9 bg-white rounded-xl shadow-sm border border-gray-100 p-1 md:p-2 xl:p-3 lg:p-4">
+        <main className="md:col-span-6 lg:col-span-9 bg-white rounded-xl md:p-2 xl:p-3 lg:p-4">
           <Outlet />
         </main>
       </div>
-
-      {/* LOGOUT MODAL */}
-      {logout && (
-        <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
-          onClick={() => setLogout(false)}
-        >
-          <div
-            className="bg-white rounded-2xl shadow-lg w-full max-w-sm p-6 text-center animate-fadeIn"
-            onClick={e => e.stopPropagation()}
-          >
-            <XCircle className="text-red-500 w-10 h-10 mx-auto mb-2" />
-            <h3 className="text-lg font-semibold text-gray-800 mb-1">Confirm Logout</h3>
-            <p className="text-sm text-gray-600 mb-4">Are you sure you want to log out of your account?</p>
-
-            <div className="flex justify-center gap-3">
-              <button
-                className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-all"
-                onClick={() => setLogout(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-all"
-                onClick={confirmLogout}
-              >
-                Yes, Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

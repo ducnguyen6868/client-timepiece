@@ -1,20 +1,15 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { toast } from "react-toastify";
-import { useNavigate, Link } from "react-router-dom";
-import { useContext } from "react";
-import { UserContext } from "../../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 import { isValidEmail } from '../../utils/isValidEmail';
-import ForgotPasswordModal from '../../components/common/ForgotPasswordModal';
-import authApi from '../../api/authApi';
+import authApi from "../../api/authApi";
 import loginImage from '../../assets/login.png';
 import websiteLogo from '../../assets/website-logo.png';
 
 export default function AdminLogin() {
 
-  const { setInfoUser } = useContext(UserContext);
-
-  const [isModal, setIsModal] = useState(false);
+  const [forgotPass, setForgotPass] = useState(false);
   const navigate = useNavigate();
 
   const [loginData, setLoginData] = useState({
@@ -50,21 +45,15 @@ export default function AdminLogin() {
     }
     // API login
     try {
-      const response = await authApi.login(loginData);
+      const response = await authApi.postAdmin(loginData);
       if (loginData.rememberMe) {
         //Save token to localstorage 
-        localStorage.setItem("token", response.token);
+        localStorage.setItem("adminToken", response.token);
       } else {
-        sessionStorage.setItem("token", response.token);
+        sessionStorage.setItem("adminToken", response.token);
       }
       toast.success(response.message);
-      await setInfoUser(prev => ({
-        ...prev, name: response.user.fullName,
-        email: response.user.email,
-        avatar: response.user.avatar,
-        cart: response.user.carts?.length,
-        wishlist: response.user.wishlist?.length
-      }));
+
       navigate('/');
 
     } catch (err) {
@@ -163,7 +152,7 @@ export default function AdminLogin() {
             </label>
             <button
               type="button"
-              onClick={() => setIsModal(true)}
+              onClick={() => setForgotPass(true)}
               className="text-brand hover:underline"
             >
               Forgot password?
@@ -177,38 +166,18 @@ export default function AdminLogin() {
           >
             Login
           </button>
-
-          {/* Divider */}
-          <div className="flex items-center justify-center my-6">
-            <div className="h-px w-1/4 bg-gray-200" />
-            <span className="mx-3 text-sm text-gray-400">Or continue with</span>
-            <div className="h-px w-1/4 bg-gray-200" />
-          </div>
-
-          {/* Social Login */}
-          <div className="flex gap-4">
-            <button className="flex-1 flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition">
-              <Icon icon="logos:google-icon" width="20" />
-              <span>Google</span>
-            </button>
-            <button className="flex-1 flex items-center justify-center gap-2 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
-              <Icon icon="logos:facebook" width="20" />
-              <span>Facebook</span>
-            </button>
-          </div>
-
-          {/* Footer */}
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-            No account?{" "}
-            <Link to="../register" className="text-blue-600 font-medium hover:underline">
-              Sign Up
-            </Link>
-          </p>
         </div>
       </div>
 
       {/* Forgot password modal */}
-      {isModal && <ForgotPasswordModal onClose={() => setIsModal(false)} />}
+      {forgotPass && (
+        <div className="fixed inset-0 flex p-4 justify-center items-center z-20  backdrop-blur-sm" onClick={() => setForgotPass(false)}>
+          <div className="flex flex-col gap-2 justify-center items-center p-4 bg-white text-blue-400 rounded-lg " onClick={(e) => e.stopPropagation()}>
+            <span>Contact adminstrator to change password</span>
+            <button className="bg-brand text-white py-2 px-6 rounded-lg" onClick={() => setForgotPass(false)}>Ok</button>
+          </div>
+        </div>
+      )}
     </>
 
   );

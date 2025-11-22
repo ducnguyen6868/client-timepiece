@@ -66,7 +66,7 @@ const CollectionSection = () => {
     }
 
     return (
-        <section className="relative py-2 sm:py-3 md:py-4 px-2 sm:px-3 md:px-4 bg-gray-50 w-full">
+        <section className="relative py-2 sm:py-3 md:py-4 bg-gray-50 w-full">
             <div
                 className="relative mx-auto overflow-hidden rounded-xl shadow-xl
             h-[160px] xs:h-[200px] sm:h-[220px] md:h-[240px] lg:h-[260px] xl:h-[280px] "

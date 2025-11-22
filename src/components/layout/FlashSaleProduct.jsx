@@ -85,7 +85,7 @@ export default function FlashSale() {
             )}
 
             {/* Flash Sale Products (NEW SECTION) */}
-            <section className="p-4 bg-bg-secondary transition-colors duration-500 bg-gradient-to-r from-red-500 to-orange-400">
+            <section className="p-4 bg-bg-secondary transition-colors duration-500 bg-gradient-to-r from-red-500 to-orange-400 rounded-xl">
                 <div className="flex items-center space-x-1.5 relative text-white">
                     <Icon icon="noto:fire" width="18" height="18" />
                     <span className='font-bold text-xl '>FLASH SALE</span>

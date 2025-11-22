@@ -97,7 +97,7 @@ export default function CommunitySection() {
                                         className="text-text-muted hover:text-error transition-colors transform hover:scale-110 active:scale-95 p-1 rounded-full hover:bg-bg-tertiary"
                                         aria-label="Like post"
                                     >
-                                        <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
+                                        <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
                                     </button>
                                 </div>
                             </div>

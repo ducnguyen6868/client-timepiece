@@ -90,7 +90,7 @@ export default function LoginPage() {
       <div className="min-h-screen relative flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 px-4"
       >
         <img className='fixed w-full h-full' src={loginImage} alt='Login' title='Login' />
-        <div className="bg-white z-10 relative dark:bg-gray-900 w-full max-w-md rounded-2xl shadow-xl p-8 space-y-6 border border-gray-100 dark:border-gray-700">
+        <div className="bg-white z-10 relative dark:bg-gray-900 w-full max-w-md rounded-2xl shadow-xl p-8 space-y-4 border border-gray-100 dark:border-gray-700">
           {/* Header */}
           <div className="text-center space-y-2">
             <h2 className="text-2xl font-bold text-cyan-600">Welcome Back</h2>
@@ -220,12 +220,17 @@ export default function LoginPage() {
           </div>
 
           {/* Footer */}
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-            No account?{" "}
-            <Link to="../register" className="text-blue-600 font-medium hover:underline">
-              Sign Up
+          <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+            <p>
+              No account ?{" "}
+              <Link to="../register" className="text-blue-600 font-medium hover:underline">
+                Sign Up
+              </Link>
+            </p>
+            <Link to="/admin/login" className="text-blue-600 font-medium hover:underline">
+              Adminstrator ?
             </Link>
-          </p>
+          </div>
         </div>
       </div>
 
