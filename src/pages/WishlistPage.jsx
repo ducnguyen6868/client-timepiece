@@ -44,7 +44,7 @@ export default function WishlistPage() {
         <>
             {products.length > 0 ? (
                 <div
-                    className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 lg:grid-cols-4
+                    className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 lg:grid-cols-5
                 py-2 md:py-3 xl:py-4 gap-4 md:gap-6 xl:gap-8 p-4 md:p-6 xl:p-8'>
                     {products.map((product, index) =>
                     (

@@ -27,7 +27,7 @@ export default function TrendingProduct() {
                 setLoading(true);
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 const page = 1;
-                const limit = 5;
+                const limit = 4;
                 const response = await productApi.getTrending(page, limit);
                 setTrendingProducts(response.products);
             } catch (err) {
@@ -111,15 +111,12 @@ export default function TrendingProduct() {
                         <p className="text-sm">Our top-selling timepieces, trusted by the TIMEPIECE community</p>
                     </div>
 
-
-                    <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 gap-4">
-                        {loading && (
-                            <>
-                                <LoadingAnimations option='skeleton'/>
-                                <LoadingAnimations option='skeleton'/>
-
-                            </>
-                        )}
+                    {loading && (
+                        <>
+                            <LoadingAnimations option='skeleton' />
+                        </>
+                    )}
+                    <div className="grid lg:grid-cols-6 lg:gap-3 md:grid-cols-3 grid-cols-2 gap-4">
                         {trendingProducts.map((product, idx) => (
                             <div
                                 key={product._id}

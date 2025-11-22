@@ -48,6 +48,7 @@ function App() {
           {/* Các route chính */}
           <Route path="login" element={<LoginPage />}></Route>
           <Route path="register" element={<RegisterPage />}></Route>
+
           <Route path='/' element={<Public />}>
             <Route index element={<HomePage />}></Route>
             <Route path="collection/:slug" element={<CollectionPage />}></Route>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Flame, BadgePercent, ChevronsRight } from "lucide-react";
+import { Flame, BadgePercent } from "lucide-react";
 import { formatCurrency } from '../../utils/formatCurrency';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Icon } from '@iconify/react';
 import productApi from "../../api/productApi";
 import Notification from '../common/Notification';
@@ -103,14 +103,12 @@ export default function FlashSale() {
 
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  justify-center items-center gap-2 mt-2">
-                    {loading && (
-                        <>
-                            <LoadingAnimations option='skeleton' />
-                            <LoadingAnimations option='skeleton' />
-
-                        </>
-                    )}
+                {loading && (
+                    <div className="mt-4 w-full">
+                        <LoadingAnimations option='skeleton' />
+                    </div>
+                )}
+                <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-4 xl:grid-cols-4  justify-center items-center gap-2 mt-2">
 
                     {flashSaleProducts?.map((product, idx) => (
                         <div
@@ -181,7 +179,7 @@ export default function FlashSale() {
                         </div>
                     ))}
                 </div>
-                
+
                 {flashSaleProducts?.length > 0 && (
                     <div className='text-center mt-4'>
                         <button className='text-base md:text-lg xl:text-xl md:px-5 xl:px-6

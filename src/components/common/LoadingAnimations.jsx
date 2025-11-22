@@ -1,111 +1,64 @@
-import { useEffect, useState } from 'react';
-import '../../styles/LoadingAnimations.css';
+import useProductsPerRow from '../../hooks/useProductsPerRow';
+
+// Effect 2: Shimmer Effect
+const ShimmerLoader = () => (
+    <div className="bg-white rounded-lg md:rounded-xl xl:rounded-2xl shadow-md overflow-hidden relative">
+        <div className="bg-gray-200 h-44 sm:h-48 md:h-52 w-full relative overflow-hidden">
+            <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+        </div>
+        <div className="p-4 space-y-3">
+            <div className="h-4 bg-gray-200 rounded w-3/4 relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+            </div>
+            <div className="h-3 bg-gray-200 rounded w-1/2 relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+            </div>
+        </div>
+    </div>
+);
+
+const DotsLoader = () => (
+    <div className="bg-white rounded-lg shadow-md h-96 flex items-center justify-center">
+        <div className="flex gap-2">
+            {[0, 1, 2].map((i) => (
+                <div
+                    key={i}
+                    className="w-4 h-4 bg-blue-600 rounded-full animate-bounce"
+                    style={{ animationDelay: `${i * 0.15}s` }}
+                ></div>
+            ))}
+        </div>
+    </div>
+);
 
 export default function LoadingAnimations({ option }) {
-    const [chooseLoader, setChooseLoader] = useState({
-        spinner: false,
-        dots: false,
-        bars: false,
-        circle: false,
-        skeleton: false,
-        hourglass: false,
-        gradient: false,
-    });
-    useEffect(() => {
-        setChooseLoader((prev) => ({
-            [prev]: false,
-            [option]: true
-        }))
-    }, [option]);
+
+    const length = useProductsPerRow();
+
     return (
-        <>     {/* Spinner Loader */}
-            {chooseLoader.spinner && (
-                <div className="loader-container">
-                    <div className="spinner-loader"></div>
-                    <p className="loader-text">Loading...</p>
-                </div>
-            )}
-
-            {/* Pulse Loader */}
-            {chooseLoader.pulse && (
-                <div className="loader-container">
-                    <div className="pulse-loader">
-                        <div className="pulse-ring"></div>
-                        <div className="pulse-ring"></div>
-                        <div className="pulse-ring"></div>
-                    </div>
-                    <p className="loader-text">Loading content</p>
-                </div>
-            )}
-
-            {/* Circle Loader */}
-            {chooseLoader.circle && (
-                <div className="loader-container">
-                    <div className="circle-loader">
-                        <div className="circle-path"></div>
-
-                    </div>
-                    <p className="loader-text">Sending OTP...</p>
-                </div>
-            )}
-
-            {/* Skeleton Loader */}
-            {chooseLoader.skeleton && (
-                <div className="skeleton-card">
-                    <div className="skeleton-image"></div>
-                    <div className="skeleton-content">
-                        <div className="skeleton-line title"></div>
-                        <div className="skeleton-line"></div>
-                        <div className="skeleton-line short"></div>
-                    </div>
-                </div>
-            )}
-
-            {/* Hourglass Loader */}
-            {chooseLoader.hourglass && (
-                <div className="loader-container">
-                    <div className="hourglass-loader">
-                        <div className="hourglass">
-                            <div className="hourglass-top"></div>
-                            <div className="hourglass-bottom"></div>
-                        </div>
-                    </div>
-                    <p className="loader-text">Please be patient</p>
-                </div>
-            )}
-
-            {/* Gradient Loader */}
-            {chooseLoader.gradient && (
-                <div className="loader-container">
-                    <div className="gradient-loader">
-                        <div className="gradient-spinner"></div>
-                    </div>
-                    <p className="loader-text">Preparing your content</p>
-                </div>
-            )}
-            {/* Bars Loader */}
-            {chooseLoader.bars && (
-                <div className="loader-container">
-                    <div className="bars-loader">
-                        <div className="bar-item"></div>
-                        <div className="bar-item"></div>
-                        <div className="bar-item"></div>
-                        <div className="bar-item"></div>
-                        <div className="bar-item"></div>
-                    </div>
-                    <p className="loader-text">Checking payment...</p>
-                </div>
-            )}
-            {/* Dots Loader */}
-            {chooseLoader.dots && (
-                <div className="loader-container">
-                    <div className="dots-loader">
-                        <div className="dot"></div>
-                        <div className="dot"></div>
-                        <div className="dot"></div>
-                    </div>
-                </div>
-            )}
+        <>
+            <style>
+                {`
+          @keyframes shimmer {
+            100% { transform: translateX(100%); }
+          }
+        
+        `}
+            </style>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6  gap-2 md:gap-3 ">
+                {option === 'skeleton' && (
+                    Array(length).fill(0).map((_, index) => (
+                        <ShimmerLoader key={index} />
+                    ))
+                )}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6  gap-2 md:gap-3 ">
+                {option === 'dots' && (
+                    Array(length).fill(0).map((_, index) => (
+                        <DotsLoader key={index} />
+                    ))
+                )}
+            </div>
         </>
     );
 }

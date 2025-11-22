@@ -44,10 +44,10 @@ export default function CommunitySection() {
                 text-base p-2 md:text-lg md:p-3 xl:text-xl xl:p-4 rounded-md mb-2 md:rounded-lg md:mb-3 xl:rounded-xl xl:mb-4
                 '>Timepiece Community</h2>
                 <div className="mx-auto">
-                    <div className="grid grid-cols-1 gap-2 sm:gap-3 sm:grid-cols-2 lg:grid-cols-4 md:gap-4 lg:gap-6 mb-8">
-                        {loading && (
-                            <LoadingAnimations option='skeleton' />
-                        )}
+                    {loading && (
+                        <LoadingAnimations option='skeleton' />
+                    )}
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:grid-cols-3 lg:grid-cols-4 md:gap-4 lg:gap-6 mb-8">
                         {communities?.map((post, idx) => (
                             <div
                                 key={idx}

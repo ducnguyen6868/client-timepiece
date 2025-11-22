@@ -80,7 +80,7 @@ export default function PaymentResultPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-start  bg-gray-50 dark:bg-gray-900 transition-all duration-300">
       {loading ? (
-        <LoadingAnimations option="bars" />
+        <LoadingAnimations option="dots" />
       ) : (
         <>
           {/* Payment Summary Card */}

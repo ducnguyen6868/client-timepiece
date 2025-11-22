@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 
 export default function useProductsPerRow() {
   const getPerRow = (width) => {
-    if (width >= 1200) return 4;
-    if (width >= 900) return 3;
-    if (width >= 600) return 2;
-    return 1;
+    if (width >= 1280) return 6;
+    if (width >= 1024) return 5;
+    if (width >= 768) return 4;
+    if (width >= 480) return 3;
+    return 2;
   };
 
   const [perRow, setPerRow] = useState(() => getPerRow(window.innerWidth));
