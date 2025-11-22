@@ -209,6 +209,9 @@ const Message = () => {
                                         <div className="relative">
                                             <img
                                                 src={otherUser?.avatar}
+                                                alt={otherUser?.fullName}
+                                                title={otherUser?.fullName}
+                                                loading='lazy'
                                                 className="w-12 h-12 rounded-full object-cover"
                                             />
                                             <span className={`absolute bottom-0 right-0 w-3 h-3 rounded-full
@@ -238,7 +241,7 @@ const Message = () => {
                     {activeConversation ? (
                         <>
                             {/* Header */}
-                            <div className="p-3 border-b bg-white shadow-sm flex items-center justify-between">
+                            <div className="pl-3 py-1 rounded-lg border-b bg-brand shadow-sm flex items-center justify-between">
                                 {(() => {
                                     const otherUser =
                                         activeConversation.participants[0]?.code === user.code
@@ -247,10 +250,15 @@ const Message = () => {
 
                                     return (
                                         <div className="flex items-center gap-3">
-                                            <img
-                                                src={otherUser?.avatar}
-                                                className="w-10 h-10 rounded-full object-cover border-2 border-brand"
-                                            />
+                                            <div className='p-2 border-2 border-white rounded-full'>
+                                                <img
+                                                    src={otherUser?.avatar}
+                                                    alt={otherUser?.fullName}
+                                                    title={otherUser?.fullName}
+                                                    loading='lazy'
+                                                    className="w-10 h-10 rounded-full object-cover border-2 border-brand"
+                                                />
+                                            </div>
                                             <div>
                                                 <h3 className="font-semibold text-gray-800">
                                                     {otherUser?.fullName}
@@ -258,7 +266,7 @@ const Message = () => {
                                                 <p className={`text-xs 
                                         ${activeConversation.status === "online"
                                                         ? "text-green-500"
-                                                        : "text-gray-500"}`}>
+                                                        : "text-white"}`}>
                                                     {activeConversation.status === "online" ? "Online" : "Offline"}
                                                 </p>
                                             </div>
@@ -277,14 +285,15 @@ const Message = () => {
                                         className={`flex mb-4 
                             ${msg.sender?.code === user.code ? "justify-end" : "justify-start"}`}>
                                         <div className={`
-                                max-w-xs md:max-w-md p-3 rounded-2xl shadow
+                                max-w-xs md:max-w-md p-3 rounded-xl shadow
                                 ${msg.sender?.code === user.code
                                                 ? "bg-brand text-white rounded-br-none"
                                                 : "bg-white border rounded-tl-none text-gray-800"}
                             `}>
                                             <p className="text-sm">{msg.text}</p>
-                                            <span className="block mt-1 text-right text-xs text-gray-400">
-                                                {formatTime(msg.createdAt)}
+                                            <span
+                                                className={`block mt-1 text-right text-xs ${msg.sender?.code === user.code ? 'text-white' : 'text-gray-400'}`}>
+                                                {formatDate(msg.createdAt)} - {formatTime(msg.createdAt)}
                                             </span>
                                         </div>
                                     </div>
@@ -313,7 +322,7 @@ const Message = () => {
                         </>
                     ) : (
                         <div className="flex-1 flex flex-col items-center justify-center text-gray-400">
-                            <MessageSquare className='w-24 h-24 text-brand'/>
+                            <MessageSquare className='w-24 h-24 text-brand' />
                             Select a conversation
                         </div>
                     )}
@@ -361,6 +370,8 @@ const Message = () => {
                                             <img
                                                 src={otherUser?.avatar || avatarError}
                                                 alt={otherUser?.fullName}
+                                                title={otherUser?.fullName}
+                                                loading='lazy'
                                                 className="w-10 h-10 rounded-full object-cover border-2 border-white"
                                             />
                                             <span
@@ -401,7 +412,7 @@ const Message = () => {
                     <div className="flex flex-col flex-1 overflow-hidden">
 
                         {/* Header */}
-                        <div className="p-2 bg-brand text-white flex items-center gap-3">
+                        <div className="p-2 bg-brand text-white flex items-center gap-3 rounded-lg">
                             <button onClick={handleBackToList} className="p-1 hover:bg-teal-600 rounded-full">
                                 <ArrowLeft className="w-6 h-6" />
                             </button>
@@ -416,6 +427,9 @@ const Message = () => {
                                     <div className="flex items-center gap-3 flex-1">
                                         <img
                                             src={otherUser?.avatar || avatarError}
+                                            alt={otherUser?.fullName}
+                                            title={otherUser?.fullName}
+                                            loading='lazy'
                                             className="w-10 h-10 rounded-full border-2 border-white"
                                         />
                                         <div>
@@ -441,7 +455,7 @@ const Message = () => {
                                     className={`flex mb-3 ${msg.sender?.code === user.code ? "justify-end" : "justify-start"}`}
                                 >
                                     <div
-                                        className={`max-w-[75%] p-3 rounded-2xl shadow-sm
+                                        className={`max-w-[75%] p-3 rounded-xl shadow-sm
                                 ${msg.sender?.code === user.code
                                                 ? "bg-brand text-white rounded-br-none"
                                                 : "bg-white border text-gray-800 rounded-tl-none"
@@ -450,10 +464,10 @@ const Message = () => {
                                     >
                                         <p className="text-sm break-words">{msg.text}</p>
                                         <span
-                                            className={`block mt-1 text-right text-xs 
+                                            className={`block mt-1 text-xs 
                                     ${msg.sender?.code === user.code
-                                                    ? "text-teal-100"
-                                                    : "text-gray-400"
+                                                    ? "text-teal-100 text-right"
+                                                    : "text-gray-400 text-left"
                                                 }
                                 `}
                                         >

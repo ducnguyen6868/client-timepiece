@@ -48,7 +48,7 @@ export default function Admin() {
     ];
 
     return (
-        <div className="min-h-screen flex bg-gray-50 relative">
+        <div className="min-h-screen  flex bg-gray-50 relative">
 
             {/* -----------------------------------------------------------
                Sidebar (Desktop)
@@ -150,9 +150,9 @@ export default function Admin() {
                Main Content
             ----------------------------------------------------------- */}
             <main className="
-                flex-1 overflow-y-auto p-4 md:p-6 xl:p-8
+                flex-1 overflow-y-auto p-4
                 md:ml-64  /* offset for desktop sidebar */
-                mb-16 md:mb-0 /* space for bottom navbar mobile */
+                mb-16 md:mb-0 /* space for bottom navbar mobile */ 
             ">
                 <Outlet />
             </main>

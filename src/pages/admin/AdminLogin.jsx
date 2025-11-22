@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { isValidEmail } from '../../utils/isValidEmail';
 import authApi from "../../api/authApi";
 import loginImage from '../../assets/login.png';
 import websiteLogo from '../../assets/website-logo.png';
+import Notification from "../../components/common/Notification";
 
 export default function AdminLogin() {
 
@@ -21,6 +21,10 @@ export default function AdminLogin() {
   const [isHiddenPassword, setIsHiddenPassword] = useState(true);
   const [errors, setErrors] = useState({});
 
+  // Notification
+  const [show , setShow] = useState(false);
+  const [type , setType] = useState('');
+  const [message , setMessage] =useState('');
 
   const handleLoginChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -52,18 +56,23 @@ export default function AdminLogin() {
       } else {
         sessionStorage.setItem("adminToken", response.token);
       }
-      toast.success(response.message);
+      setShow(true);
+      setType('success');
+      setMessage(response.message);
 
-      navigate('/');
+      navigate('/admin/login');
 
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
+
+      setShow(true);
+      setType('error');
+      setMessage(err.response?.data?.message || err.message);
     }
   };
 
   return (
     <>
-
+      <Notification show={show} message={message} type={type} onClose={()=>setShow(false)}/>
       <div className="min-h-screen relative flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 px-4"
       >
         <img className='fixed w-full h-full' src={loginImage} alt='Login' title='Login' />
