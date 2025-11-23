@@ -45,12 +45,16 @@ export default function ProductPage() {
   useEffect(() => {
     if(!product || !product.flashSale) return;
     if (product.flashSale) {
-      setPrice(product?.detail[selectedDetailIndex].flashSalePrice);
+      const price = product?.detail[selectedDetailIndex].flashSalePrice ;
+      const savePrice = product.detail[selectedDetailIndex].originalPrice - price;
+      setPrice(price);
+      setSavePrice(savePrice);
     } else {
-      setPrice(product.detail[selectedDetailIndex].currentPrice);
+      const price = product?.detail[selectedDetailIndex].currentPrice ;
+      const savePrice = product.detail[selectedDetailIndex].originalPrice - price;
+      setPrice(price);
+      setSavePrice(savePrice);
     }
-    const savePrice = product.detail[selectedDetailIndex].originalPrice - price;
-    setSavePrice(savePrice);
   }, [product, selectedDetailIndex]);
 
   const handleQuantityChange = (action) => {
