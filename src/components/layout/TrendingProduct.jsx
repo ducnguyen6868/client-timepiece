@@ -100,7 +100,7 @@ export default function TrendingProduct() {
                 <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
             )}
             {/* Trending Products */}
-            <section className=" min-w-96 flex justify-center py-6 transition-colors duration-500" id='trending-container'>
+            <section className="w-full flex justify-center py-6 transition-colors duration-500" id='trending-container'>
                 <div className="mx-auto py-4 px-4 md:px-8 lg:px-12 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg">
                     <div
                         id="trending-header"

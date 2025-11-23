@@ -18,7 +18,7 @@ const ShimmerLoader = () => (
 );
 
 const DotsLoader = () => (
-    <div className="bg-white rounded-lg shadow-md h-96 flex items-center justify-center">
+    <div className="bg-white w-full mt-4 p-4 h-max flex items-center justify-center">
         <div className="flex gap-2">
             {[0, 1, 2].map((i) => (
                 <div
@@ -52,13 +52,10 @@ export default function LoadingAnimations({ option }) {
                     ))
                 )}
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6  gap-2 md:gap-3 ">
-                {option === 'dots' && (
-                    Array(length).fill(0).map((_, index) => (
-                        <DotsLoader key={index} />
-                    ))
-                )}
-            </div>
+            {option === 'dots' && (
+                <DotsLoader  />
+
+            )}
         </>
     );
 }

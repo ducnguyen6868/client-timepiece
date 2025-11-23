@@ -78,14 +78,14 @@ export default function PaymentResultPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start  bg-gray-50 dark:bg-gray-900 transition-all duration-300">
+    <div className="flex flex-col mb-4 items-center justify-start  bg-gray-50 dark:bg-gray-900 transition-all duration-300">
       {loading ? (
         <LoadingAnimations option="dots" />
       ) : (
         <>
           {/* Payment Summary Card */}
           <motion.div
-            className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-10 border border-gray-100 dark:border-gray-700 animate-fadeIn mt-4"
+            className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-10 border border-gray-100 dark:border-gray-700 animate-fadeInUp mt-4"
             variants={fadeIn}
             initial="hidden"
             animate="visible"

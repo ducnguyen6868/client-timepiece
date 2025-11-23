@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { useNavigate ,useParams} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ShoppingCart, Heart, Zap, Truck, ShieldCheck, Gem, Minus, Plus, Star } from 'lucide-react';
 import { UserContext } from '../contexts/UserContext';
@@ -11,8 +11,8 @@ import Review from '../components/common/Review';
 export default function ProductPage() {
   const { setInfoUser, locale, currency } = useContext(UserContext);
   const navigate = useNavigate();
-  
-  const {slug} = useParams();
+
+  const { slug } = useParams();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedDetailIndex, setSelectedDetailIndex] = useState(0);
@@ -21,8 +21,12 @@ export default function ProductPage() {
   const [product, setProduct] = useState();
   const [stars, setStars] = useState();
 
+  const [price, setPrice] = useState(0);
+  const [savePrice, setSavePrice] = useState(0);
+
+
   useEffect(() => {
-    if(!slug || slug==='') return;
+    if (!slug || slug === '') return;
     const getProduct = async () => {
       try {
         setLoading(true);
@@ -37,6 +41,17 @@ export default function ProductPage() {
     };
     getProduct();
   }, [slug]);
+
+  useEffect(() => {
+    if(!product || !product.flashSale) return;
+    if (product.flashSale) {
+      setPrice(product?.detail[selectedDetailIndex].flashSalePrice);
+    } else {
+      setPrice(product.detail[selectedDetailIndex].currentPrice);
+    }
+    const savePrice = product.detail[selectedDetailIndex].originalPrice - price;
+    setSavePrice(savePrice);
+  }, [product, selectedDetailIndex]);
 
   const handleQuantityChange = (action) => {
     const selectedDetail = product.detail?.[selectedDetailIndex];
@@ -66,19 +81,20 @@ export default function ProductPage() {
 
   const handleCart = async (product) => {
     try {
-      const id = product._id;
       const selectedDetail = product.detail?.[selectedDetailIndex];
       const image = product.images[selectedDetailIndex];
+
       const data = {
-        id,
+        id: product._id,
         code: product.code,
         name: product.name,
+        slug: product.slug,
         image,
         description: product.description,
         quantity: 1,
         color: selectedDetail.color,
         price: selectedDetail.currentPrice,
-        detailId: selectedDetail._id
+        index: selectedDetailIndex
       };
       const response = await userApi.addCart(data);
       toast.success(response.message);
@@ -106,6 +122,7 @@ export default function ProductPage() {
     </div>
   );
 
+
   if (loading)
     return (
       <div className="flex justify-center items-center min-h-screen text-gray-600 text-lg">
@@ -131,7 +148,7 @@ export default function ProductPage() {
           <div>
             <div className="border border-gray-200 rounded-xl overflow-hidden bg-white shadow">
               <img
-                src={`${process.env.REACT_APP_API_URL}`+`/${product.images[selectedDetailIndex]}`}
+                src={`${process.env.REACT_APP_API_URL}` + `/${product.images[selectedDetailIndex]}`}
                 alt={product.name}
                 loading='lazy'
                 onError={(e) => {
@@ -152,7 +169,7 @@ export default function ProductPage() {
                     }`}
                 >
                   <img
-                    src={`${process.env.REACT_APP_API_URL}`+`/${img}`}
+                    src={`${process.env.REACT_APP_API_URL}` + `/${img}`}
                     alt={product.name}
                     title={product.name}
                     loading='lazy'
@@ -169,8 +186,14 @@ export default function ProductPage() {
 
           {/* Product Info */}
           <div className="space-y-4">
-            <div className="text-white px-4 py-1 rounded-xl font-semibold uppercase tracking-wide text-sm w-max bg-emerald-600">
-              ✨ Limited Edition
+            <div className='flex gap-4 flex-row'>
+              <span className='py-2 px-4 bg-green-500 rounded-xl text-white'>✨ Limited Edition</span>
+              {product.flashSale && (
+                <p className='flex flex-row gap-4 bg-orange-500 justify-center items-center py-2 px-4 rounded-xl'>
+                  <Zap className='text-white' />
+                  <span className='text-white'>FLASHSALE</span>
+                </p>
+              )}
             </div>
             <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
 
@@ -184,23 +207,23 @@ export default function ProductPage() {
 
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-semibold text-blue-600">
-                {formatCurrency(selectedDetail.currentPrice, locale, currency)}
+                {formatCurrency(price, locale, currency)}
               </span>
-              {selectedDetail.originalPrice > selectedDetail.currentPrice && (
-                <>
-                  <span className="line-through text-gray-400">
-                    {formatCurrency(selectedDetail.originalPrice, locale, currency)}
-                  </span>
-                  <span className="text-green-600 text-sm font-medium">
-                    Save{' '}
-                    {formatCurrency(
-                      selectedDetail.originalPrice - selectedDetail.currentPrice,
-                      locale,
-                      currency
-                    )}
-                  </span>
-                </>
-              )}
+
+              <>
+                <span className="line-through text-gray-400">
+                  {formatCurrency(selectedDetail.originalPrice, locale, currency)}
+                </span>
+                <span className="text-green-600 text-sm font-medium">
+                  Save{' '}
+                  {formatCurrency(
+                    savePrice,
+                    locale,
+                    currency
+                  )}
+                </span>
+              </>
+
             </div>
 
             <p className="text-gray-600">{product.description}</p>
@@ -282,7 +305,7 @@ export default function ProductPage() {
             </div>
 
             {/* Trust Badges */}
-            <div className="flex gap-6 justify-evenly text-gray-600 text-sm pt-6">
+            <div className="flex gap-6 justify-evenly text-gray-600 text-sm pt-2 pb-4">
               <div className="flex items-center gap-2">
                 <Truck size={16} /> Free Shipping
               </div>

@@ -154,7 +154,7 @@ export default function InfoPayment({ total, onSubmit }) {
                                 </label>
                             </div>
 
-                            {logged && (
+                            {logged && addresses?.length0> 0 && (
                                 <button className="text-brand text-sm font-medium hover:underline" onClick={() => setShowAddress(true)}>
                                     Use existing address?
                                 </button>

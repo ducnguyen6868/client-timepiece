@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useContext } from 'react';
-import { MessageSquare, Send, X, User } from 'lucide-react';
+import { Send, X, User } from 'lucide-react';
 import { UserContext } from '../../contexts/UserContext';
 import { formatDate } from '../../utils/formatDate';
 import { formatTime } from '../../utils/formatTime';
@@ -21,7 +21,6 @@ export default function ChatModal ({ onClose }) {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
   const [user, setUser] = useState({});
-  const [isTyping, setIsTyping] = useState(false);
 
   const messagesEndRef = useRef(null);
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -147,21 +146,13 @@ export default function ChatModal ({ onClose }) {
             <div className={`max-w-[70%] p-2 sm:p-3 rounded-xl shadow-md text-sm sm:text-base 
               ${chat.sender?.code === user.code ? 'bg-teal-500 text-white rounded-br-none' : 'bg-white text-gray-800 rounded-tl-none border border-gray-200'}`}>
               <p>{chat.text}</p>
-              <span className={`block mt-1 text-right text-xs sm:text-sm ${chat.sender?.code === user.code ? 'text-teal-200' : 'text-gray-400'}`}>
+              <span className={`block mt-1 text-xs sm:text-sm ${chat.sender?.code === user.code ? 'text-teal-200 text-right ' : 'text-gray-400 text-left'}`}>
                 {formatDate(chat.createdAt)} • {formatTime(chat.createdAt)}
               </span>
             </div>
           </div>
         ))}
-        {isTyping && (
-          <div className="flex justify-start">
-            <div className="max-w-[70%] p-2 sm:p-3 rounded-xl bg-white text-gray-800 border border-gray-100 shadow-sm text-sm flex items-center gap-1">
-              <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce delay-0"></span>
-              <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce delay-150"></span>
-              <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce delay-300"></span>
-            </div>
-          </div>
-        )}
+       
         <div ref={messagesEndRef} />
       </div>
 

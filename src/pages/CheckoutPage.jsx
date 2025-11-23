@@ -8,20 +8,15 @@ import profileApi from '../api/profileApi';
 import pointApi from '../api/pointApi';
 import InfoPayment from '../components/common/InfoPayment';
 import SearchPromotion from '../components/common/SearchPromotion';
-import {
-  Truck,
-  Tag,
-  Gift,
-  X,
-  BadgeDollarSign,
-  Coins,
-} from 'lucide-react';
+import { Truck, Tag, Gift, X, BadgeDollarSign, Coins, } from 'lucide-react';
 
 export default function CheckoutPage() {
+
   const { setInfoUser } = useContext(UserContext);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const fromCart = queryParams.get('cart') || null;
+  
   const productData = location.state?.productData || [];
 
   const brands = productData.map((p) => p.brand);
@@ -106,7 +101,7 @@ export default function CheckoutPage() {
             {productData.map((p, i) => (
               <div key={i} className="flex py-4 gap-4">
                 <img
-                  src={`${process.env.REACT_APP_API_URL}`+`/${p.image}`}
+                  src={`${process.env.REACT_APP_API_URL}` + `/${p.image}`}
                   alt={p.name}
                   className="w-20 h-20 rounded-md object-cover border border-gray-200 dark:border-gray-700"
                 />

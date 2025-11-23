@@ -14,7 +14,7 @@ export default function Public() {
 
     useEffect(() => {
         const loadingAnimation = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 500));
             setLoading(false);
         }
         loadingAnimation();

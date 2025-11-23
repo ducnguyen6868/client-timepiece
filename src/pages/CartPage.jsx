@@ -99,8 +99,9 @@ export default function CartPage() {
     };
 
     const handleShopping = () => {
+
         const productData = carts.map((cart) => ({
-            id: cart.id,
+            id: cart._id,
             name: cart.name,
             code: cart.code,
             image: cart.image,
@@ -109,6 +110,7 @@ export default function CartPage() {
             index:cart.index,
             quantity: cart.quantity,
         }));
+        console.log(productData);
         navigate("/product/checkout?cart=all", { state: { productData } });
     };
 
