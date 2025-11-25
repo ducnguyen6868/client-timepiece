@@ -91,7 +91,7 @@ export default function CheckoutPage() {
       if(infoPayment.payment==='MOMO'){
         window.location.href=link;
       }else{
-        window.location.href=process.env.REACT_APP_API_URL||'http://localhost:3000'+`/payment-result?orderId=${orderId}`;
+        window.location.href=process.env.REACT_APP_FRONTEND_URL||'http://localhost:3000'+`/payment-result?orderId=${orderId}`;
       }
 
     } catch (err) {
