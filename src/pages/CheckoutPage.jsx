@@ -87,6 +87,7 @@ export default function CheckoutPage() {
       }
       orderId = res.order?.code;
       if (discount > 0) await pointApi.put(infoPayment.userId, orderId, discount);
+      
       if(infoPayment.payment==='MOMO'){
         window.location.href=link;
       }else{
