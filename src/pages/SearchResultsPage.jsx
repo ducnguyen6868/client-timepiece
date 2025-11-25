@@ -355,9 +355,7 @@ export default function SearchResultsPage() {
 
           {/* LOADING */}
           {loading && (
-            <div className="min-h-80 flex items-center justify-center">
               <LoadingAnimations option="skeleton" />
-            </div>
           )}
 
           {/* NO RESULTS */}

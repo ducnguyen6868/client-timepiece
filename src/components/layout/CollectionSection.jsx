@@ -69,7 +69,7 @@ const CollectionSection = () => {
         <section className="relative py-1 mb-1 sm:py-3 md:py-4 bg-gray-50 w-full">
             <div
                 className="relative mx-auto overflow-hidden rounded-sm shadow-md
-            h-[100px] xs:h-[200px] sm:h-[220px] md:h-[240px] lg:h-[260px] xl:h-[280px] "
+            h-[140px] xs:h-[200px] sm:h-[220px] md:h-[240px] lg:h-[260px] xl:h-[280px] "
             >
                 {collections.map((collection, index) => (
                     <div
