@@ -22,7 +22,7 @@ export default function CartPage() {
 
     const getCarts = async () => {
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 200));
 
             const response = await userApi.viewCart();
             setCarts(response.carts);
@@ -49,6 +49,7 @@ export default function CartPage() {
             } else {
                 setCarts([]);
             }
+            setLoading(false);
         }
     }, [token]);
 

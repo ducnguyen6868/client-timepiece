@@ -15,7 +15,7 @@ export default function WishlistPage() {
 
         const getProducts = async () => {
             try {
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 200));
 
                 let wishlist = localStorage.getItem('wishlist');
                 wishlist = JSON.parse(wishlist);
@@ -30,7 +30,7 @@ export default function WishlistPage() {
         }
         const getWishlist = async () => {
             try {
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 200));
                 const response = await userApi.wishlist();
                 setProducts(response.products);
             } catch (err) {

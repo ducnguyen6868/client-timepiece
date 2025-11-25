@@ -101,7 +101,7 @@ export default function TrendingProduct() {
             )}
             {/* Trending Products */}
             <section className="w-full flex justify-center py-6 transition-colors duration-500" id='trending-container'>
-                <div className="mx-auto py-4 px-4 md:px-8 lg:px-12 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg">
+                <div className="w-full mx-auto py-4 px-4 md:px-8 lg:px-12 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg">
                     <div
                         id="trending-header"
                         data-animate
@@ -113,7 +113,9 @@ export default function TrendingProduct() {
 
                     {loading && (
                         <>
-                            <LoadingAnimations option='skeleton' />
+                            <div className='w-full'>
+                                <LoadingAnimations option='skeleton' />
+                            </div>
                         </>
                     )}
                     <div className="grid lg:grid-cols-6 lg:gap-3 md:grid-cols-3 grid-cols-2 gap-4">
