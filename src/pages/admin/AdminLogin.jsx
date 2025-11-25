@@ -52,9 +52,9 @@ export default function AdminLogin() {
       const response = await authApi.postAdmin(loginData);
       if (loginData.rememberMe) {
         //Save token to localstorage 
-        localStorage.setItem("adminToken", response.token);
+        localStorage.setItem("token", response.token);
       } else {
-        sessionStorage.setItem("adminToken", response.token);
+        sessionStorage.setItem("token", response.token);
       }
       setShow(true);
       setType('success');

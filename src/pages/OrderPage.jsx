@@ -3,6 +3,7 @@ import { Package, Truck, CheckCircle, XCircle, Clock, Loader2, AlertTriangle } f
 import OrderDetail from '../components/layout/OrderDetail';
 import orderApi from '../api/orderApi';
 import ReviewModal from '../components/common/ReviewModal';
+import LoadingAnimations from '../components/common/LoadingAnimations';
 import { formatDate } from '../utils/formatDate';
 import { formatTime } from '../utils/formatTime';
 
@@ -92,6 +93,8 @@ const CancelModal = ({ open, onClose, onConfirm, orderCode }) => {
 export default function OrderPage() {
     const [logged, setLogged] = useState(true);
 
+    const [loading, setLoading] = useState(true);
+
     const [orders, setOrders] = useState([]);
     const [activeFilter, setActiveFilter] = useState('All');
     const [filteredOrders, setFilteredOrders] = useState([]);
@@ -143,16 +146,20 @@ export default function OrderPage() {
     }
     const getOrders = async () => {
         try {
+            await new Promise(resolve => setTimeout(resolve, 500));
             const response = await orderApi.getOrders();
             setOrders(response.orders || []);
         } catch (err) {
             console.error(err.response?.data?.message || err.message);
             setLogged(false);
             localStorage.removeItem('token');
+        } finally {
+            setLoading(false);
         }
     };
     const getOtherOrders = async () => {
         try {
+            await new Promise(resolve => setTimeout(resolve, 500));
             let order = localStorage.getItem('order');
             order = JSON.parse(order);
             const response = await orderApi.viewList(order);
@@ -160,6 +167,8 @@ export default function OrderPage() {
         } catch (err) {
             console.error(err.response?.data?.message || err.message);
 
+        } finally {
+            setLoading(false);
         }
     };
     useEffect(() => {
@@ -183,9 +192,15 @@ export default function OrderPage() {
     const endOrder = startOrder + 2;
     const listOrder = filteredOrders.slice(startOrder, endOrder);
 
+    if (loading) {
+        return (
+            <LoadingAnimations option='dots_circle' />
+        );
+    };
+    
     return (
         <>
-            <div className={logged ? `space-y-6` : 'px-4 md:px-5 xl:px-6 lg:px-8' }>
+            <div className={logged ? `space-y-6` : 'px-4 md:px-5 xl:px-6 lg:px-8'}>
                 {/* Status Filter Tabs */}
                 <div className="flex space-x-2 space-y-2 border-b border-gray-200 overflow-x-auto">
                     {statusFilters.map(filter => (

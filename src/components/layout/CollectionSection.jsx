@@ -13,16 +13,16 @@ const CollectionSection = () => {
 
     const navigate = useNavigate();
 
-    // Auto-play slider
-    // useEffect(() => {
-    //     if (!isAutoPlaying || collections.length <= 1) return;
+   // Auto-play slider
+    useEffect(() => {
+        if (!isAutoPlaying || collections.length <= 1) return;
 
-    //     const interval = setInterval(() => {
-    //         setCurrentIndex((prev) => (prev + 1) % collections.length);
-    //     }, 5000);
+        const interval = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % collections.length);
+        }, 5000);
 
-    //     return () => clearInterval(interval);
-    // }, [isAutoPlaying, collections]);
+        return () => clearInterval(interval);
+    }, [isAutoPlaying, collections]);
 
     const nextSlide = () => {
         setCurrentIndex((currentIndex + 1) % collections.length);
@@ -66,10 +66,10 @@ const CollectionSection = () => {
     }
 
     return (
-        <section className="relative py-2 sm:py-3 md:py-4 bg-gray-50 w-full">
+        <section className="relative py-1 mb-1 sm:py-3 md:py-4 bg-gray-50 w-full">
             <div
-                className="relative mx-auto overflow-hidden rounded-xl shadow-xl
-            h-[160px] xs:h-[200px] sm:h-[220px] md:h-[240px] lg:h-[260px] xl:h-[280px] "
+                className="relative mx-auto overflow-hidden rounded-sm shadow-md
+            h-[100px] xs:h-[200px] sm:h-[220px] md:h-[240px] lg:h-[260px] xl:h-[280px] "
             >
                 {collections.map((collection, index) => (
                     <div
@@ -84,7 +84,8 @@ const CollectionSection = () => {
                             }
                 `}
                     >
-                        <div className="relative w-full h-full bg-gradient-to-br from-gray-900 via-teal-900 to-gray-900 rounded-xl text-white overflow-hidden">
+                        <div className="relative w-full h-full bg-gradient-to-br from-gray-900 via-teal-900 to-gray-900 
+                        rounded-md md:rounded-lg xl:rounded-xl text-white overflow-hidden">
                             <img
                                 src={`${process.env.REACT_APP_API_URL}` + `/${collection.banner}`}
                                 alt={collection.name}
@@ -105,7 +106,7 @@ const CollectionSection = () => {
                         "
                             >
                                 {/* Featured Label */}
-                                <div className="flex items-center space-x-1 sm:space-x-2">
+                                <div className="hidden lg:flex items-center space-x-1 sm:space-x-2">
                                     <Sparkles className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-teal-400" />
                                     <span className="text-sm sm:text-base md:text-lg font-semibold uppercase tracking-wide text-teal-400">
                                         Featured Collection

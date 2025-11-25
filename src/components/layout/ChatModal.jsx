@@ -125,8 +125,7 @@ export default function ChatModal ({ onClose }) {
   };
 
   return (
-    <div className="fixed bottom-20 right-4 w-[95%] max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl 
-    h-[450px] sm:h-[500px] bg-white rounded-xl shadow-2xl flex flex-col z-50 border border-gray-300">
+    <div className="fixed inset-0 bottom-20 bg-white rounded-xl shadow-2xl flex flex-col z-50 border border-gray-300">
 
       {/* Header */}
       <div className="p-3 flex justify-between items-center rounded-t-xl bg-brand hover:bg-brand-hover text-white">

@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import orderApi from '../../api/orderApi';
 import RevenueChart from '../../components/layout/RevenueChart';
 
-
 const topCustomers = [
     { name: 'Eleanor Vance', sales: 5490.50, status: 'VIP', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734bcae?w=50&h=50&fit=crop' },
     { name: 'Marcus Thorne', sales: 4890.00, status: 'Gold', avatar: 'https://images.unsplash.com/photo-1521119989659-a83eee488004?w=50&h=50&fit=crop' },
@@ -17,9 +16,6 @@ const adminAlerts = [
     { text: 'New customer support ticket requires attention.', level: 'medium' },
     { text: 'Inventory count mismatch for product X.', level: 'low' },
 ];
-
-
-
 
 // ************************************************
 // Main Component: Overview Dashboard

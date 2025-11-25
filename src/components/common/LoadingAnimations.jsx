@@ -1,6 +1,5 @@
 import useProductsPerRow from '../../hooks/useProductsPerRow';
 
-// Effect 2: Shimmer Effect
 const ShimmerLoader = () => (
     <div className="bg-white rounded-lg md:rounded-xl xl:rounded-2xl shadow-md overflow-hidden relative">
         <div className="bg-gray-200 h-44 sm:h-48 md:h-52 w-full relative overflow-hidden">
@@ -23,10 +22,32 @@ const DotsLoader = () => (
             {[0, 1, 2].map((i) => (
                 <div
                     key={i}
-                    className="w-4 h-4 bg-blue-600 rounded-full animate-bounce"
+                    className="w-4 h-4 bg-brand rounded-full animate-bounce"
                     style={{ animationDelay: `${i * 0.15}s` }}
                 ></div>
             ))}
+        </div>
+    </div>
+);
+
+const DotsCircleLoader = () => (
+    <div className="flex w-full p-4 items-center justify-center">
+        <div className="relative w-16 h-16">
+            {[...Array(8)].map((_, i) => (
+                <div
+                    key={i}
+                    className="absolute w-3 h-3 bg-brand rounded-full"
+                    style={{
+                        top: '50%',
+                        left: '50%',
+                        transform: `rotate(${i * 45}deg) translateY(-24px)`,
+                        opacity: 1 - (i * 0.1),
+                        animation: 'fade 1s infinite',
+                        animationDelay: `${i * 0.125}s`
+                    }}
+                ></div>
+            ))}
+
         </div>
     </div>
 );
@@ -42,6 +63,10 @@ export default function LoadingAnimations({ option }) {
           @keyframes shimmer {
             100% { transform: translateX(100%); }
           }
+            @keyframes fade {
+              0%, 100% { opacity: 1; }
+              50% { opacity: 0.2; }
+            }
         
         `}
             </style>
@@ -53,8 +78,10 @@ export default function LoadingAnimations({ option }) {
                 )}
             </div>
             {option === 'dots' && (
-                <DotsLoader  />
-
+                <DotsLoader />
+            )}
+            {option === 'dots_circle' && (
+                <DotsCircleLoader />
             )}
         </>
     );

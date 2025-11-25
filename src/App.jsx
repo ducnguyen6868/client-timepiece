@@ -20,8 +20,9 @@ import CartPage from './pages/CartPage';
 import WishlistPage from './pages/WishlistPage';
 import OrderPage from './pages/OrderPage';
 
+import AuthAccount from './middlewares/authAccount';
+
 import User from './components/layout/User';
-import UserAuth from './hooks/userAuth';
 import ProfilePage from './pages/ProfilePage';
 import WalletPage from './pages/WalletPage';
 import PointPage from './pages/PointPage';
@@ -64,31 +65,34 @@ function App() {
 
           {/* Các route danh cho User */}
           <Route path="/user" element={<User />}>
-            <Route index path='profile' element={<UserAuth><ProfilePage /></UserAuth>}></Route>
-            <Route path='point' element={<UserAuth><PointPage /></UserAuth>}></Route>
-            <Route path='wallet' element={<UserAuth><WalletPage /></UserAuth>}></Route>
-            <Route path='promotions' element={<UserAuth><PromotionPage /></UserAuth>}></Route>
-            <Route path='orders' element={<UserAuth><OrderPage /></UserAuth>}></Route>
-            <Route path='address' element={<UserAuth><AddressPage /></UserAuth>}></Route>
-            <Route path='wishlist' element={<UserAuth><WishlistPage /></UserAuth>}></Route>
-            <Route path='settings' element={<UserAuth><SettingPage /></UserAuth>}></Route>
+            <Route index element={<Navigate to='profile' replace />}></Route>
+            <Route path='profile' element={<AuthAccount><ProfilePage /></AuthAccount>}></Route>
+            <Route path='point' element={<AuthAccount><PointPage /></AuthAccount>}></Route>
+            <Route path='wallet' element={<AuthAccount><WalletPage /></AuthAccount>}></Route>
+            <Route path='promotions' element={<AuthAccount><PromotionPage /></AuthAccount>}></Route>
+            <Route path='orders' element={<AuthAccount><OrderPage /></AuthAccount>}></Route>
+            <Route path='address' element={<AuthAccount><AddressPage /></AuthAccount>}></Route>
+            <Route path='wishlist' element={<AuthAccount><WishlistPage /></AuthAccount>}></Route>
+            <Route path='settings' element={<AuthAccount><SettingPage /></AuthAccount>}></Route>
           </Route>
 
 
           {/* Các route dành cho admin */}
           <Route path='/admin/login' element={<AdminLogin />}></Route>
+
           <Route path='/admin' element={<Admin />}>
-            <Route path='overview' element={<OverviewDashboard />}></Route>
-            <Route path='products' element={<ProductManagement />}></Route>
-            <Route path='orders' element={<OrderManagement />}></Route>
-            <Route path='promotions' element={<PromotionManagement />}></Route>
-            <Route path='users' element={<UserManagement />}></Route>
-            <Route path='chats' element={<ChatManagement />}></Route>
-            <Route path='settings' element={<AdminSettingPage />}></Route>
+            <Route index element={<Navigate to='overview' replace />}></Route>
+            <Route path='overview' element={<AuthAccount><OverviewDashboard /></AuthAccount>}></Route>
+            <Route path='products' element={<AuthAccount><ProductManagement /></AuthAccount>}></Route>
+            <Route path='orders' element={<AuthAccount><OrderManagement /></AuthAccount>}></Route>
+            <Route path='promotions' element={<AuthAccount><PromotionManagement /></AuthAccount>}></Route>
+            <Route path='users' element={<AuthAccount><UserManagement /></AuthAccount>}></Route>
+            <Route path='chats' element={<AuthAccount><ChatManagement /></AuthAccount>}></Route>
+            <Route path='settings' element={<AuthAccount><AdminSettingPage /></AuthAccount>}></Route>
           </Route>
         </Routes>
-
       </UserProvider>
+
     </BrowserRouter>
   );
 }

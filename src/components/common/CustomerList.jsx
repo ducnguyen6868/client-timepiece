@@ -1,7 +1,7 @@
 import {
     UserCheck, UserX, Clock, Mail, Phone,
     Edit, UndoDot, Eye, ShoppingBag, Calendar,
-    TrendingUp, Star, Crown, Zap, Ban ,ShieldCheck
+    TrendingUp, Star, Crown, Zap, Ban, ShieldCheck
 } from 'lucide-react';
 import { useState } from 'react';
 import { formatDate } from '../../utils/formatDate';
@@ -79,7 +79,7 @@ export default function CustomerList({ customersData, onChange }) {
         } catch (err) {
             setType('error');
             setMessage(err.response?.data?.message || err.message);
-        }finally{
+        } finally {
             setShow(true);
         }
 
@@ -108,7 +108,7 @@ export default function CustomerList({ customersData, onChange }) {
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
                                             <div className="relative w-10 h-10">
-                                                <img className="object-cover rounded-full ring-2 ring-[#00bcd4] ring-offset-2 transform group-hover:scale-110 transition-transform duration-300" src={customer.avatar} alt={customer.name} />
+                                                <img className="object-cover rounded-full w-full h-full ring-2 ring-[#00bcd4] ring-offset-2 transform group-hover:scale-110 transition-transform duration-300" src={customer.avatar} alt={customer.name} />
                                                 {customer.status === 'actived' && (
                                                     <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full ring-2 ring-white animate-pulse"></div>
                                                 )}
@@ -123,10 +123,12 @@ export default function CustomerList({ customersData, onChange }) {
                                             <Mail className='w-4 h-4 text-[#00bcd4]' />
                                             <span>{customer.email}</span>
                                         </div>
-                                        <div className='flex items-center space-x-2 hover:text-[#00bcd4] transition-colors'>
-                                            <Phone className='w-4 h-4 text-[#00bcd4]' />
-                                            <span>{customer.phone}</span>
-                                        </div>
+                                        {customer.phone && (
+                                            <div className='flex items-center space-x-2 hover:text-[#00bcd4] transition-colors'>
+                                                <Phone className='w-4 h-4 text-[#00bcd4]' />
+                                                <span>{customer.phone}</span>
+                                            </div>
+                                        )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                         <div className="flex items-center space-x-2">
@@ -168,7 +170,7 @@ export default function CustomerList({ customersData, onChange }) {
                                                 >
                                                     <UndoDot className="w-4 h-4" />
                                                 </button>
-                                            ) : customer.status === 'inActive'?(
+                                            ) : customer.status === 'inActive' ? (
                                                 <button title="Active"
                                                     className="p-2 text-violet-600 hover:bg-violet-100 
                                             rounded-lg transition-all duration-200 transform hover:scale-110"
@@ -176,7 +178,7 @@ export default function CustomerList({ customersData, onChange }) {
                                                 >
                                                     <ShieldCheck className="w-4 h-4" />
                                                 </button>
-                                            ): (
+                                            ) : (
                                                 <button title="Supesened"
                                                     className="p-2 text-red-600 hover:bg-red-100 rounded-lg
                                             transition-all duration-200 transform hover:scale-110"

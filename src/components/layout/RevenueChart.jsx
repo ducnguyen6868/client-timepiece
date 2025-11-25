@@ -3,12 +3,17 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { TrendingUp, DollarSign, ShoppingCart, Activity, Calendar } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatCurrency';
 import orderApi from '../../api/orderApi';
+import Notification from '../common/Notification';
 
 export default function RevenueChart() {
   const [timeRange, setTimeRange] = useState('7days');
   const [revenueData, setRevenueData] = useState([]);
   const [summary, setSummary] = useState();
+
   const [loading, setLoading] = useState(false);
+  const [type, setType] = useState('');
+  const [show, setShow] = useState(false);
+  const [message, setMessage] = useState('');
 
   const getRevenueData = async () => {
     setLoading(true);
@@ -17,7 +22,9 @@ export default function RevenueChart() {
       setRevenueData(response.revenueData);
       setSummary(response.summary);
     } catch (err) {
-      console.log(err.response?.data?.message || err.message);
+      setShow(true);
+      setMessage(err.response?.data?.message || err.message);
+      setType('error');
     } finally {
       setLoading(false);
     }
@@ -37,8 +44,10 @@ export default function RevenueChart() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-teal-50">
-      <div className="max-w-7xl mx-auto">
+    <>
+      <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-teal-50">
+
         {/* Header Section */}
         <div className="mb-4 flex flex-row flex-wrap justify-between items-center">
           <div className="flex items-center gap-3 mb-3">
@@ -247,7 +256,8 @@ export default function RevenueChart() {
             )}
           </div>
         </div>
+
       </div>
-    </div>
+    </>
   );
 };
