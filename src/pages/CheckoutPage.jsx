@@ -88,10 +88,11 @@ export default function CheckoutPage() {
       orderId = res.order?.code;
       if (discount > 0) await pointApi.put(infoPayment.userId, orderId, discount);
 
-      if(infoPayment.payment==='MOMO'){
-        window.location.href=link;
-      }else{
-        window.location.href=process.env.REACT_APP_FRONTEND_URL||'http://localhost:3000'+`/payment-result?orderId=${orderId}`;
+      if (infoPayment.payment === 'MOMO') {
+        window.location.href = link;
+      } else {
+        link = process.env.REACT_APP_FRONTEND_URL || 'http://localhost:3000';
+        window.location.href = link + `/payment-result?orderId=${orderId}`;
       }
 
     } catch (err) {
