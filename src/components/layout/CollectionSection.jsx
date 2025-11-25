@@ -66,7 +66,7 @@ const CollectionSection = () => {
     }
 
     return (
-        <section className="relative py-1 mb-1 sm:py-3 md:py-4 bg-gray-50 w-full">
+        <section className="relative p-1 mb-1 sm:py-3 md:py-4 bg-gray-50 w-full">
             <div
                 className="relative mx-auto overflow-hidden rounded-sm shadow-md
             h-[140px] xs:h-[200px] sm:h-[220px] md:h-[240px] lg:h-[260px] xl:h-[280px] "
@@ -102,7 +102,7 @@ const CollectionSection = () => {
                             absolute inset-0 z-0 w-full
                             px-3 xs:px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16
                             py-3 xs:py-4 sm:py-5 md:py-6 lg:py-8
-                            flex flex-col justify-center gap-2 
+                            flex flex-col justify-evenly gap-2 
                         "
                             >
                                 {/* Featured Label */}
@@ -116,7 +116,7 @@ const CollectionSection = () => {
                                 {/* Title */}
                                 <h2
                                     className="
-                                font-bold leading-tight
+                                font-bold 
                                 text-xs xs:text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl
                                 line-clamp-1 sm:line-clamp-2
                             "
@@ -127,9 +127,9 @@ const CollectionSection = () => {
                                 {/* Description */}
                                 <p
                                     className="
-                                text-xs max-w-xs md:text-sm xl:text-base leading-relaxed
+                                text-xs max-w-xs md:text-sm xl:text-base
                                 md:max-w-lg lg:max-w-xl
-                                line-clamp-1 md:line-clamp-2 xl:line-clamp-3
+                                line-clamp-2 md:line-clamp-2 xl:line-clamp-3
                                 mb-2 sm:mb-3 md:mb-4
                             "
                                 >

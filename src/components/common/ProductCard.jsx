@@ -35,7 +35,7 @@ export default function ProductCard({ product }) {
                 </div>
 
                 <div className="p-4">
-                    <Link to={`/product/${product.slug}`} className="text-gray-900 dark:text-gray-100 font-semibold truncate"
+                    <Link to={`/product/${product.slug}`} className="text-gray-900 dark:text-gray-100 font-semibold line-clamp-1 pr-4"
                     >
                         {product.name}
                     </Link>

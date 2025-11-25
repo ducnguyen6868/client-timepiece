@@ -169,12 +169,12 @@ export default function InfoPayment({ total, onSubmit }) {
                         <div className="space-y-3 mt-4">
                             {[
                                 { id: "MOMO", label: "Pay with MOMO", img: momoImg },
-                                { id: "ZaloPay", label: "Pay with ZaloPay", img: zaloImg },
+                                // { id: "ZaloPay", label: "Pay with ZaloPay", img: zaloImg },
                                 { id: "COD", label: "Cash On Delivery", icon: Wallet },
                             ].map((method) => (
                                 <label key={method.id} className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-brand transition">
                                     <input type="radio" name="payment" value={method.id} checked={infoPayment.payment === method.id} onChange={handleInputChange} />
-                                    {method.img ? <img src={method.img} alt={method.id} className="w-8 h-8" /> : <method.icon size={26} />}
+                                    {method.img ? <img src={method.img} alt={method.id} className="w-auto h-8" /> : <method.icon size={26} />}
                                     <span className="text-sm font-medium">{method.label}</span>
                                 </label>
                             ))}

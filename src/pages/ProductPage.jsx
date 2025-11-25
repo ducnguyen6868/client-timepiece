@@ -7,6 +7,7 @@ import { formatCurrency } from '../utils/formatCurrency';
 import userApi from '../api/userApi';
 import productApi from '../api/productApi';
 import Review from '../components/common/Review';
+import LoadingAnimations from '../components/common/LoadingAnimations';
 
 export default function ProductPage() {
   const { setInfoUser, locale, currency } = useContext(UserContext);
@@ -29,7 +30,6 @@ export default function ProductPage() {
     if (!slug || slug === '') return;
     const getProduct = async () => {
       try {
-        setLoading(true);
         const response = await productApi.getProduct(slug);
         setProduct(response.product);
         setStars(response.stars);
@@ -127,12 +127,11 @@ export default function ProductPage() {
   );
 
 
-  if (loading)
+  if (loading){
     return (
-      <div className="flex justify-center items-center min-h-screen text-gray-600 text-lg">
-        Loading product...
-      </div>
+      <LoadingAnimations option='dots_circle'/>
     );
+  }
 
   if (!product || !product.name)
     return (

@@ -16,7 +16,7 @@ export default function CheckoutPage() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const fromCart = queryParams.get('cart') || null;
-  
+
   const productData = location.state?.productData || [];
 
   const brands = productData.map((p) => p.brand);
@@ -64,8 +64,14 @@ export default function CheckoutPage() {
       final_amount: total,
     };
     try {
-      const response = await orderApi.payment(total);
-      const res = await orderApi.createOrder(orderData, response.orderId, fromCart);
+      let orderId;
+      let link;
+      if (infoPayment.payment === 'MOMO') {
+        const response = await orderApi.payment(total);
+        orderId = response.orderId;
+        link = response.payUrl;
+      }
+      const res = await orderApi.createOrder(orderData, orderId, fromCart);
       if (!infoPayment.userId) {
         const code = res.order?.code;
         let order = localStorage.getItem('order');
@@ -79,8 +85,14 @@ export default function CheckoutPage() {
       } else {
         setInfoUser((prev) => ({ ...prev, cart: res.cart }));
       }
-      if (discount > 0) await pointApi.put(infoPayment.userId, response.orderId, discount);
-      window.location.href = response.payUrl;
+      orderId = res.order?.code;
+      if (discount > 0) await pointApi.put(infoPayment.userId, orderId, discount);
+      if(infoPayment.payment==='MOMO'){
+        window.location.href=link;
+      }else{
+        window.location.href=process.env.REACT_APP_API_URL||'http://localhost:3000'+`/payment-result?orderId=${orderId}`;
+      }
+
     } catch (err) {
       toast.error(err.response?.data?.message || err.message);
     }
@@ -103,6 +115,11 @@ export default function CheckoutPage() {
                 <img
                   src={`${process.env.REACT_APP_API_URL}` + `/${p.image}`}
                   alt={p.name}
+                  loading='lazy'
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "https://placehold.co/300x300/e2e8f0/64748b?text=Watch";
+                  }}
                   className="w-20 h-20 rounded-md object-cover border border-gray-200 dark:border-gray-700"
                 />
                 <div className="flex flex-col justify-between w-full">
