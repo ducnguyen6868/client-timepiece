@@ -31,7 +31,7 @@ export default function WishlistPage() {
         const getWishlist = async () => {
             try {
                 await new Promise(resolve => setTimeout(resolve, 200));
-                const response = await userApi.wishlist();
+                const response = await userApi.getWishlist();
                 setProducts(response.products);
             } catch (err) {
                 if (err.response && err.response.status === 403) {

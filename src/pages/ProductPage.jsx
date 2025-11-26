@@ -7,6 +7,7 @@ import { formatCurrency } from '../utils/formatCurrency';
 import userApi from '../api/userApi';
 import productApi from '../api/productApi';
 import Review from '../components/common/Review';
+import WatchNotFound from '../components/layout/WatchNotFound';
 import LoadingAnimations from '../components/common/LoadingAnimations';
 
 export default function ProductPage() {
@@ -43,14 +44,14 @@ export default function ProductPage() {
   }, [slug]);
 
   useEffect(() => {
-    if(!product || !product.flashSale) return;
+    if (!product || !product.flashSale) return;
     if (product.flashSale) {
-      const price = product?.detail[selectedDetailIndex].flashSalePrice ;
+      const price = product?.detail[selectedDetailIndex].flashSalePrice;
       const savePrice = product.detail[selectedDetailIndex].originalPrice - price;
       setPrice(price);
       setSavePrice(savePrice);
     } else {
-      const price = product?.detail[selectedDetailIndex].currentPrice ;
+      const price = product?.detail[selectedDetailIndex].currentPrice;
       const savePrice = product.detail[selectedDetailIndex].originalPrice - price;
       setPrice(price);
       setSavePrice(savePrice);
@@ -71,13 +72,13 @@ export default function ProductPage() {
         id: product._id,
         name: product.name,
         code: product.code,
+        slug: product.slug,
         brand: product.brand.name,
         image: product.images[0],
         price: selectedDetail.currentPrice,
         index: selectedDetailIndex,
         color: selectedDetail.color,
         quantity: quantity,
-
       }
     ];
     navigate('../product/checkout', { state: { productData } });
@@ -100,7 +101,7 @@ export default function ProductPage() {
         price: selectedDetail.currentPrice,
         index: selectedDetailIndex
       };
-      const response = await userApi.addCart(data);
+      const response = await userApi.postCart(data);
       toast.success(response.message);
       setInfoUser((prev) => ({ ...prev, cart: response.cart }));
     } catch (err) {
@@ -127,17 +128,15 @@ export default function ProductPage() {
   );
 
 
-  if (loading){
+  if (loading) {
     return (
-      <LoadingAnimations option='dots_circle'/>
+      <LoadingAnimations option='dots_circle' />
     );
   }
 
   if (!product || !product.name)
     return (
-      <div className="flex justify-center items-center min-h-screen text-gray-600 text-lg">
-        Product not found
-      </div>
+      <WatchNotFound />
     );
 
   const selectedDetail = product.detail?.[selectedDetailIndex] || {};

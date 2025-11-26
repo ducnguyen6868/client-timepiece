@@ -1,18 +1,13 @@
 
-import { useState, useEffect, useContext } from 'react';
-import { Heart } from 'lucide-react';
+import { useState, useEffect} from 'react';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { Link } from "react-router-dom";
-import { UserContext } from '../../contexts/UserContext';
 import { Icon } from '@iconify/react';
 import productApi from '../../api/productApi';
-import userApi from '../../api/userApi';
 import Notification from '../common/Notification';
 import LoadingAnimations from '../common/LoadingAnimations';
 
 export default function TrendingProduct() {
-
-    const { setInfoUser } = useContext(UserContext);
 
     const [trendingProducts, setTrendingProducts] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -25,7 +20,7 @@ export default function TrendingProduct() {
         const getTrendingProducts = async () => {
             try {
                 setLoading(true);
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 500));
                 const page = 1;
                 const limit = 6;
                 const response = await productApi.getTrending(page, limit);
@@ -40,49 +35,6 @@ export default function TrendingProduct() {
         }
         getTrendingProducts();
     }, []);
-
-    const toggleWishlist = async (code, isRemove = false) => {
-        const token = localStorage.getItem("token");
-
-        setShow(true);
-
-        if (!token) {
-            let wishlistLocal = JSON.parse(localStorage.getItem("wishlist") || "[]");
-            const exists = wishlistLocal.some((item) => item.code === code);
-
-            if (isRemove) {
-                wishlistLocal = wishlistLocal.filter((i) => i.code !== code);
-                setMessage('Removed from wishlist 💔');
-                setType('info');
-            } else if (exists) {
-                setMessage('Already in wishlist');
-                setType('warning');
-                return;
-            } else {
-                wishlistLocal.push({ code });
-                setMessage('Added to wishlist ❤️')
-                setType('success');
-            }
-
-            localStorage.setItem("wishlist", JSON.stringify(wishlistLocal));
-            setInfoUser((prev) => ({ ...prev, wishlist: wishlistLocal.length }));
-            return;
-        }
-
-        try {
-            const response = isRemove
-                ? await userApi.removeWishlist(code)
-                : await userApi.addWishlist(code, 0);
-            setMessage(response.message);
-            setType('success');
-            setInfoUser((prev) => ({ ...prev, wishlist: response.wishlist }));
-        } catch (err) {
-            setMessage(err.response?.data?.message || err.message);
-            setType('error');
-            if (err.response?.status === 403) localStorage.removeItem("token");
-        }
-    };
-
 
     const getRankTag = (rank) => {
         switch (rank) {
@@ -142,12 +94,7 @@ export default function TrendingProduct() {
 
                                         style={{ animationDelay: `${idx * 0.1}s` }}
                                     />
-                                    <button className="absolute top-2 right-2 w-7 h-7 bg-bg-primary rounded-full flex items-center justify-center shadow hover:bg-error hover:text-text-primary transition-all transform hover:scale-110 animate-badgeSlideIn"
-                                        style={{ animationDelay: `${idx * 0.2}s` }}
-                                        onClick={() => toggleWishlist(product.code)}
-                                    >
-                                        <Heart className="w-4 h-4 text-text-primary" />
-                                    </button>
+                                    
                                 </div>
                                 <div className="p-3">
                                     <Link to={`/product/${product.slug}`}

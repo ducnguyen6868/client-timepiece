@@ -20,11 +20,11 @@ export default function CartPage() {
     const [indexCart, setIndexCart] = useState(-1);
 
 
-    const getCarts = async () => {
+    const getCart = async () => {
         try {
             await new Promise(resolve => setTimeout(resolve, 200));
 
-            const response = await userApi.viewCart();
+            const response = await userApi.getCart();
             setCarts(response.carts);
             const total = response.carts.reduce((t, c) => t + c.price * c.quantity, 0);
             setTotal(total);
@@ -38,7 +38,7 @@ export default function CartPage() {
 
     useEffect(() => {
         if (token) {
-            getCarts();
+            getCart();
         } else {
             let cart = localStorage.getItem("cart");
             if (cart) {
@@ -80,7 +80,7 @@ export default function CartPage() {
             const response = await userApi.changeQuantity(cartId, quantity);
             toast.success(response.message);
             setIndexCart(-1);
-            getCarts();
+            getCart();
         } catch (err) {
             toast.error(err.response?.data?.message || err.message);
         }
@@ -98,7 +98,7 @@ export default function CartPage() {
         try {
             const response = await userApi.deleteCart(cartId);
             toast.success(response.message);
-            getCarts();
+            getCart();
             setInfoUser((prev) => ({ ...prev, cart: response.cart }));
         } catch (err) {
             toast.error(err.response?.data?.message || err.message);
