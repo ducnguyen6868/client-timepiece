@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-    Package,
-    Truck,
-    CheckCircle,
-    Clock,
-    MapPin,
-    ChevronRight,
-    XCircle,
+import {Package,Truck,CheckCircle, Clock, MapPin, ChevronRight,  XCircle,
 } from "lucide-react";
 import { formatDate } from "../../utils/formatDate";
 import { toast } from "react-toastify";

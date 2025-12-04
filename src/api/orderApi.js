@@ -8,7 +8,7 @@ const orderApi={
     createOrder:(orderData,orderId ,fromCart) =>axiosClient.post('/order/create',{orderData,orderId ,fromCart}),
     payment:(final_amount) =>axiosClient.post('/order/payment',{final_amount}),
     transitionStatus:(orderId) =>axiosClient.post('/order/transition-status',{orderId}),
-    orders:(page, limit)=>axiosClient.get(`/order/management?page=${page}&&limit=${limit}`),
+    getOrdersManage:(page, limit)=>axiosClient.get(`/order/management?page=${page}&&limit=${limit}`),
     changeStatus:(orderId ,status)=>axiosClient.patch('/order/status',{orderId ,status}),
 }
 export default orderApi;

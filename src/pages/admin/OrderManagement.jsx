@@ -119,7 +119,7 @@ export default function OrderManagementPage() {
     const getOrders = async () => {
         try {
             const limit=5;
-            const response = await orderApi.orders(page,limit);
+            const response = await orderApi.getOrdersManage(page,limit);
             setOrders(response.orders);
             setTotal(response.total);
         } catch (err) {

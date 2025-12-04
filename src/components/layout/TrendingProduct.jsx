@@ -1,8 +1,9 @@
 
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { Link } from "react-router-dom";
 import { Icon } from '@iconify/react';
+import { Zap } from 'lucide-react';
 import productApi from '../../api/productApi';
 import Notification from '../common/Notification';
 import LoadingAnimations from '../common/LoadingAnimations';
@@ -94,7 +95,9 @@ export default function TrendingProduct() {
 
                                         style={{ animationDelay: `${idx * 0.1}s` }}
                                     />
-                                    
+                                    {product?.flashSale && (
+                                        <span className='absolute top-0 right-0 p-2' title='FLASHSALE'><Zap className='text-brand' /></span>
+                                    )}
                                 </div>
                                 <div className="p-3">
                                     <Link to={`/product/${product.slug}`}
@@ -102,7 +105,18 @@ export default function TrendingProduct() {
                                         style={{ animationDelay: `${idx * 0.15}s` }}
 
                                     >{product.name}</Link>
-                                    <p className="text-lg font-bold text-brand animate-fadeInUp">{formatCurrency(product.detail[0]?.currentPrice, 'en-Us', 'USD')}</p>
+                                    {product.flashSale ? (
+                                        <p className="text-lg font-bold text-brand animate-fadeInUp">
+                                            {formatCurrency(product.detail[0]?.flashSalePrice, 'en-Us', 'USD')}
+                                            <span className='pl-1 text-sm font-semibold line-through text-red-500 italic'>{formatCurrency(product.detail[0]?.originalPrice, 'en-Us', 'USD')}</span>
+                                        </p>
+                                    ) : (
+                                        <p className="text-lg font-bold text-brand animate-fadeInUp">
+                                            {formatCurrency(product.detail[0]?.currentPrice, 'en-Us', 'USD')}
+
+                                        </p>
+                                    )}
+
 
                                 </div>
                             </div >

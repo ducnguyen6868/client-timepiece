@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { Edit, Trash2, Eye, Star, Clock, Tag, Zap } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatCurrency';
 import ComfirmDeleteModal from './ConfirmDeleteModal';
 import UpdateStockModal from './UpdateStockModal';
 import productApi from '../../api/productApi';
+import Notification from './Notification';
 
 
 export default function ProductCard2({ product, onChange }) {
@@ -15,6 +16,10 @@ export default function ProductCard2({ product, onChange }) {
 
     const [showUpdateStockModal, setShowUpdateStockModal] = useState(false);
     const [stock, setStock] = useState(0);
+
+    const [show, setShow] = useState(false);
+    const [type, setType] = useState('');
+    const [message, setMessage] = useState('');
 
     const handleDelete = (product) => {
         setProductName(product.name);
@@ -28,7 +33,9 @@ export default function ProductCard2({ product, onChange }) {
             setShowConfirmModal(false);
             onChange?.();
         } catch (err) {
-            alert(err.response?.data?.message || err.message);
+            setShow(true);
+            setType('error');
+            setMessage(err.response?.data?.message || err.message);
         }
     }
     const handleChangeStock = (product) => {
@@ -39,10 +46,15 @@ export default function ProductCard2({ product, onChange }) {
 
     const handleSubmitStock = async (quantity) => {
         try {
-            await productApi.patchStock(productId, selectedIndex, quantity);
+           const response =  await productApi.patchStock(productId, selectedIndex, quantity);
+            setShow(true);
+            setType('success');
+            setMessage(response.message);
             onChange?.();
         } catch (err) {
-            console.log(err.response?.data?.message || err.message);
+            setShow(true);
+            setType('error');
+            setMessage(err.response?.data?.message || err.message);
         } finally {
             setShowUpdateStockModal(false);
         }
@@ -50,6 +62,7 @@ export default function ProductCard2({ product, onChange }) {
 
     return (
         <>
+            <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
             <div className="bg-white p-5 flex flex-col rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 animate-cardSlideInUp">
                 {/* Product Header */}
                 <div className="border-b border-gray-100">
@@ -85,7 +98,7 @@ export default function ProductCard2({ product, onChange }) {
                         {/* Selected Color with Price */}
                         <div className="flex items-center justify-between p-3 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-lg border border-cyan-200">
                             <div >
-                                <img className='w-10 rounded' src={`${process.env.REACT_APP_API_URL}`+`/${product.images[selectedIndex]}`}
+                                <img className='w-10 rounded' src={`${process.env.REACT_APP_API_URL}` + `/${product.images[selectedIndex]}`}
                                     alt={product?.name} title={product?.name}
                                     onError={(e) => {
                                         e.target.onerror = null;
@@ -155,18 +168,18 @@ export default function ProductCard2({ product, onChange }) {
                     <div className="flex items-center gap-4 text-xs text-gray-500">
                         <div className="flex items-center gap-1">
                             <Tag className="w-3 h-3" />
-                            <span>{product.category?.name}</span>
+                            <span>{product.category?.name || 'N/A'}</span>
                         </div>
                         <div className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
-                            <span>{new Date(product.createdAt)?.toLocaleDateString('vi-VN')}</span>
+                            <span>{product.createdAt || 'N/A'}</span>
                         </div>
                     </div>
 
                 </div>
                 {/* Footer--->Actions */}
                 <div className="flex gap-2 pt-2">
-                    <button className="flex-1 flex items-center justify-center
+                    {/* <button className="flex-1 flex items-center justify-center
                  gap-2 px-4 py-2.5 border border-cyan-500 text-cyan-600
                  hover:bg-cyan-50 rounded-lg font-medium transition-colors
                   animate-fadeInUp">
@@ -178,9 +191,9 @@ export default function ProductCard2({ product, onChange }) {
                      border border-gray-300 text-gray-600 hover:bg-gray-50
                      rounded-lg transition-colors animate-fadeInUp">
                         <Edit className="w-4 h-4" />
-                    </button>
+                    </button> */}
                     <button
-                        className="flex items-center justify-center px-4 py-2.5
+                        className="flex flex-1 items-center justify-center px-4 py-2.5
                      border border-red-300 text-red-600 hover:bg-red-50
                     rounded-lg transition-colors animate-fadeInUp"
                         onClick={() => handleDelete(product)}>

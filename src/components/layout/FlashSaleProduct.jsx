@@ -49,7 +49,7 @@ export default function FlashSale() {
                 setLoading(true);
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 const page = 1;
-                const limit = 5;
+                const limit = 10;
                 const response = await productApi.getFlashSale(page, limit);
                 let updatedProducts = response.flashsales;
 
@@ -180,14 +180,6 @@ export default function FlashSale() {
                     ))}
                 </div>
 
-                {flashSaleProducts?.length > 0 && (
-                    <div className='text-center mt-4'>
-                        <button className='text-base md:text-lg xl:text-xl md:px-5 xl:px-6
-                             text-white border-white border-2 rounded-full px-4'>
-                            Show more
-                        </button>
-                    </div>
-                )}
             </section>
 
         </>

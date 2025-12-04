@@ -7,12 +7,12 @@ import io from 'socket.io-client';
 import profileApi from '../../api/profileApi';
 import chatApi from '../../api/chatApi';
 
-const socket = io(process.env.REACT_APP_SOCKET_URL||'http://localhost:5000', {
+const socket = io(process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000', {
   transports: ["websocket"],
   withCredentials: true,
 });
 
-export default function ChatModal ({ onClose }) {
+export default function ChatModal({ onClose }) {
   const { infoUser, setInfoUser } = useContext(UserContext);
   const [logged, setLogged] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -32,18 +32,18 @@ export default function ChatModal ({ onClose }) {
     const loadUser = async () => {
       try {
         const res = await profileApi.profile();
-        const code = res.user.code || `user${Date.now()}`;
+        const code = res.user.code || `cus_${Date.now()}`;
         setUser({
           code,
-          fullName: res.user.fullName || 'Unknown',
+          fullName: res.user.fullName || 'CUS_'+Date.now(),
           avatar: res.user.avatar || `https://api.dicebear.com/8.x/avataaars/svg?seed=${code}`,
         });
         setLogged(true);
       } catch {
         let localUser = JSON.parse(localStorage.getItem('user') || '{}');
         if (!localUser.code) {
-          const code = Date.now().toString();
-          localUser = { code, fullName: 'Unknown', avatar: `https://api.dicebear.com/8.x/avataaars/svg?seed=${code}` };
+          const code = 'cus_'+Date.now();
+          localUser = { code, fullName: 'CUS_'+Date.now(), avatar: `https://api.dicebear.com/8.x/avataaars/svg?seed=${code}` };
           localStorage.setItem('user', JSON.stringify(localUser));
         }
         setUser(localUser);
@@ -115,8 +115,9 @@ export default function ChatModal ({ onClose }) {
     setText('');
     socket.emit('sendMessage', message);
 
-    try { await chatApi.postMessage(message); }
-    catch {
+    try {
+      await chatApi.postMessage(message);
+    }catch {
       setMessages(prev => prev.filter(m => m !== message));
       if (logged) setInfoUser(prev => ({ ...prev, conversationId: '' }));
       else localStorage.removeItem('conversationId');
@@ -151,7 +152,7 @@ export default function ChatModal ({ onClose }) {
             </div>
           </div>
         ))}
-       
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -163,7 +164,7 @@ export default function ChatModal ({ onClose }) {
           onChange={e => setText(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSend()}
           placeholder="Type your message..."
-          className="flex-1 p-2 sm:p-2.5 text-xs sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+          className="flex-1 p-2 sm:p-2.5 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
         />
         <button onClick={handleSend} className="p-2 sm:p-2.5 rounded-full bg-brand hover:bg-brand-hover text-white transition-all">
           <Send className="w-4 h-4 sm:w-5 sm:h-5" />

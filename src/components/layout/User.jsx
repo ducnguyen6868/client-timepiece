@@ -23,7 +23,7 @@ const sidebarMenu = [
 const SidebarLink = ({ item, isActive, onClick }) => (
   <button
     onClick={onClick}
-    className={`relative flex items-center space-x-3 w-max text-left px-4 py-2.5 rounded-lg transition-all group text-white hover:text-black
+    className={`relative w-full flex items-center space-x-3 mb-1 text-left px-4 py-2.5 rounded-lg transition-all group text-white hover:text-black
       ${isActive
         ? 'bg-white text-brand font-semibold shadow-sm'
         : 'text-white hover:bg-gray-50 '

@@ -1,39 +1,7 @@
-import {
-    ShoppingCart, Truck, MapPin, Tag, CheckCircle, XCircle, Clock, Package, MoveRight
-} from 'lucide-react';
+import { ShoppingCart, Truck, MapPin, Tag, CheckCircle, XCircle, Clock, Package, MoveRight} from 'lucide-react';
 import {Link} from 'react-router-dom';
 import {formatDate} from '../../utils/formatDate';
 import {formatTime} from '../../utils/formatTime';
-
-// ************************************************
-// Reusable Component: Order Status Badge
-// ************************************************
-const OrderStatusBadge = ({ status }) => {
-    let classes = '';
-    let Icon = null;
-
-    if (status === 'Delivered Successfully') {
-        classes = 'bg-green-100 text-green-700';
-        Icon = CheckCircle;
-    } else if (status === 'Processing') {
-        classes = 'bg-yellow-100 text-yellow-700';
-        Icon = Clock;
-    } else if (status === 'Shipping') {
-        classes = 'bg-blue-100 text-blue-700';
-        Icon = Truck;
-    } else if (status === 'Canceled') {
-        classes = 'bg-red-100 text-red-700';
-        Icon = XCircle;
-    }
-
-    return (
-        <span className={`inline-flex items-center space-x-1 px-3 py-1 text-sm font-semibold rounded-full ${classes}`}>
-            {Icon && <Icon className="w-4 h-4" />}
-            <span>{status}</span>
-        </span>
-    );
-};
-
 
 // ************************************************
 // Main Component: Order Details Content
@@ -127,7 +95,7 @@ export default function OrderDetail({ order, onClose }) {
                   className="w-16 h-16 object-cover rounded-md border border-gray-200 dark:border-gray-700 mr-4"
                 />
                 <div className="flex-1">
-                  <Link to={`/product?code=${product.code}`} className="font-semibold text-gray-900 dark:text-white">{product?.name}</Link>
+                  <Link to={`/product/${product.slug}`} className="font-semibold text-gray-900 dark:text-white">{product?.name}</Link>
                   <p className="text-xs text-gray-500 dark:text-gray-400">Item code: {product?.code}</p>
                 </div>
                 <div className="text-right">

@@ -33,6 +33,16 @@ const Message = () => {
 
     const messagesEndRef = useRef(null);
 
+    const [keyword, setKeyword] = useState('');
+    const [searchConver, setSearchConver] = useState([]);
+
+    const handleSearchConver = () => {
+        if (!conversations || conversations.length === 0) return;
+        const conver = conversations.filter(conver => conver.participants[0].fullName == keyword || conver.participants[1].fullName == keyword);
+        setSearchConver(conver);
+        console.log(conver);
+    }
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
@@ -179,60 +189,117 @@ const Message = () => {
                             <input
                                 type="text"
                                 placeholder="Search conversations..."
-                                className="w-full p-2 pl-10 text-sm border rounded-lg 
-                    border-gray-300 focus:ring-brand focus:border-brand transition"
+                                className="w-full p-2 pl-10 text-sm border rounded-lg border-gray-300
+                                focus:ring-brand focus:border-brand transition"
+                                value={keyword}
+                                onChange={(e) => setKeyword(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleSearchConver()}
+
                             />
-                            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                            <Search onClick={() => handleSearchConver()} className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         </div>
                     </div>
 
                     {/* List */}
-                    <div className="flex-1 overflow-y-auto">
-                        {conversations.map((conver, index) => {
-                            const otherUser =
-                                conver.participants[0]?.code === user.code
-                                    ? conver.participants[1]
-                                    : conver.participants[0];
+                    {keyword == '' ? (
+                        <div className="flex-1 overflow-y-auto">
+                            {conversations.map((conver, index) => {
+                                const otherUser =
+                                    conver.participants[0]?.code === user.code
+                                        ? conver.participants[1]
+                                        : conver.participants[0];
 
-                            return (
-                                <div
-                                    key={index}
-                                    className={`flex items-center p-4 cursor-pointer transition
+                                return (
+                                    <div
+                                        key={index}
+                                        className={`flex items-center p-4 cursor-pointer transition
                             border-b border-gray-100 
                             ${activeConversation?._id === conver._id
-                                            ? "bg-teal-50 border-l-4 border-brand-hover"
-                                            : "hover:bg-gray-100"
-                                        }`}
-                                    onClick={() => handleActiveConversation(conver)}
-                                >
-                                    <div className="flex items-center gap-3 w-full">
-                                        <div className="relative">
-                                            <img
-                                                src={otherUser?.avatar}
-                                                alt={otherUser?.fullName}
-                                                title={otherUser?.fullName}
-                                                loading='lazy'
-                                                className="w-12 h-12 rounded-full object-cover"
-                                            />
-                                            <span className={`absolute bottom-0 right-0 w-3 h-3 rounded-full
+                                                ? "bg-teal-50 border-l-4 border-brand-hover"
+                                                : "hover:bg-gray-100"
+                                            }`}
+                                        onClick={() => handleActiveConversation(conver)}
+                                    >
+                                        <div className="flex items-center gap-3 w-full">
+                                            <div className="relative">
+                                                <img
+                                                    src={otherUser?.avatar}
+                                                    alt={otherUser?.fullName}
+                                                    title={otherUser?.fullName}
+                                                    loading='lazy'
+                                                    className="w-12 h-12 rounded-full object-cover"
+                                                />
+                                                <span className={`absolute bottom-0 right-0 w-3 h-3 rounded-full
                                     ring-2 ring-white
                                     ${conver.status === "online" ? "bg-green-400" : "bg-gray-400"}`} />
-                                        </div>
+                                            </div>
 
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-semibold text-gray-900 truncate">
-                                                {otherUser?.fullName}
-                                            </p>
-                                            <p className={`text-sm truncate 
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-semibold text-gray-900 truncate">
+                                                    {otherUser?.fullName}
+                                                </p>
+                                                <p className={`text-sm truncate 
                                     ${conver.isRead ? "text-gray-500" : "text-gray-900 font-medium"}`}>
-                                                {conver.lastMessage?.text}
-                                            </p>
+                                                    {conver.lastMessage?.text}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                );
+                            })}
+                        </div>
+
+                    ) : (
+                        <div className="overflow-y-auto bg-slate-200">
+                            <p className='pl-2'>Results for ' {keyword} '({searchConver.length})</p>
+                            {searchConver.map((conver, index) => {
+                                const otherUser =
+                                    conver.participants[0]?.code === user.code
+                                        ? conver.participants[1]
+                                        : conver.participants[0];
+
+                                return (
+                                    <div
+                                        key={index}
+                                        className={`flex items-center p-4 cursor-pointer transition
+                            border-b border-gray-100 
+                            ${activeConversation?._id === conver._id
+                                                ? "bg-teal-50 border-l-4 border-brand-hover"
+                                                : "hover:bg-gray-100"
+                                            }`}
+                                        onClick={() => handleActiveConversation(conver)}
+                                    >
+                                        <div className="flex items-center gap-3 w-full">
+                                            <div className="relative">
+                                                <img
+                                                    src={otherUser?.avatar}
+                                                    alt={otherUser?.fullName}
+                                                    title={otherUser?.fullName}
+                                                    loading='lazy'
+                                                    className="w-12 h-12 rounded-full object-cover"
+                                                />
+                                                <span className={`absolute bottom-0 right-0 w-3 h-3 rounded-full
+                                    ring-2 ring-white
+                                    ${conver.status === "online" ? "bg-green-400" : "bg-gray-400"}`} />
+                                            </div>
+
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-semibold text-gray-900 truncate">
+                                                    {otherUser?.fullName}
+                                                </p>
+                                                <p className={`text-sm truncate 
+                                    ${conver.isRead ? "text-gray-500" : "text-gray-900 font-medium"}`}>
+                                                    {conver.lastMessage?.text}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+
+
                 </div>
 
                 {/* RIGHT CHAT WINDOW */}
@@ -250,13 +317,13 @@ const Message = () => {
 
                                     return (
                                         <div className="flex items-center gap-3">
-                                            <div className='p-2 border-2 border-white rounded-full'>
+                                            <div className='border-2 border-white rounded-full'>
                                                 <img
                                                     src={otherUser?.avatar}
                                                     alt={otherUser?.fullName}
                                                     title={otherUser?.fullName}
                                                     loading='lazy'
-                                                    className="w-10 h-10 rounded-full object-cover border-2 border-brand"
+                                                    className="w-12 h-12 rounded-full object-cover border-2 border-brand"
                                                 />
                                             </div>
                                             <div>
@@ -327,11 +394,11 @@ const Message = () => {
                         </div>
                     )}
                 </div>
-            </div>
+            </div >
 
 
             {/* Mobile View */}
-            <div className="xl:hidden flex flex-col flex-1 bg-white overflow-hidden">
+            <div div className="xl:hidden flex flex-col flex-1 bg-white overflow-hidden" >
 
                 {!showMobileChat ? (
                     /* ================================
@@ -347,6 +414,10 @@ const Message = () => {
                                     placeholder="Search conversations..."
                                     className="w-full p-3 pl-10 text-sm border border-gray-300 rounded-lg
                                    focus:ring-2 focus:ring-brand focus:border-brand-hover"
+                                    value={keyword}
+                                    onChange={(e) => setKeyword(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleSearchConver()}
+
                                 />
                                 <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
                             </div>
@@ -498,8 +569,9 @@ const Message = () => {
                             </button>
                         </div>
                     </div>
-                )}
-            </div>
+                )
+                }
+            </div >
 
         </>
     );

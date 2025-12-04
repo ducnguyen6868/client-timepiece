@@ -152,9 +152,6 @@ export default function SearchResultsPage() {
       try {
         const response = await brandApi.getBrands();
         setBrands(response.brands);
-        setType('success');
-        setMessage(response.message);
-        setShow(true);
       } catch (err) {
         setType('error');
         setMessage(err.response?.data?.message || err.message);
