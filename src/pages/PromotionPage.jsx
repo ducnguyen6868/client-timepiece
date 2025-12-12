@@ -20,7 +20,7 @@ export default function PromotionPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-bg-secondary md:px-3 xl:px-4">
+    <div className="min-h-screen bg-bg-secondary md:px-3 xl:px-4 rounded-lg pt-4">
       {/* Header */}
       <div className="flex flex-row justify-between items-center gap-2 mb-4">
         <span className="text-brand hidden md:inline font-medium mb-2">

@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import {
     ShoppingCart, Plus, Filter, ChevronUp, ChevronDown,
-     Eye, XCircle, CheckCircle, Search,Clock ,SquarePen
+    Eye, XCircle, CheckCircle, Search, Clock, SquarePen
 } from 'lucide-react';
 import { formatDate } from '../../utils/formatDate';
 import orderApi from '../../api/orderApi';
 import OrderDetail from '../../components/layout/OrderDetail';
 import OrderStatusTracker from '../../components/common/OrderStatusTracker';
+import LoadingAnimations from '../../components/common/LoadingAnimations';
+import AdminLogin from './AdminLogin';
 
-// ************************************************
 // Reusable Component: Status Badge (cho Trạng thái đơn hàng)
-// ************************************************
 const OrderStatusBadge = ({ status }) => {
     let classes = '';
     let text = status;
@@ -41,17 +41,19 @@ const OrderStatusBadge = ({ status }) => {
     );
 };
 
-// ************************************************
 // Main Component: Order Management Page
-// ************************************************
 export default function OrderManagementPage() {
-    const [orders, setOrders] = useState([]);
-    const [page,setPage] = useState(1);
-    const [total,setTotal] = useState(1);
 
-    const [detail ,setDetail] = useState(false);
-    const [changeStatus ,setChangeStatus] = useState(false);
-    const [order , setOrder] = useState();
+    const [loading, setLoading] = useState(false);
+    const [adminLogged ,setAdminLogged] = useState(true);
+
+    const [orders, setOrders] = useState([]);
+    const [page, setPage] = useState(1);
+    const [total, setTotal] = useState(1);
+
+    const [detail, setDetail] = useState(false);
+    const [changeStatus, setChangeStatus] = useState(false);
+    const [order, setOrder] = useState();
 
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState({ key: 'date', direction: 'desc' });
@@ -118,29 +120,38 @@ export default function OrderManagementPage() {
 
     const getOrders = async () => {
         try {
-            const limit=5;
-            const response = await orderApi.getOrdersManage(page,limit);
+            setLoading(true);
+            const limit = 5;
+            const response = await orderApi.getOrdersManage(page, limit);
             setOrders(response.orders);
             setTotal(response.total);
         } catch (err) {
-            console.log(err.response?.data?.message || err.message);
+            setAdminLogged(false)
+        } finally {
+            setLoading(false);
         }
     }
 
     useEffect(() => {
         getOrders();
-    },[page]);
+    }, [page]);
 
-    const handleOrder = (order)=>{
+    const handleOrder = (order) => {
         setOrder(order);
         setDetail(true);
     };
-    const handleChangeStatus = (order)=>{
+    const handleChangeStatus = (order) => {
         setOrder(order);
         setChangeStatus(true);
     };
 
-    const pages = Math.ceil(total/5);
+    const pages = Math.ceil(total / 5);
+
+    if(!adminLogged){
+        return(
+            <AdminLogin/>
+        );
+    };
 
     return (
         <>
@@ -168,80 +179,85 @@ export default function OrderManagementPage() {
                     </button>
                 </div>
             </div>
-
-            {/* Orders Table Card */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-brand text-white animate-fadeInUp">
-                            <tr>
-                                {/* Table Headers */}
-                                {tableHeaders.map(header => (
-                                    <th
-                                        key={header}
-                                        className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer hover:bg-teal-400"
-                                        onClick={() => header !== 'Actions' && header !== 'Payment' && handleSort(formatHeaderKey(header))}
-                                    >
-                                        <div className="flex items-center">
-                                            {header}
-                                            {(header !== 'Actions' && header !== 'Payment') && renderSortIcon(formatHeaderKey(header))}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {sortedOrders.length > 0 ? (
-                                sortedOrders.map((order,index) => (
-                                    <tr key={index} className="hover:bg-cyan-50 transition-colors animate-fadeInUp"
-                                        style={{animationDelay:`${index*0.1}s`}}
-                                    >
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{order.code}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{order.name}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(order.createdAt)}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-teal-600 font-bold">${order.final_amount.toFixed(2)}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <OrderStatusBadge status={order.status.at(-1).present} />
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.paymentMethod}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <div className="flex space-x-2">
-                                                <button title="View Details" className="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50 transition-colors" onClick={()=>handleOrder(order)}>
-                                                    <Eye className="w-5 h-5" />
-                                                </button>
-                                                <button title="Update Status" className="text-teal-600 hover:text-teal-800 p-1 rounded-full hover:bg-teal-50 transition-colors" onClick={()=>handleChangeStatus(order)}>
-                                                    <SquarePen className="w-5 h-5" />
-                                                </button>
-                                            </div>
-                                        </td>
+            {loading ? (
+                <LoadingAnimations option='dots_circle' />                
+            ) : (
+                <>
+                    {/* Orders Table Card */}
+                    <div div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-brand text-white animate-fadeInUp">
+                                    <tr>
+                                        {/* Table Headers */}
+                                        {tableHeaders.map(header => (
+                                            <th
+                                                key={header}
+                                                className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer hover:bg-teal-400"
+                                                onClick={() => header !== 'Actions' && header !== 'Payment' && handleSort(formatHeaderKey(header))}
+                                            >
+                                                <div className="flex items-center">
+                                                    {header}
+                                                    {(header !== 'Actions' && header !== 'Payment') && renderSortIcon(formatHeaderKey(header))}
+                                                </div>
+                                            </th>
+                                        ))}
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="7" className="px-6 py-8 text-center text-gray-500 text-lg">
-                                        No orders found matching "{searchTerm}".
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {sortedOrders.length > 0 ? (
+                                        sortedOrders.map((order, index) => (
+                                            <tr key={index} className="hover:bg-cyan-50 transition-colors animate-fadeInUp"
+                                                style={{ animationDelay: `${index * 0.1}s` }}
+                                            >
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{order.code}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{order.name}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(order.createdAt)}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-teal-600 font-bold">${order.final_amount.toFixed(2)}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <OrderStatusBadge status={order.status.at(-1).present} />
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.paymentMethod}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <div className="flex space-x-2">
+                                                        <button title="View Details" className="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50 transition-colors" onClick={() => handleOrder(order)}>
+                                                            <Eye className="w-5 h-5" />
+                                                        </button>
+                                                        <button title="Update Status" className="text-teal-600 hover:text-teal-800 p-1 rounded-full hover:bg-teal-50 transition-colors" onClick={() => handleChangeStatus(order)}>
+                                                            <SquarePen className="w-5 h-5" />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="7" className="px-6 py-8 text-center text-gray-500 text-lg">
+                                                No orders found matching "{searchTerm}".
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
 
-                {/* Pagination Placeholder */}
-                <div className="p-4 flex justify-center gap-4 items-center border-t border-gray-200">
-                     <button className="px-3 py-1 text-sm rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100" disabled={page===1} onClick={()=>setPage(page-1)}>Previous</button>
-                        <button className="px-3 py-1 text-sm rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">{page} / {pages}</button>
-                        <button className="px-3 py-1 text-sm rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100"disabled={page===pages} onClick={()=>setPage(page+1)} >Next</button>
-                </div>
-            </div>
-
-            {detail&&(
-                <OrderDetail order={order} onClose={()=>setDetail(false)}/>
+                        {/* Pagination Placeholder */}
+                        <div className="p-4 flex justify-center gap-4 items-center border-t border-gray-200">
+                            <button className="px-3 py-1 text-sm rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100" disabled={page === 1} onClick={() => setPage(page - 1)}>Previous</button>
+                            <button className="px-3 py-1 text-sm rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">{page} / {pages}</button>
+                            <button className="px-3 py-1 text-sm rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100" disabled={page === pages} onClick={() => setPage(page + 1)} >Next</button>
+                        </div>
+                    </div>
+                </>
             )}
-            {changeStatus&&(
-                <div className='fixed z-40 backdrop-blur-sm top-0 bottom-0 left-0 right-0 flex justify-center' onClick={()=>setChangeStatus(false)}>
-                    <div className=''onClick={(e)=>e.stopPropagation()}>
-                    <OrderStatusTracker order={order} onClose={()=>setChangeStatus(false)} onChange={()=>getOrders()}/>
+
+            {detail && (
+                <OrderDetail order={order} onClose={() => setDetail(false)} />
+            )}
+            {changeStatus && (
+                <div className='fixed z-40 backdrop-blur-sm top-0 bottom-0 left-0 right-0 flex justify-center' onClick={() => setChangeStatus(false)}>
+                    <div className='' onClick={(e) => e.stopPropagation()}>
+                        <OrderStatusTracker order={order} onClose={() => setChangeStatus(false)} onChange={() => getOrders()} />
                     </div>
                 </div>
             )}

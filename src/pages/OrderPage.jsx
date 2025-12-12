@@ -116,9 +116,9 @@ export default function OrderPage() {
     const handleReview = (order) => {
         const user = order.user || '';
         const name = order.name;
-        const codeProduct = order.products[0].code;
+        const codeWatch = order.watches[0].code;
         const codeOrder = order.code;
-        setData({ user, name, codeProduct, codeOrder });
+        setData({ user, name, codeWatch, codeOrder });
         setReview(true);
     }
 
@@ -136,7 +136,7 @@ export default function OrderPage() {
     const handleSubmit = async () => {
         try {
             const status = 'Canceled';
-            await orderApi.changeStatus(orderId, status);
+            const response = await orderApi.patchStatus(orderId, status);
             setShowCancelModal(false);
             logged ? getOrders() : getOtherOrders();
         } catch (err) {
@@ -200,7 +200,7 @@ export default function OrderPage() {
     
     return (
         <>
-            <div className={logged ? `space-y-6` : 'px-4 md:px-5 xl:px-6 lg:px-8'}>
+            <div className={logged ? `space-y-6` : 'px-4 md:px-5 xl:px-6 lg:px-8 '}>
                 {/* Status Filter Tabs */}
                 <div className="flex space-x-2 space-y-2 border-b border-gray-200 overflow-x-auto">
                     {statusFilters.map(filter => (
@@ -250,9 +250,9 @@ export default function OrderPage() {
                                                 <p className="text-lg font-bold text-gray-900">${order.final_amount.toFixed(2)}</p>
                                             </div>
                                             <div>
-                                                <p className="text-gray-500">Items ({order.products.length})</p>
-                                                {order.products.map((product, index) => (
-                                                    <p key={index} className="font-medium text-gray-800 truncate">x{product.quantity} {product.name} </p>
+                                                <p className="text-gray-500">Items ({order.watches.length})</p>
+                                                {order.watches.map((watch, index) => (
+                                                    <p key={index} className="font-medium text-gray-800 truncate">x{watch.quantity} {watch.name} </p>
                                                 ))}
                                             </div>
 

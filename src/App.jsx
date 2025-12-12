@@ -5,13 +5,16 @@ import "react-toastify/dist/ReactToastify.css";
 import './styles/App.css';
 import { UserProvider } from './contexts/UserProvider';
 
+import PageNotFound from './pages/PageNotFound';
+
 import Public from './components/layout/Public';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
-import ProductPage from './pages/ProductPage';
+import WatchPage from './pages/WatchPage';
 import BrandPage from './pages/BrandPage';
 import CollectionPage from './pages/CollectionPage';
+import CategoryPage from './pages/CategoryPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import AddressPage from './pages/AddressPage';
 import CheckoutPage from './pages/CheckoutPage';
@@ -33,7 +36,7 @@ import SettingPage from './pages/SettingPage';
 import Admin from './components/layout/Admin';
 import AdminLogin from './pages/admin/AdminLogin';
 import OverviewDashboard from './pages/admin/OverviewDashboard';
-import ProductManagement from './pages/admin/ProductManagement';
+import WatchManagement from './pages/admin/WatchManagement';
 import OrderManagement from './pages/admin/OrderManagement';
 import PromotionManagement from './pages/admin/PromotionManagement';
 import UserManagement from './pages/admin/UserManagement';
@@ -54,12 +57,12 @@ function App() {
             <Route index element={<HomePage />}></Route>
             <Route path="collection/:slug" element={<CollectionPage />}></Route>
             <Route path="brand/:slug" element={<BrandPage />}></Route>
-            <Route path="product/:slug" element={<ProductPage />}></Route>
+            <Route path="watch/:slug" element={<WatchPage />}></Route>
+            <Route path="category/:slug" element={<CategoryPage />}></Route>
             <Route path="search" element={<SearchResultsPage />}></Route>
-            <Route path="product/checkout" element={<CheckoutPage />}></Route>
+            <Route path="watch/checkout" element={<CheckoutPage />}></Route>
             <Route path="payment-result" element={<PaymentResultPage />}></Route>
             <Route path='cart' element={<CartPage />}></Route>
-            <Route path='wishlist' element={<WishlistPage />}></Route>
             <Route path='order' element={<OrderPage />}></Route>
           </Route>
 
@@ -83,13 +86,15 @@ function App() {
           <Route path='/admin' element={<Admin />}>
             <Route index element={<Navigate to='overview' replace />}></Route>
             <Route path='overview' element={<AuthAccount><OverviewDashboard /></AuthAccount>}></Route>
-            <Route path='products' element={<AuthAccount><ProductManagement /></AuthAccount>}></Route>
+            <Route path='watches' element={<AuthAccount><WatchManagement /></AuthAccount>}></Route>
             <Route path='orders' element={<AuthAccount><OrderManagement /></AuthAccount>}></Route>
             <Route path='promotions' element={<AuthAccount><PromotionManagement /></AuthAccount>}></Route>
             <Route path='users' element={<AuthAccount><UserManagement /></AuthAccount>}></Route>
             <Route path='chats' element={<AuthAccount><ChatManagement /></AuthAccount>}></Route>
             <Route path='settings' element={<AuthAccount><AdminSettingPage /></AuthAccount>}></Route>
           </Route>
+
+          <Route path='*' element={<PageNotFound/>}/>
         </Routes>
       </UserProvider>
 

@@ -1,19 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-    ShoppingCart, Star, TrendingUp, Sparkles, ChevronLeft, ChevronRight
-} from 'lucide-react';
+import { Link} from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import collectionApi from '../../api/collectionApi';
 
 const CollectionSection = () => {
     const [collections, setCollections] = useState([]);
+
     const [loading, setLoading] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-    const navigate = useNavigate();
-
-   // Auto-play slider
+    // Auto-play slider
     useEffect(() => {
         if (!isAutoPlaying || collections.length <= 1) return;
 
@@ -53,9 +50,6 @@ const CollectionSection = () => {
         getCollections();
     }, []);
 
-    const handleCollection = (slug) => {
-        navigate(`/collection/${slug}`);
-    }
 
     if (loading) {
         return (
@@ -66,149 +60,66 @@ const CollectionSection = () => {
     }
 
     return (
-        <section className="relative p-1 mb-1 sm:py-3 md:py-4 bg-gray-50 w-full">
-            <div
-                className="relative mx-auto overflow-hidden rounded-sm shadow-md
-            h-[140px] xs:h-[200px] sm:h-[220px] md:h-[240px] lg:h-[260px] xl:h-[280px] "
-            >
-                {collections.map((collection, index) => (
-                    <div
-                        key={collection._id}
-                        className={`
-                    absolute inset-0 transition-all duration-700 ease-in-out
+        <section className="relative mb-1 sm:py-3 md:py-4 bg-gray-50 h-28 md:h-52 lg:h-64 m-4 overflow-hidden">
+            {collections.map((collection, index) => (
+                <Link
+                    key={collection._id}
+                    to={`/collection/${collection.slug}`}
+                    className={`
+                    absolute inset-0 transition-all duration-700 ease-in-out rounded-xl overflow-hidden
                     ${index === currentIndex
-                                ? "opacity-100 translate-x-0 z-0"
-                                : index < currentIndex
-                                    ? "opacity-0 -translate-x-full z-0"
-                                    : "opacity-0 translate-x-full z-0"
-                            }
+                            ? "opacity-100 translate-x-0 z-0"
+                            : index < currentIndex
+                                ? "opacity-0 -translate-x-full z-0"
+                                : "opacity-0 translate-x-full z-0"
+                        }
                 `}
-                    >
-                        <div className="relative w-full h-full bg-gradient-to-br from-gray-900 via-teal-900 to-gray-900 
-                        rounded-md md:rounded-lg xl:rounded-xl text-white overflow-hidden">
-                            <img
-                                src={`${process.env.REACT_APP_API_URL}` + `/${collection.banner}`}
-                                alt={collection.name}
-                                loading="lazy"
-                                onError={(e) => {
-                                    e.target.onerror = null;
-                                    e.target.src = "https://placehold.co/800x400/00bcd4/ffffff?text=FEATURED+COLLECTION";
-                                }}
-                                className="absolute inset-0 w-full h-full object-cover opacity-30"
-                            />
+                >
+                    <img
+                        src={collection.banner}
+                        alt={collection.name}
+                        loading="lazy"
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://placehold.co/800x400/00bcd4/ffffff?text=FEATURED+COLLECTION";
+                        }}
+                        className="absolute inset-0 w-full h-full object-cover "
+                    />
+                </Link>
+            ))}
 
+            {/* Indicators */}
+            {collections.length > 1 && (
+                <div className="absolute bottom-0.5 sm:bottom-1 md:bottom-2 w-full flex justify-center items-center space-x-2 z-0">
+                    {collections.map((collection, index) => (
+                        <button
+                            key={collection._id}
+                            onClick={() => goToSlide(index)}
+                            className="group relative"
+                            aria-label={`Go to ${collection.name}`}
+                        >
                             <div
-                                className="
-                            absolute inset-0 z-0 w-full
-                            px-3 xs:px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16
-                            py-3 xs:py-4 sm:py-5 md:py-6 lg:py-8
-                            flex flex-col justify-evenly gap-2 
-                        "
-                            >
-                                {/* Featured Label */}
-                                <div className="hidden lg:flex items-center space-x-1 sm:space-x-2">
-                                    <Sparkles className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-teal-400" />
-                                    <span className="text-sm sm:text-base md:text-lg font-semibold uppercase tracking-wide text-teal-400">
-                                        Featured Collection
-                                    </span>
-                                </div>
-
-                                {/* Title */}
-                                <h2
-                                    className="
-                                font-bold 
-                                text-xs xs:text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl
-                                line-clamp-1 sm:line-clamp-2
-                            "
-                                >
-                                    {collection.name}
-                                </h2>
-
-                                {/* Description */}
-                                <p
-                                    className="
-                                text-xs max-w-xs md:text-sm xl:text-base
-                                md:max-w-lg lg:max-w-xl
-                                line-clamp-2 md:line-clamp-2 xl:line-clamp-3
-                                mb-2 sm:mb-3 md:mb-4
-                            "
-                                >
-                                    {collection.description}
-                                </p>
-
-                                <div className='flex gap-2 items-end  '>
-
-                                    {/* Button */}
-                                    <button
-                                        className=" w-max
-                                bg-brand hover:to-brand-hover text-white font-bold rounded-full
-                                px-4 xs:px-5 sm:px-6 md:px-8 lg:px-10
-                                py-1.5 xs:py-2 sm:py-2.5 md:py-3
-                                text-[9px] xs:text-xs sm:text-sm
-                                transition-all duration-300
-                                flex items-center justify-center space-x-2
-                                shadow-lg hover:shadow-xl hover:scale-105
-                            "
-                                        onClick={() => handleCollection(collection.slug)}
-                                    >
-                                        <ShoppingCart className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
-                                        <span>Shop Now</span>
-                                    </button>
-
-                                    {/* Stats */}
-                                    <button className="flex items-center space-x-1 text-[9px] xs:text-[10px] sm:text-xs md:text-sm rounded-full
-                                    px-4 xs:px-5 sm:px-6 md:px-8 lg:px-10 py-1.5 xs:py-2 sm:py-2.5 md:py-3 xs:text-xs 
-                                transition-all duration-300 justify-center shadow-lg hover:shadow-xl hover:scale-105
-                                    ">
-                                        <Star className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-400 fill-yellow-400" />
-                                        <span className="font-semibold">Premium</span>
-                                    </button>
-                                    <button className="flex items-center space-x-1 text-[9px] xs:text-[10px] sm:text-xs md:text-sm rounded-full
-                                    px-4 xs:px-5 sm:px-6 md:px-8 lg:px-10 py-1.5 xs:py-2 sm:py-2.5 md:py-3
-                                    xs:text-xs  transition-all duration-300 justify-center 
-                                    shadow-lg hover:shadow-xl hover:scale-105">
-                                        <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-teal-400" />
-                                        <span className="font-semibold">{collection.products?.length || 0} Products</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-
-                {/* Indicators */}
-                {collections.length > 1 && (
-                    <div className="absolute bottom-0.5 sm:bottom-1 md:bottom-2 w-full flex justify-center items-center space-x-2 z-0">
-                        {collections.map((collection, index) => (
-                            <button
-                                key={collection._id}
-                                onClick={() => goToSlide(index)}
-                                className="group relative"
-                                aria-label={`Go to ${collection.name}`}
-                            >
-                                <div
-                                    className={`
+                                className={`
                                 transition-all duration-300 rounded-full
                                 ${index === currentIndex
-                                            ? "w-5 xs:w-6 sm:w-7 md:w-8 h-1.5 bg-teal-600"
-                                            : "w-1.5 sm:w-2 h-1.5 bg-white/60 hover:bg-teal-400"
-                                        }
+                                        ? "w-5 xs:w-6 sm:w-7 md:w-8 h-1.5 bg-teal-600"
+                                        : "w-1.5 sm:w-2 h-1.5 bg-white/60 hover:bg-teal-400"
+                                    }
                             `}
-                                />
-                                <div
-                                    className="
+                            />
+                            <div
+                                className="
                                 hidden sm:block absolute bottom-full left-1/2 -translate-x-1/2
                                 mb-2 px-3 py-1 bg-gray-900 text-white text-xs rounded shadow-lg
                                 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none
                             "
-                                >
-                                    {collection.name}
-                                </div>
-                            </button>
-                        ))}
-                    </div>
-                )}
-            </div>
+                            >
+                                {collection.name}
+                            </div>
+                        </button>
+                    ))}
+                </div>
+            )}
 
             {/* Arrows */}
             {collections.length > 1 && (
@@ -243,7 +154,6 @@ const CollectionSection = () => {
                 </>
             )}
         </section>
-
     );
 };
 

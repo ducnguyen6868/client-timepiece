@@ -39,7 +39,7 @@ export default function Admin() {
 
     const sidebarItems = [
         { name: "Overview", icon: LayoutDashboard, key: "overview" },
-        { name: "Products", icon: Package, key: "products" },
+        { name: "Watches", icon: Package, key: "watches" },
         { name: "Orders", icon: ShoppingBag, key: "orders" },
         { name: "Users", icon: Users, key: "users" },
         { name: "Chats", icon: MessagesSquare, key: "chats" },
@@ -48,7 +48,7 @@ export default function Admin() {
     ];
 
     return (
-        <div className="min-h-screen  flex bg-gray-50 relative">
+        <div className="min-h-screen flex bg-gray-50 relative">
 
             {/* -----------------------------------------------------------
                Sidebar (Desktop)
@@ -56,7 +56,6 @@ export default function Admin() {
             <aside
                 className="
                     hidden md:flex flex-col
-                    w-64 fixed inset-y-0 left-0
                     bg-white border-r border-gray-200 shadow-sm
                     z-30
                 "
@@ -151,7 +150,7 @@ export default function Admin() {
             ----------------------------------------------------------- */}
             <main className="
                 flex-1 overflow-y-auto p-4
-                md:ml-64  /* offset for desktop sidebar */
+       
                 mb-16 md:mb-0 /* space for bottom navbar mobile */ 
             ">
                 <Outlet />

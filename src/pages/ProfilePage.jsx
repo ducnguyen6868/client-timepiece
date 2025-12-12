@@ -6,6 +6,7 @@ import { UserContext } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 import profileApi from '../api/profileApi';
 import Notification from '../components/common/Notification';
+import LoadingAnimations from '../components/common/LoadingAnimations';
 import ImageError from '../assets/imageError.jpg';
 
 // ************************************************
@@ -18,7 +19,8 @@ export default function ProfilePage() {
     const navigate = useNavigate();
 
     const [logout, setLogout] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [loadingAvatar, setLoadingAvatar] = useState(false);
     const [type, setType] = useState('');
     const [message, setMessage] = useState('');
     const [show, setShow] = useState(false);
@@ -29,22 +31,48 @@ export default function ProfilePage() {
                 const response = await profileApi.profile();
                 setUser(response.user);
             } catch (err) {
-                console.log(err.response?.data?.message || err.message);
+                setShow(true);
+                setType('error');
+                setMessage(err.response?.data?.message || err.message)
+            }finally{
+                setLoading(false);
             }
         }
         getProfile();
     }, []);
+
+    const getRank = (rank) => {
+        switch (rank) {
+            case 'Brown': return <span className="inline-flex items-center w-max px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                <Award className="w-3 h-3 mr-1" />
+                {rank + ' member'}
+            </span>;
+            case 'Silver': return <span className="inline-flex items-center w-max px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600">
+                <Award className="w-3 h-3 mr-1" />
+                {rank + ' member'}
+            </span>;
+            case 'Gold': return <span className="inline-flex items-center w-max px-3 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-600">
+                <Award className="w-3 h-3 mr-1" />
+                {rank + ' member'}
+            </span>;
+            case 'Diamond': return <span className="inline-flex items-center w-max px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                <Award className="w-3 h-3 mr-1" />
+                {rank + ' member'}
+            </span>;
+            default: break
+        }
+    };
 
     const handleAvatarChange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
         const formData = new FormData();
-        formData.append('avatar', file);
+        formData.append('image', file);
 
         try {
-            setLoading(true);
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            setLoadingAvatar(true);
+            await new Promise(resolve => setTimeout(resolve, 500));
 
             const response = await profileApi.patchAvatar(formData);
 
@@ -59,16 +87,21 @@ export default function ProfilePage() {
             setShow(true);
             setType('error');
         } finally {
-            setLoading(false);
+            setLoadingAvatar(false);
         }
     };
 
     const confirmLogout = () => {
         localStorage.removeItem('token');
-        setInfoUser({ name: '', email: '', avatar: '' });
+        setInfoUser({ fullName: '', email: '', avatar: '' });
         navigate('/');
     };
 
+    if(loading){
+        return(
+            <LoadingAnimations option='dots_circle'/>
+        );
+    };
     return (
         <>
             {/* 1. Profile Overview (Default Content) */}
@@ -85,8 +118,8 @@ export default function ProfilePage() {
                         <button className='w-full absolute bottom-0 flex justify-center backdrop-blur-[2px]'>
                             <Camera className='w-6 h-6 text-gray-400' />
                         </button>
-                        <input name='avatar' type='file' acept='.png , .jpg , .jpeg' className='absolute inset-0 visibility opacity-0 cursor-pointer' onChange={(e) => handleAvatarChange(e)} />
-                        {loading && (
+                        <input name='image' type='file' acept='.png , .jpg , .jpeg' className='absolute inset-0 visibility opacity-0 cursor-pointer' onChange={(e) => handleAvatarChange(e)} />
+                        {loadingAvatar && (
                             <div className='absolute inset-0 p-8 z-50 flex justify-center items-center'>
                                 <div className='border-b-2 rounded-full w-full h-full border-brand animate-spin'></div>
                             </div>
@@ -97,10 +130,7 @@ export default function ProfilePage() {
                             <span>{user.fullName}</span>
                         </h2>
                         <p className="text-gray-600 mb-1 text-base ">{user.email}</p>
-                        <span className="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                            <Award className="w-3 h-3 mr-1" />
-                            {user.memberStatus || 'Gold member'}
-                        </span>
+                        {getRank(user.rank)}
                     </div>
                 </div>
 
@@ -112,16 +142,16 @@ export default function ProfilePage() {
                     </h3>
                     <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm font-semibold text-gray-600">Current Points: <span className='text-brand'>{user.point?.quantity}</span></span>
-                            <span className="text-sm text-gray-500">Next Tier: 9999</span>
+                            <span className="text-sm font-semibold text-gray-600">Current Points: <span className='text-brand'>{user.point?.quantity || 0}</span></span>
+                            <span className="text-sm text-gray-500">Next Tier: {user.rankScore[1] || 0}</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2.5">
                             <div
                                 className="h-2.5 rounded-full"
-                                style={{ width: `88%`, backgroundColor: '#00bcd4' }}
+                                style={{ width: `${Math.ceil(0 / user.rankScore[1])}`, backgroundColor: '#00bcd4' }}
                             />
                         </div>
-                        <p className="text-xs text-gray-500 mt-2">2828 points to reach next tier!</p>
+                        <p className="text-xs text-gray-500 mt-2">{user.rankScore[1] - 0} points to reach next tier!</p>
                     </div>
                 </div>
 
@@ -140,11 +170,16 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Logout */}
-                <button className='flex w-full max-w-96 gap-2 bg-red-500 text-white p-2 rounded-xl justify-center items-center'>
-                    <LogOut />
-                    <span onClick={() => setLogout(true)}>Logout</span>
-                </button>
-                
+                <div className='flex justify-center items-center'>
+                    <button className='flex gap-2 bg-red-500 text-white
+                  py-2 px-12 rounded-xl justify-center items-center'
+                        onClick={() => setLogout(true)}
+                    >
+                        <LogOut />
+                        <span >Logout</span>
+                    </button>
+                </div>
+
                 {/* LOGOUT MODAL */}
                 {logout && (
                     <div

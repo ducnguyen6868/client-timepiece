@@ -2,6 +2,8 @@ import { AlertTriangle, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import orderApi from '../../api/orderApi';
 import RevenueChart from '../../components/layout/RevenueChart';
+import AdminLogin from './AdminLogin';
+import LoadingAnimations from '../../components/common/LoadingAnimations';
 
 const topCustomers = [
     { name: 'Eleanor Vance', sales: 5490.50, status: 'VIP', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734bcae?w=50&h=50&fit=crop' },
@@ -14,23 +16,28 @@ const topCustomers = [
 const adminAlerts = [
     { text: 'Server load is critically high, investigate immediately.', level: 'high' },
     { text: 'New customer support ticket requires attention.', level: 'medium' },
-    { text: 'Inventory count mismatch for product X.', level: 'low' },
+    { text: 'Inventory count mismatch for watch X.', level: 'low' },
 ];
 
 // ************************************************
 // Main Component: Overview Dashboard
 // ************************************************
 export default function Overview() {
-    const [topProducts, setTopProducts] = useState([]);
+    const [adminLogged , setAdminLogged] = useState(true);
+    const [loading, setLoading]= useState(true);
+
+    const [topWatches, setTopWatches] = useState([]);
     const [time, setTime] = useState('7day');
 
     useEffect(() => {
         const getTopSelling = async () => {
             try {
                 const response = await orderApi.getTopSelling(time);
-                setTopProducts(response.topProducts);
+                setTopWatches(response.topWatches);
             } catch (err) {
-                console.log(err.response?.data?.message || err.message);
+                setAdminLogged(false);
+            }finally{
+                setLoading(false);
             }
         }
         getTopSelling();
@@ -43,6 +50,19 @@ export default function Overview() {
         return 'text-orange-600 border-orange-300 bg-orange-50';
     };
 
+    if(!adminLogged){
+        return(
+            <AdminLogin/>
+        );
+    };
+    
+    if(loading){
+        return(
+            <LoadingAnimations option='dots_circle'/>
+        );
+    };
+    console.log(adminLogged);
+    
     return (
         <>
             <RevenueChart />
@@ -69,9 +89,9 @@ export default function Overview() {
 
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {topProducts?.map(product => (
-                        <div key={product._id} className="flex flex-col items-center text-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                            <img src={`${process.env.REACT_APP_API_URL}`+`/${product.image}`} alt={product.name}
+                    {topWatches?.map(watch => (
+                        <div key={watch._id} className="flex flex-col items-center text-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <img src={`${process.env.REACT_APP_API_URL}`+`/${watch.image}`} alt={watch.name}
                                 className="w-20 h-20 object-cover rounded-lg mb-2 border border-gray-300"
                                 loading="lazy"
                                 onError={(e) => {
@@ -79,8 +99,8 @@ export default function Overview() {
                                     e.target.src = "https://placehold.co/300x300/e2e8f0/64748b?text=Watch";
                                 }}
                             />
-                            <p className="text-sm font-medium text-gray-900 truncate w-full px-1">{product.name}</p>
-                            <span className="text-xs text-gray-600 mt-1">{product.totalSold} units sold</span>
+                            <p className="text-sm font-medium text-gray-900 truncate w-full px-1">{watch.name}</p>
+                            <span className="text-xs text-gray-600 mt-1">{watch.totalSold} units sold</span>
                         </div>
                     ))}
                 </div>

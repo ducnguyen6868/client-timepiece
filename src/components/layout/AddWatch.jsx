@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import productApi from '../../api/productApi';
+import watchApi from '../../api/watchApi';
 import categoryApi from '../../api/categoryApi';
 import brandApi from '../../api/brandApi';
 import Notification from '../common/Notification';
@@ -30,7 +30,7 @@ const FormInput = ({ label, name, type = 'text', value, onChange, isFullWidth = 
     </div>
 );
 
-export default function AddProduct({ onClose, onChange }) {
+export default function AddWatch({ onClose, onChange }) {
     // State cho các trường đơn giản và file ảnh
     const [show, setShow] = useState(false);
     const [type, setType] = useState('');
@@ -172,7 +172,7 @@ export default function AddProduct({ onClose, onChange }) {
             });
 
             // Gửi yêu cầu POST
-            const response = await productApi.postProduct(data);
+            const response = await watchApi.postWatch(data);
             setType('success');
             setMessage(response.message);
             setShow(true);
@@ -200,7 +200,7 @@ export default function AddProduct({ onClose, onChange }) {
 
                 {/* Header */}
                 <div className="flex justify-between items-center pb-4 border-b border-gray-200 mb-6">
-                    <h2 className='text-3xl font-extrabold text-gray-800'>➕ Add New Product</h2>
+                    <h2 className='text-3xl font-extrabold text-gray-800'>➕ Add New Watch</h2>
                 </div>
 
                 {/* Form Body */}
@@ -210,7 +210,7 @@ export default function AddProduct({ onClose, onChange }) {
                     <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
                         <h3 className="text-xl font-semibold mb-4 text-blue-600">Basic Information</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormInput label="Product Name" name="name" value={formData.name} onChange={handleChange} />
+                            <FormInput label="Watch Name" name="name" value={formData.name} onChange={handleChange} />
                             <FormInput label="Slug (URL Path)" name="slug" value={formData.slug} onChange={handleChange} />
 
                             <div className="col-span-2">
@@ -270,7 +270,7 @@ export default function AddProduct({ onClose, onChange }) {
                     </div>
 
 
-                    {/* -------------------- PRODUCT DETAILS (Color, Price, Quantity) -------------------- */}
+                    {/* -------------------- WATCH DETAILS (Color, Price, Quantity) -------------------- */}
                     <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
                         <h3 className="text-xl font-semibold mb-4 text-blue-600">Details & Variations</h3>
                         {details.map((detail, index) => (
@@ -309,7 +309,7 @@ export default function AddProduct({ onClose, onChange }) {
 
                     {/* -------------------- IMAGES -------------------- */}
                     <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                        <h3 className="text-xl font-semibold mb-4 text-blue-600">Product Images</h3>
+                        <h3 className="text-xl font-semibold mb-4 text-blue-600">Watch Images</h3>
                         <div className="flex items-center space-x-4">
                             <input
                                 type="file"
@@ -331,7 +331,7 @@ export default function AddProduct({ onClose, onChange }) {
                             disabled={loading}
                             className={`w-full py-3 text-white font-bold rounded-lg shadow-lg transition duration-300 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 hover:shadow-xl'}`}
                         >
-                            {loading ? 'Adding...' : 'SAVE PRODUCT'}
+                            {loading ? 'Adding...' : 'SAVE WATCH'}
                         </button>
                     </div>
 

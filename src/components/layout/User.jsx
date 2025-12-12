@@ -1,11 +1,9 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import {
-  User, ShoppingCart, MapPin, Zap, Gift, Heart, Settings, Bell, Search, XCircle, Wallet, Home
+  User, ShoppingCart, MapPin, Zap, Gift, Heart, Settings, Wallet, Home
 } from 'lucide-react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
-import websiteLogo from '../../assets/website-logo.png';
-import ImageError from '../../assets/imageError.jpg';
+
 
 // Sidebar Menu
 const sidebarMenu = [
@@ -41,8 +39,6 @@ const SidebarLink = ({ item, isActive, onClick }) => (
 );
 
 export default function UserLayout() {
-  const { infoUser, setInfoUser } = useContext(UserContext);
-  const [logout, setLogout] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
 
   const location = useLocation();
@@ -59,60 +55,13 @@ export default function UserLayout() {
   }
   return (
     <>
-      {/* HEADER */}
-      <header className="hidden xl:block sticky top-0 border-b border-gray-100 bg-white/80 backdrop-blur-md z-40 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link
-            to="/"
-            className="flex items-center gap-2 text-xl font-extrabold tracking-widest"
-            style={{
-              background: 'linear-gradient(90deg, var(--brand-light, #3355ff), var(--brand-color, #00bcd4))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              filter: 'drop-shadow(0 0 2px rgba(0, 188, 212, 0.4))'
-            }}
-          >
-            <img src={websiteLogo} alt="Logo" className="w-7 h-7" />
-            TIMEPIECE
-          </Link>
-
-          <div className="flex items-center space-x-4">
-            <div className="relative hidden sm:block">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search your profile..."
-                className="w-64 pl-9 pr-3 py-1.5 text-xs border border-gray-300 rounded-full focus:ring-1 focus:ring-brand focus:border-brand bg-gray-50"
-              />
-            </div>
-
-            <button className="text-gray-600 hover:text-teal-600 transition-colors">
-              <Bell className="w-5 h-5" />
-            </button>
-
-            <img
-              src={infoUser.avatar}
-              title='Avatar'
-              alt='Avatar'
-              loading='lazy'
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = ImageError;
-              }}
-              className="w-8 h-8 rounded-full border border-gray-300 object-cover hover:scale-105 transition-transform"
-            />
-          </div>
-        </div>
-      </header>
 
       {/* MAIN */}
-      <div className="relative max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-2 md:gap-4 xl:gap-6 lg:gap-8">
+      <div className="relative max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-4">
         {/* SIDEBAR */}
-        <aside className="hidden xl:block md:relative p-2 md:p-0 lg:p-0 lg:col-span-3 md:col-span-2
-         bg-white shadow-md border border-gray-100 xl:p-0
-          
-          ">
-          <div className='rounded-xl md:p-2 xl:p-3 lg:p-4 bg-gradient-to-bl from-brand to-brand-hover overflow-y-auto'>
+        <aside className="hidden md:block md:relative p-2 md:p-0 
+        lg:p-0 lg:col-span-3 md:col-span-2 xl:p-0 ">
+          <div className='rounded-xl md:p-2 xl:p-3 lg:p-4 bg-gradient-to-bl from-brand to-brand-hover'>
             <h2 className="hidden xl:block text-xs uppercase text-white xl:pl-4 xl:pt-2 mb-3 tracking-wide font-medium">Dashboard</h2>
           <nav className="flex flex-row md:flex-col overflow-y-auto">
             {sidebarMenu.map(item => (
@@ -125,19 +74,10 @@ export default function UserLayout() {
             ))}
           </nav>
 
-          {/* <div className="mt-8 pt-4 border-t border-gray-100">
-            <button
-              onClick={() => setLogout(true)}
-              className="flex items-center space-x-3 w-full px-4 py-2.5 rounded-lg text-sm text-orange-600 bg-red-50 transition-all"
-            >
-              <LogOut className="w-5 h-5" />
-              <span>Logout</span>
-            </button>
-          </div> */}
           </div>
         </aside>
 
-        <div className='xs:hidden md:hiden xl:hidden lg:hidden fixed bottom-0 right-0 left-0 z-50 flex p-2 justify-between text-brand m-2 rounded-md bg-gray-100'>
+        <div className='md:hidden lg:hidden xl:hidden fixed bottom-0 right-0 left-0 z-50 flex p-2 justify-between text-brand m-2 rounded-md bg-gray-100'>
           <Link to='/' className={`p-2 flex flex-1 items-center justify-center rounded-lg  ${activeTab==='home'?('text-white bg-brand'):('')}` }>
             <Home className='w-8 h-8'/>
           </Link>
@@ -157,7 +97,7 @@ export default function UserLayout() {
         </div>
 
         {/* CONTENT */}
-        <main className="md:col-span-6 lg:col-span-9 bg-white rounded-xl md:p-2 xl:p-3 lg:p-4">
+        <main className="md:col-span-6 lg:col-span-9 rounded-xl">
           <Outlet />
         </main>
       </div>

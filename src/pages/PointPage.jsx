@@ -61,7 +61,7 @@ export default function PointPage() {
     );
 
   return (
-    <div className="min-h-screen bg-bg-secondary p-2 md:p-3 xl:p-4 lg:p-6">
+    <div className="min-h-screen bg-bg-secondary p-2 md:p-3 xl:p-4 lg:p-6 rounded-lg">
       {/* Header */}
       <div className="flex flex-row items-center justify-between mb-6 border-b border-brand pb-4">
         <div className="flex flex-row items-center gap-3">

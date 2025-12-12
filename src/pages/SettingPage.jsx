@@ -112,7 +112,7 @@ const NotificationPreferencesTab = ({ data }) => {
                     <div className="flex items-start space-x-3">
                         <Mail className="w-5 h-5 mt-1 text-blue-500" />
                         <div>
-                            <p className="font-semibold text-gray-900">Email Product Updates</p>
+                            <p className="font-semibold text-gray-900">Email Watch Updates</p>
                             <p className="text-sm text-gray-500">Receive weekly emails about new arrivals and features.</p>
                         </div>
                     </div>

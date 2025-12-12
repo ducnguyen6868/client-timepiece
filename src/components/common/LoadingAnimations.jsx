@@ -1,4 +1,4 @@
-import useProductsPerRow from '../../hooks/useProductsPerRow';
+import useWatchesPerRow from '../../hooks/useWatchesPerRow';
 
 const ShimmerLoader = () => (
     <div className="bg-white rounded-lg md:rounded-xl xl:rounded-2xl shadow-md overflow-hidden relative">
@@ -54,7 +54,7 @@ const DotsCircleLoader = () => (
 
 export default function LoadingAnimations({ option }) {
 
-    const length = useProductsPerRow();
+    const length = useWatchesPerRow();
 
     return (
         <>

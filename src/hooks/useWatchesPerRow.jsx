@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export default function useProductsPerRow() {
+export default function useWatchesPerRow() {
   const getPerRow = (width) => {
     if (width >= 1280) return 6;
     if (width >= 1024) return 5;

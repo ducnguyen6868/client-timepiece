@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { isValidEmail } from '../utils/isValidEmail';
 import { useNavigate } from 'react-router-dom';
 import authApi from "../api/authApi";
 import loginImage from '../assets/login.png';
+import Notification from "../components/common/Notification";
 
 export default function RegisterPage() {
     const navigate = useNavigate();
@@ -21,6 +21,10 @@ export default function RegisterPage() {
     const [errors, setErrors] = useState({});
     const [step, setStep] = useState(1);
 
+    const [show, setShow] = useState(false);
+    const [type, setType] = useState('');
+    const [message, setMessage] = useState('');
+
     const handleRegisterChange = (e) => {
         const { name, value, type, checked } = e.target;
         setRegisterData((prev) => ({
@@ -32,15 +36,17 @@ export default function RegisterPage() {
 
     const handleRegisterSubmit = async () => {
         try {
-
             const response = await authApi.register(registerData);
 
-            if (response) {
-                toast.success(response.message);
-                navigate('../login');
-            }
+            setShow(true);
+            setType('success');
+            setMessage(response.message);
+            await new Promise(resolve=>setTimeout(resolve,1000));
+            navigate('../login');
         } catch (err) {
-            toast.error(err.response.data.message || err.message);
+            setShow(true);
+            setType('error');
+            setMessage(err.response?.data?.message || err.message);
         }
     };
 
@@ -76,6 +82,7 @@ export default function RegisterPage() {
     }
     return (
         <>
+            <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
             <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-800 px-4">
                 <img className='fixed w-full h-full' src={loginImage} alt='Login' title='Login' />
                 <div className="relative z-10 w-full max-w-md bg-white p-8 rounded-2xl shadow-2xl border border-gray-200">

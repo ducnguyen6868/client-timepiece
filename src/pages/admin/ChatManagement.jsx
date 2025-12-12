@@ -40,7 +40,6 @@ const Message = () => {
         if (!conversations || conversations.length === 0) return;
         const conver = conversations.filter(conver => conver.participants[0].fullName == keyword || conver.participants[1].fullName == keyword);
         setSearchConver(conver);
-        console.log(conver);
     }
 
     const scrollToBottom = () => {

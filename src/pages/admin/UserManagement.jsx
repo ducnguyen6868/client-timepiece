@@ -3,11 +3,17 @@ import { Users, UserPlus, Shield, Search, Filter, ChevronLeftCircle, ChevronRigh
 import CustomerList from '../../components/common/CustomerList';
 import StaffList from '../../components/common/StaffList';
 import userApi from '../../api/userApi';
+import AdminLogin from './AdminLogin';
+import LoadingAnimations from '../../components/common/LoadingAnimations';
 
 // ************************************************
 // Main Component: User Management Page
 // ************************************************
 export default function UserManagement() {
+
+    const [adminLogged , setAdminLogged] = useState(true);
+    const [loading,setLoading]= useState(false);
+
     const [activeTab, setActiveTab] = useState('customers');
     const [usersData, setUsersData] = useState([]);
     const [totalUser, setTotalUser] = useState(0);
@@ -23,18 +29,34 @@ export default function UserManagement() {
     const limit = 5;
     const getList = async () => {
         try {
+            setLoading(true);
             const response = await userApi.getList(role, page, limit);
             setUsersData(response.usersData);
             setTotal(response.total);
             setTotalUser(response.totalUser);
             setTotalStaff(response.totalStaff);
-        } catch (err) {
-            console.log(err.response?.data?.message || err.message);
+        } catch {
+            setAdminLogged(false);
+        }finally{
+            setLoading(false);
         }
     }
     useEffect(() => {
         getList();
     }, [activeTab, page]);
+
+    if(!adminLogged){
+        return(
+            <AdminLogin/>
+        );
+    };
+    
+    if(loading){
+        return(
+            <LoadingAnimations option='dots_circle'/>
+        );
+    };
+
     return (
         <div className="space-y-6">
 

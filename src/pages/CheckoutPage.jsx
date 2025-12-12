@@ -12,14 +12,15 @@ import { Truck, Tag, Gift, X, BadgeDollarSign, Coins } from 'lucide-react';
 
 export default function CheckoutPage() {
 
-  const { setInfoUser } = useContext(UserContext);
+  const { infoUser, setInfoUser } = useContext(UserContext);
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const fromCart = queryParams.get('cart') || null;
 
-  const productData = location.state?.productData || [];
+  const watchData = location.state?.watchData || [];
 
-  const brands = productData.map((p) => p.brand);
+  const brands = watchData.map((p) => p.brand);
   const [point, setPoint] = useState();
   const [usePoint, setUsePoint] = useState(false);
   const [promotion, setPromotion] = useState(false);
@@ -31,8 +32,7 @@ export default function CheckoutPage() {
   const [type, setType] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
+    if (!infoUser || infoUser.name === '') return;
     const getPoint = async () => {
       try {
         const res = await profileApi.profile();
@@ -47,7 +47,7 @@ export default function CheckoutPage() {
     getPoint();
   }, []);
 
-  const subtotal = productData.reduce((t, p) => t + p.price * p.quantity, 0);
+  const subtotal = watchData.reduce((t, p) => t + p.price * p.quantity, 0);
   const shipping = 0;
   const total = (parseFloat(subtotal) + shipping - discount)?.toFixed(2);
 
@@ -67,7 +67,7 @@ export default function CheckoutPage() {
   const handleSubmit = async (infoPayment) => {
     const orderData = {
       infoPayment,
-      productData,
+      watchData,
       total_amount: subtotal,
       discount_amount: discount,
       final_amount: total,
@@ -80,7 +80,7 @@ export default function CheckoutPage() {
         orderId = response.orderId;
         link = response.payUrl;
       }
-      const res = await orderApi.createOrder(orderData, orderId, fromCart);
+      const res = await orderApi.postOrder(orderData, orderId, fromCart);
       if (!infoPayment.userId) {
         const code = res.order?.code;
         let order = localStorage.getItem('order');
@@ -124,13 +124,13 @@ export default function CheckoutPage() {
               Order Summary
             </h2>
 
-            {/* Product List */}
+            {/* Watch List */}
             <div className="divide-y divide-gray-200 dark:divide-gray-700">
-              {productData.map((p, i) => (
+              {watchData.map((watch, i) => (
                 <div key={i} className="flex py-4 gap-4">
                   <img
-                    src={`${process.env.REACT_APP_API_URL}` + `/${p.image}`}
-                    alt={p.name}
+                    src={watch.thumbnail}
+                    alt={watch.name}
                     loading='lazy'
                     onError={(e) => {
                       e.target.onerror = null;
@@ -140,13 +140,15 @@ export default function CheckoutPage() {
                   />
                   <div className="flex flex-col justify-between w-full">
                     <div>
-                      <Link to={`/product/${p.slug}`} className="text-sm font-medium text-gray-900 dark:text-gray-100">{p.name}</Link>
-                      <p className="text-xs text-gray-500">Color: {p.color}</p>
+                      <Link to={`/watch/${watch.slug}`} className="text-sm font-medium text-gray-900 dark:text-gray-100">{watch.name}</Link>
+                      <p className="text-xs text-gray-500">
+                        {watch.material} - {watch.strapType} - {watch.color}
+                      </p>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span>Qty: {p.quantity}</span>
+                      <span>Qty: {watch.quantity}</span>
                       <span className="font-semibold text-gray-800 dark:text-gray-100">
-                        ${p.price?.toFixed(2)}
+                        ${formatCurrency(watch.price , 'en-US' , 'USD')}
                       </span>
                     </div>
                   </div>

@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { UserContext } from '../../contexts/UserContext';
 import categoryApi from '../../api/categoryApi';
-import productApi from '../../api/productApi';
+import watchApi from '../../api/watchApi';
 import userApi from '../../api/userApi';
 
 export default function VibeFinder() {
@@ -16,7 +16,7 @@ export default function VibeFinder() {
     const [categories, setCategories] = useState([]);
     const [category, setCategory] = useState('');
     const [cateId, setCateId] = useState();
-    const [vibeFinderProducts, setVibeFinderProducts] = useState([]);
+    const [vibeFinderWatches, setVibeFinderWatches] = useState([]);
     useEffect(() => {
         const getCategories = async () => {
             try {
@@ -32,47 +32,47 @@ export default function VibeFinder() {
     }, []);
     useEffect(() => {
         if (!category) return;
-        const getVibeFinderProducts = async () => {
+        const getVibeFinderWatches = async () => {
             try {
-                const response = await productApi.getVibeFinder(cateId);
-                setVibeFinderProducts(response.products);
+                const response = await watchApi.getVibeFinder(cateId);
+                setVibeFinderWatches(response.watches);
             } catch (err) {
                 console.log(err.response?.data?.message || err.message);
             }
         }
-        getVibeFinderProducts();
+        getVibeFinderWatches();
     }, [category, cateId]);
 
     const handleChangeVibe = (cate) => {
         setCategory(cate.name);
         setCateId(cate._id);
     }
-    const handleCheckout = (product) => {
-        const id = product._id;
-        const code = product.code;
-        const name = product.name;
-        const image = product.images[0];
-        const description = product.description;
+    const handleCheckout = (watch) => {
+        const id = watch._id;
+        const code = watch.code;
+        const name = watch.name;
+        const image = watch.images[0];
+        const description = watch.description;
         const quantity = 1;
-        const color = product.detail[0]?.color;
-        const price = product.detail[0]?.currentPrice;
+        const color = watch.detail[0]?.color;
+        const price = watch.detail[0]?.currentPrice;
         const index=0;
-        const productData = [{
+        const watchData = [{
             id, code, name, image, description, quantity, color, price, index
         }]
-        navigate('/product/checkout', { state: { productData } });
+        navigate('/watch/checkout', { state: { watchData } });
     }
 
-    const handleCart = async (product) => {
-        const detail = product.detail?.[0];
-        if (!detail) return toast.error("Product detail not found!");
+    const handleCart = async (watch) => {
+        const detail = watch.detail?.[0];
+        if (!detail) return toast.error("Watch detail not found!");
 
         const cartItem = {
-            id: product._id,
-            code: product.code,
-            name: product.name,
-            image: product.images[0],
-            description: product.description,
+            id: watch._id,
+            code: watch.code,
+            name: watch.name,
+            image: watch.images[0],
+            description: watch.description,
             quantity: 1,
             color: detail.color,
             price: detail.currentPrice,
@@ -90,7 +90,7 @@ export default function VibeFinder() {
 
             if (exist) {
                 exist.quantity++;
-                toast.info("Product quantity updated");
+                toast.info("Watch quantity updated");
             } else {
                 cartLocal.push(cartItem);
                 toast.success("Added to cart 🛒");
@@ -181,37 +181,37 @@ export default function VibeFinder() {
                     </div>
 
                     <div className="flex flex-row items-center justify-center gap-6 mb-8">
-                        {vibeFinderProducts?.map((product, idx) => (
+                        {vibeFinderWatches?.map((watch, idx) => (
                             <div
-                                key={product._id}
+                                key={watch._id}
                                 className={`bg-bg-primary max-w-60 rounded-lg overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 animate-cardSlideInUp visible`}
                                 style={{ animationDelay: `${idx * 0.15}s` }}
                             >
                                 <div className="relative bg-bg-secondary overflow-hidden">
                                     <img
-                                        src={`${process.env.REACT_APP_API_URL}`+`/${product.images[0]}`}
-                                        alt={product.name}
+                                        src={`${process.env.REACT_APP_API_URL}`+`/${watch.images[0]}`}
+                                        alt={watch.name}
                                         onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x300/e2e8f0/64748b?text=Vibe+Watch'; }}
                                         className="w-full aspect-square object-cover transform hover:scale-110 transition-transform duration-500"
                                     />
                                     <button className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center shadow hover:bg-error hover:text-white transition-all animate-badgeSlideIn"
                                         style={{ backgroundColor: 'var(--bg-primary)' }}
-                                        onClick={() => toggleWishlist(product.code)}
+                                        onClick={() => toggleWishlist(watch.code)}
                                     >
                                         <Heart className="w-4 h-4 text-text-muted" />
                                     </button>
                                 </div>
                                 <div className="p-3">
-                                    <Link to={`/product?code=${product.code}`} className="font-semibold text-sm mb-1 text-text-primary truncate animate-fadeInDown">{product.name}</Link>
-                                    <p className="text-lg font-bold mb-3 text-brand animate-fadeInUp">{formatCurrency(product.detail[0]?.currentPrice, 'en-Us', 'USD')}</p>
+                                    <Link to={`/watch?code=${watch.code}`} className="font-semibold text-sm mb-1 text-text-primary truncate animate-fadeInDown">{watch.name}</Link>
+                                    <p className="text-lg font-bold mb-3 text-brand animate-fadeInUp">{formatCurrency(watch.detail[0]?.currentPrice, 'en-Us', 'USD')}</p>
                                     <div className='flex items-center justify-center gap-2'>
                                         <button
-                                            className="py-1 px-4 bg-gray-400 text-white text-xs rounded transition-all transform hover:scale-[1.02] btn-brand shadow" onClick={() => handleCart(product)}
+                                            className="py-1 px-4 bg-gray-400 text-white text-xs rounded transition-all transform hover:scale-[1.02] btn-brand shadow" onClick={() => handleCart(watch)}
                                         >
                                             <ShoppingCart className='w-4' />
                                         </button>
                                         <button
-                                            className="flex-1 py-2 bg-brand text-white text-xs rounded transition-all transform hover:scale-[1.02] btn-brand shadow" onClick={() => handleCheckout(product)}
+                                            className="flex-1 py-2 bg-brand text-white text-xs rounded transition-all transform hover:scale-[1.02] btn-brand shadow" onClick={() => handleCheckout(watch)}
                                         >
                                             Buy now
                                         </button>

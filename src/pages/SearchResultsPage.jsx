@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useImageStore } from '../store/imageStore';
-import productApi from '../api/productApi';
+import watchApi from '../api/watchApi';
 import brandApi from '../api/brandApi';
-import ProductCard from '../components/common/ProductCard';
+import WatchCard from '../components/common/WatchCard';
 import LoadingAnimations from '../components/common/LoadingAnimations';
 import Notification from '../components/common/Notification';
 import { motion, AnimatePresence } from "framer-motion";
@@ -95,12 +95,12 @@ export default function SearchResultsPage() {
   useEffect(() => {
     setFilteredResults([]);
     if (!keyword || keyword === '') return;
-    const getProducts = async () => {
+    const getWatches = async () => {
       try {
         setLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await productApi.search(keyword);
-        const update = response.product.map((pro) => {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const response = await watchApi.search(keyword);
+        const update = response.watch.map((pro) => {
           const sold = pro.detail?.reduce((t, d) => t + d.sold, 0);
           const total = pro.detail?.reduce((t, d) => t + d.quantity, 0);
           const stock = total - sold;
@@ -108,9 +108,6 @@ export default function SearchResultsPage() {
           return { ...pro, sold, stock, reviewCount }
         });
         setResults(update);
-        setType('success');
-        setMessage(response.message);
-        setShow(true);
       } catch (err) {
         if (filteredResults?.length === 0) {
           setType('error');
@@ -122,16 +119,16 @@ export default function SearchResultsPage() {
         setLoading(false);
       }
     }
-    getProducts();
+    getWatches();
   }, [keyword]);
 
   useEffect(() => {
-    const getProducts = async () => {
+    const getWatches = async () => {
       try {
         setLoading(true);
         new Promise(resolve => setTimeout(resolve, 1500));
-        const response = await productApi.postImgToSearch(formData);
-        setResults(response.products);
+        const response = await watchApi.postImgToSearch(formData);
+        setResults(response.watches);
         setShow(true);
         setMessage(response.message);
         setType('success');
@@ -144,7 +141,7 @@ export default function SearchResultsPage() {
         setLoading(false);
       }
     }
-    getProducts();
+    getWatches();
   }, [formData]);
 
   useEffect(() => {
@@ -333,7 +330,7 @@ export default function SearchResultsPage() {
                 </h2>
               )}
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                {filteredResults.length} products found
+                {filteredResults.length} watches found
               </p>
             </div>
 
@@ -359,7 +356,7 @@ export default function SearchResultsPage() {
           {!loading && filteredResults.length === 0 && (
             <div className="flex flex-col items-center justify-center min-h-[50vh] p-6 bg-white dark:bg-gray-800 rounded-md shadow-md border dark:border-gray-700 text-center">
               <div className="text-5xl mb-3">🔍</div>
-              <h3 className="text-lg font-bold mb-1 text-gray-900 dark:text-white">No products found</h3>
+              <h3 className="text-lg font-bold mb-1 text-gray-900 dark:text-white">No watches found</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Try adjusting your filters or search query</p>
               <button
                 className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md shadow-md transition"
@@ -373,8 +370,8 @@ export default function SearchResultsPage() {
           {/* GRID */}
           {!loading && filteredResults.length > 0 && (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredResults.map((product, index) => (
-                <ProductCard key={index} product={product} />
+              {filteredResults.map((watch, index) => (
+                <WatchCard key={index} watch={watch} />
               ))}
             </div>
           )}

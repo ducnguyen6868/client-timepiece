@@ -8,10 +8,10 @@ import userApi from "../api/userApi";
 import LoadingAnimations from "../components/common/LoadingAnimations";
 import EmptyCart from '../components/common/EmptyCart';
 import Notification from "../components/common/Notification";
+import { collapseToast } from "react-toastify";
 
 export default function CartPage() {
     const { setInfoUser } = useContext(UserContext);
-    const token = localStorage.getItem("token");
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(true);
@@ -41,27 +41,14 @@ export default function CartPage() {
         }
     };
 
-    useEffect(() => {
-        if (token) {
-            getCart();
-        } else {
-            let cart = localStorage.getItem("cart");
-            if (cart) {
-                cart = JSON.parse(cart);
-                setCarts(cart);
-                const total = cart.reduce((t, c) => t + c.price * c.quantity, 0);
-                setTotal(total);
-            } else {
-                setCarts([]);
-            }
-            setLoading(false);
-        }
-    }, [token]);
+    useEffect(()=>{
+        getCart();
+    },[]);
 
-    const handleQuantityChange = (code, action, index) => {
+    const handleQuantityChange = (sku, action, index) => {
         setIndexCart(index);
         const updatedCarts = carts.map((cart) => {
-            if (cart.code === code) {
+            if (cart.variation.sku === sku) {
                 let newQuantity = cart.quantity;
                 if (action === "increase") newQuantity += 1;
                 else if (action === "decrease" && newQuantity > 1) newQuantity -= 1;
@@ -74,17 +61,9 @@ export default function CartPage() {
         setTotal(total);
     };
 
-    const handleSubmitQuantity = async (cartId, quantity) => {
-        if (!token) {
-            localStorage.setItem("cart", JSON.stringify(carts));
-            setShow(true);
-            setType('success');
-            setMessage("Updated quantity successfully");
-            setIndexCart(-1);
-            return;
-        }
+    const handleSubmitQuantity = async (sku, quantity) => {
         try {
-            const response = await userApi.changeQuantity(cartId, quantity);
+            const response = await userApi.changeQuantity(sku, quantity);
             setShow(true);
             setType('success');
             setMessage(response.message);
@@ -97,20 +76,10 @@ export default function CartPage() {
         }
     };
 
-    const handleRemove = async (cartId) => {
-        if (!token) {
-            const newCart = carts.filter((item) => item.code !== cartId);
-            localStorage.setItem("cart", JSON.stringify(newCart));
-            setCarts(newCart);
-            setInfoUser((prev) => ({ ...prev, cart: newCart.length }));
-               setShow(true);
-            setType('success');
-            setMessage("Removed product from cart");
-            return;
-        }
+    const handleRemove = async (sku) => {
         try {
-            const response = await userApi.deleteCart(cartId);
-               setShow(true);
+            const response = await userApi.deleteCart(sku);
+            setShow(true);
             setType('success');
             setMessage(response.message);
             getCart();
@@ -123,19 +92,17 @@ export default function CartPage() {
     };
 
     const handleShopping = () => {
-
-        const productData = carts.map((cart) => ({
-            id: cart._id,
+        const watchData = carts.map((cart) => ({
+            slug: cart.slug,
             name: cart.name,
-            code: cart.code,
-            image: cart.image,
+            thumbnail: cart.thumbnail,
             price: cart.price,
-            color: cart.color,
-            index: cart.index,
             quantity: cart.quantity,
+            color:cart.variation?.color,
+            material: cart.variation?.material,
+            strapType:cart.variation?.strapType
         }));
-        console.log(productData);
-        navigate("/product/checkout?cart=all", { state: { productData } });
+        navigate("/watch/checkout?cart=all", { state: { watchData } });
     };
 
     if (loading) {
@@ -156,9 +123,9 @@ export default function CartPage() {
                     {/* 🛒 Cart Items */}
                     <div className="lg:col-span-2 space-y-6">
                         <AnimatePresence>
-                            {carts.map((cart, index) => (
+                            {carts?.map((cart, index) => (
                                 <motion.div
-                                    key={cart.code}
+                                    key={index}
                                     initial={{ opacity: 0, y: 30 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, x: -50 }}
@@ -166,7 +133,7 @@ export default function CartPage() {
                                     className="flex items-center gap-6 p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow"
                                 >
                                     <img
-                                        src={`${process.env.REACT_APP_API_URL}` + `/${cart.image}`}
+                                        src={cart.thumbnail}
                                         alt={cart.name}
                                         loading="lazy"
                                         onError={(e) => {
@@ -179,14 +146,14 @@ export default function CartPage() {
                                     <div className="flex-1 space-y-2">
                                         <div className="flex justify-between items-center">
                                             <Link
-                                                to={`/product/${cart.slug}`}
+                                                to={`/watch/${cart.sku}`}
                                                 className="text-lg font-semibold dark:text-gray-200 
                                                 hover:text-brand-hover transition-colors text-brand"
                                             >
                                                 {cart.name}
                                             </Link>
                                             <button
-                                                onClick={() => handleRemove(cart._id || cart.slug)}
+                                                onClick={() => handleRemove(cart.variation.sku)}
                                                 className="text-red-500 hover:scale-110 transition-transform"
                                             >
                                                 <Trash2 size={20} />
@@ -194,7 +161,7 @@ export default function CartPage() {
                                         </div>
 
                                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                                            Color: {cart.color}
+                                            {cart.variation?.material} - {cart.variation?.strapType} - {cart.variation?.color}
                                         </p>
 
                                         <div className="flex items-center justify-between mt-3">
@@ -202,7 +169,7 @@ export default function CartPage() {
                                                 <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-1">
                                                     <button
                                                         onClick={() =>
-                                                            handleQuantityChange(cart.code, "decrease", index)
+                                                            handleQuantityChange(cart.variation.sku, "decrease", index)
                                                         }
                                                         className="text-gray-600 dark:text-gray-300 hover:text-[var(--brand)] transition"
                                                     >
@@ -213,7 +180,7 @@ export default function CartPage() {
                                                     </span>
                                                     <button
                                                         onClick={() =>
-                                                            handleQuantityChange(cart.code, "increase", index)
+                                                            handleQuantityChange(cart.variation.sku, "increase", index)
                                                         }
                                                         className="text-gray-600 dark:text-gray-300 hover:text-[var(--brand)] transition"
                                                     >
@@ -223,7 +190,7 @@ export default function CartPage() {
 
                                                 <motion.button
                                                     onClick={() =>
-                                                        handleSubmitQuantity(cart._id || cart.code, cart.quantity)
+                                                        handleSubmitQuantity(cart.variation.sku, cart.quantity)
                                                     }
                                                     whileTap={{ scale: 0.95 }}
                                                     className={`px-4 py-2 text-sm font-medium rounded-lg 

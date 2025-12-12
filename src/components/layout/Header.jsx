@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import { useImageStore } from '../../store/imageStore';
-import { Search, User, ShoppingCart, Heart, Camera } from 'lucide-react';
+import { Search, ShoppingCart, Heart, Camera } from 'lucide-react';
 import websiteLogo from '../../assets/website-logo.png';
 import ImageError from '../../assets/imageError.jpg';
 
@@ -93,7 +93,7 @@ export default function Header() {
                                 <input
                                     type="text"
                                     placeholder="Search watches, collections, promotions..."
-                                    className="w-full pl-10 pr-12 py-2 text-sm border border-cyan-500 rounded-lg 
+                                    className="w-full pl-10 pr-12 py-2 text-sm border border-cyan-200 rounded-lg 
                            focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent
                            transition-all"
                                     value={keyword}
@@ -116,11 +116,10 @@ export default function Header() {
                             </div>
 
                             {/* User Actions */}
-                            <div className="flex items-center gap-2 md:gap-3">
-
-                                {/* User Avatar / Login */}
-                                <div className="relative group flex items-center">
-                                    {logged ? (
+                            <div className="flex items-center gap-2 md:gap-3 relative group ">
+                                {logged ? (
+                                    <>
+                                        {/* Profile */}
                                         <Link to="/user/profile" className="hidden sm:block ">
                                             <img className="w-9 h-9 rounded-full shadow-sm hover:shadow-md transition-all duration-300"
                                                 src={infoUser.avatar}
@@ -129,45 +128,46 @@ export default function Header() {
                                                 loading='lazy'
                                                 onError={(e) => {
                                                     e.target.onerror = null;
-                                                    e.target.src =ImageError;
+                                                    e.target.src = ImageError;
                                                 }}
-
                                             />
-
                                         </Link>
-                                    ) : (
-                                        <Link to="/login" className='hidden sm:inline'>
-                                            <User className="w-6 h-6 text-gray-600" />
-                                        </Link>
-                                    )}
-                                </div>
-
-                                {/* Cart */}
-                                <Link to="/cart" className="relative group">
-                                    <ShoppingCart className="w-6 h-6 text-gray-600 group-hover:text-cyan-500 transition-colors duration-300" />
-                                    {infoUser.cart > 0 && (
-                                        <span className="absolute -top-2 -right-2 min-w-[20px] h-5 
+                                        {/* Cart */}
+                                        <Link to="/cart" className="relative group">
+                                            <ShoppingCart className="w-6 h-6 text-gray-600 hover:text-cyan-500 transition-colors duration-300" />
+                                            {infoUser.cart > 0 && (
+                                                <span className="absolute -top-2 -right-2 min-w-[20px] h-5 
                                    bg-cyan-500 text-white text-xs font-semibold 
                                    rounded-full px-1.5 flex items-center justify-center 
                                    shadow-sm">
-                                            {infoUser.cart}
-                                        </span>
-                                    )}
-                                </Link>
-
-                                {/* Wishlist */}
-                                <Link to="/wishlist" className="relative group">
-                                    <Heart className="w-6 h-6 text-gray-600 group-hover:text-rose-500 transition-colors duration-300" />
-                                    {infoUser.wishlist > 0 && (
-                                        <span className="absolute -top-2 -right-2 min-w-[20px] h-5 
+                                                    {infoUser.cart}
+                                                </span>
+                                            )}
+                                        </Link>
+                                        {/* Wishlist */}
+                                        <Link to="/user/wishlist" className="relative group">
+                                            <Heart className="w-6 h-6 text-gray-600 hover:text-rose-500 transition-colors duration-300" />
+                                            {infoUser.wishlist > 0 && (
+                                                <span className="absolute -top-2 -right-2 min-w-[20px] h-5 
                                    bg-cyan-500 text-white text-xs font-semibold 
                                    rounded-full px-1.5 flex items-center justify-center 
                                    shadow-sm">
-                                            {infoUser.wishlist}
-                                        </span>
-                                    )}
-                                </Link>
+                                                    {infoUser.wishlist}
+                                                </span>
+                                            )}
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <div className='flex gap-1 items-center'>
+                                        <Link to="/login" className='hidden sm:inline text-white border border-brand bg-brand px-6 py-1 rounded-md'>
+                                            Sign in
+                                        </Link>
+                                        <Link to="/register" className='hidden sm:inline text-gray-600 border border-gray-600 px-6 py-1 rounded-md'>
+                                            Sign up
+                                        </Link>
 
+                                    </div>
+                                )}
                             </div>
                         </div>
 

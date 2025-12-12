@@ -78,11 +78,13 @@ export default function AdminLogin() {
         <img className='fixed w-full h-full' src={loginImage} alt='Login' title='Login' />
         <div className="bg-white z-10 relative dark:bg-gray-900 w-full max-w-md rounded-2xl shadow-xl p-8 space-y-6 border border-gray-100 dark:border-gray-700">
           {/* Header */}
-          <div className="text-center space-y-2 flex md:gap-4 justify-center items-end">
-            <img src={websiteLogo} title='Website Logo' alt='Website Logo' className='w-12 h-12' />
-            <span className="text-lg  md:text-xl font-extrabold tracking-wider bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-              TIMEPIECE
-            </span>
+          <div className="text-center space-y-2 flex flex-col justify-center items-center">
+            <h1 className="text-lg  md:text-xl font-extrabold tracking-wider bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+              TIMEPIECE ADMIN
+            </h1>
+            <h3 className='text-black/75'>
+              Please log in to access the admin page.
+            </h3>
           </div>
 
           {/* Email */}

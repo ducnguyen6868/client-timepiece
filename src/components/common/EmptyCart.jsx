@@ -23,7 +23,7 @@ export default function EmptyCart() {
           <p className="text-slate-600 text-lg mb-8 max-w-md mx-auto "
 
           >
-            Looks like you haven't added anything to your cart yet. Start shopping to find amazing products!
+            Looks like you haven't added anything to your cart yet. Start shopping to find amazing wacthes!
           </p>
 
           {/* CTA Button */}

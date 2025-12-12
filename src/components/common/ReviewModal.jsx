@@ -51,7 +51,7 @@ export default function ReviewModal({ data, onClose, onChange }) {
       const formData = new FormData();
       formData.append('user', data.user);
       formData.append('name', data.name);
-      formData.append('codeProduct', data.codeProduct);
+      formData.append('codeWatch', data.codeWatch);
       formData.append('codeOrder', data.codeOrder);
       formData.append('rating', rating);
       formData.append('reviewText', reviewText);
@@ -80,7 +80,7 @@ export default function ReviewModal({ data, onClose, onChange }) {
               Write a Review
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Share your experience with this product
+              Share your experience with this watch
             </p>
           </div>
           <button

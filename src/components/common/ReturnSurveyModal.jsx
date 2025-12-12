@@ -38,7 +38,7 @@ const ReturnSurveyModal = ({ onClose ,orderId}) => {
         <h2>Return & Refund Experience Survey</h2>
         <p className="subtitle">
           We're sorry that your Timepiece watch did not meet your expectations.
-          Please share your feedback to help us improve our products and service.
+          Please share your feedback to help us improve our watches and service.
         </p>
 
         <form >
@@ -52,7 +52,7 @@ const ReturnSurveyModal = ({ onClose ,orderId}) => {
               required
             >
               <option value="">-- Please select a reason --</option>
-              <option value="defective">Product was defective or damaged</option>
+              <option value="defective">Watch was defective or damaged</option>
               <option value="wrong_item">Received the wrong item</option>
               <option value="not_as_expected">Item not as described</option>
               <option value="shipping_delay">Shipping took too long</option>
@@ -62,7 +62,7 @@ const ReturnSurveyModal = ({ onClose ,orderId}) => {
 
           {/* Satisfaction */}
           <div className="form-group">
-            <label>How satisfied were you with the product before returning?</label>
+            <label>How satisfied were you with the watch before returning?</label>
             <div className="rating-group">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                 <button

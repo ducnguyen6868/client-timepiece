@@ -1,9 +1,9 @@
 import BrandSection from '../components/common/BrandSection';
-import TrendingProduct from '../components/layout/TrendingProduct';
-import FlashSaleProduct from '../components/layout/FlashSaleProduct';
+import TrendingWatch from '../components/layout/TrendingWatch';
+import FlashSaleWatch from '../components/layout/FlashSaleWatch';
 import CollectionSection from '../components/layout/CollectionSection';
 import CommunitySection from '../components/layout/CommunitySection';
-
+import CategorySection from '../components/layout/CategorySection';
 
 export default function HomePage() {
 
@@ -12,11 +12,13 @@ export default function HomePage() {
 
         <CollectionSection />
 
-        <FlashSaleProduct />
+        <FlashSaleWatch />
 
         <BrandSection />
 
-        <TrendingProduct />
+        <CategorySection/>
+
+        <TrendingWatch />
 
         {/* Community */}
         <CommunitySection />

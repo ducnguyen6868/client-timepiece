@@ -1,16 +1,18 @@
 
 import { useState, useEffect } from 'react';
 import { formatCurrency } from '../../utils/formatCurrency';
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Icon } from '@iconify/react';
 import { Zap } from 'lucide-react';
-import productApi from '../../api/productApi';
+import watchApi from '../../api/watchApi';
 import Notification from '../common/Notification';
 import LoadingAnimations from '../common/LoadingAnimations';
 
-export default function TrendingProduct() {
+export default function TrendingWatch() {
 
-    const [trendingProducts, setTrendingProducts] = useState([]);
+    const navigate = useNavigate();
+    
+    const [trendingWatches, setTrendingWatches] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const [show, setShow] = useState(false);
@@ -18,14 +20,14 @@ export default function TrendingProduct() {
     const [message, setMessage] = useState('');
 
     useEffect(() => {
-        const getTrendingProducts = async () => {
+        const getTrendingWatches = async () => {
             try {
                 setLoading(true);
                 await new Promise(resolve => setTimeout(resolve, 500));
                 const page = 1;
                 const limit = 6;
-                const response = await productApi.getTrending(page, limit);
-                setTrendingProducts(response.products);
+                const response = await watchApi.getTrending(page, limit);
+                setTrendingWatches(response.watches);
             } catch (err) {
                 setShow(true);
                 setType('error');
@@ -34,7 +36,7 @@ export default function TrendingProduct() {
                 setLoading(false);
             }
         }
-        getTrendingProducts();
+        getTrendingWatches();
     }, []);
 
     const getRankTag = (rank) => {
@@ -46,14 +48,24 @@ export default function TrendingProduct() {
         }
     };
 
+      const handleNavigate = async (slug) => {
+        try {
+            await watchApi.patchViewCount(slug);
+        } catch (err) {
+            console.log(err);
+        } finally {
+            navigate(`/watch/${slug}`);
+        }
+    }
+
     return (
         <>
             {/* Notification */}
             {show && (
                 <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
             )}
-            {/* Trending Products */}
-            <section className="w-full flex justify-center py-6 transition-colors duration-500" id='trending-container'>
+            {/* Trending Watches */}
+            <section className="m-4 flex justify-center py-6 transition-colors duration-500" id='trending-container'>
                 <div className="w-full mx-auto py-4 px-4 md:px-8 lg:px-12 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg">
                     <div
                         id="trending-header"
@@ -72,14 +84,16 @@ export default function TrendingProduct() {
                         </>
                     )}
                     <div className="grid lg:grid-cols-6 lg:gap-3 md:grid-cols-3 grid-cols-2 gap-4">
-                        {trendingProducts.map((product, idx) => (
+                        {trendingWatches.map((watch, idx) => (
                             <div
-                                key={product._id}
+                                key={watch._id}
                                 data-animate
-                                className={`bg-bg-primary rounded-lg overflow-hidden border h-max
+                                className={`bg-bg-primary rounded-lg overflow-hidden border h-max cursor-pointer
                                     border-border transition-all duration-300 transform 
                                     hover:translate-y-1 hover:shadow-xl animate-cardSlideInUp visible
                             }`}
+                                    onClick = {()=>handleNavigate(watch.slug)}
+
                             >
 
                                 <div className="relative bg-bg-secondary overflow-hidden">
@@ -87,32 +101,37 @@ export default function TrendingProduct() {
                                         {getRankTag(idx + 1)}
                                     </div>
                                     <img
-                                        src={`${process.env.REACT_APP_API_URL}` + `/${product?.images[0]}`}
-                                        alt={product.name}
+                                        src={watch?.thumbnail}
+                                        alt={watch.name}
                                         loading='lazy'
-                                        onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x300/e2e8f0/64748b?text=Watch'; }}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = 'https://placehold.co/300x300/e2e8f0/64748b?text=Watch';
+                                        }}
                                         className="w-full aspect-square object-cover transform hover:scale-110 transition-transform duration-500 "
 
                                         style={{ animationDelay: `${idx * 0.1}s` }}
                                     />
-                                    {product?.flashSale && (
+                                    {watch?.flashSale && (
                                         <span className='absolute top-0 right-0 p-2' title='FLASHSALE'><Zap className='text-brand' /></span>
                                     )}
                                 </div>
                                 <div className="p-3">
-                                    <Link to={`/product/${product.slug}`}
+                                    <p
                                         className="font-semibold text-sm mb-1 text-text-primary truncate animate-textSlideLeft translate-x-6 line-clamp-1"
                                         style={{ animationDelay: `${idx * 0.15}s` }}
 
-                                    >{product.name}</Link>
-                                    {product.flashSale ? (
+                                    >
+                                        {watch.name}
+                                    </p>
+                                    {watch.flashSale ? (
                                         <p className="text-lg font-bold text-brand animate-fadeInUp">
-                                            {formatCurrency(product.detail[0]?.flashSalePrice, 'en-Us', 'USD')}
-                                            <span className='pl-1 text-sm font-semibold line-through text-red-500 italic'>{formatCurrency(product.detail[0]?.originalPrice, 'en-Us', 'USD')}</span>
+                                            {formatCurrency(watch.variations[0]?.flashSalePrice, 'en-Us', 'USD')}
+                                            <span className='pl-1 text-sm font-semibold line-through text-red-500 italic'>{formatCurrency(watch.variations[0]?.originalPrice, 'en-Us', 'USD')}</span>
                                         </p>
                                     ) : (
                                         <p className="text-lg font-bold text-brand animate-fadeInUp">
-                                            {formatCurrency(product.detail[0]?.currentPrice, 'en-Us', 'USD')}
+                                            {formatCurrency(watch.variations[0]?.currentPrice, 'en-Us', 'USD')}
 
                                         </p>
                                     )}

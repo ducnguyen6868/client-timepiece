@@ -3,14 +3,14 @@ import { Flame, BadgePercent } from "lucide-react";
 import { formatCurrency } from '../../utils/formatCurrency';
 import { useNavigate } from "react-router-dom";
 import { Icon } from '@iconify/react';
-import productApi from "../../api/productApi";
+import watchApi from "../../api/watchApi";
 import Notification from '../common/Notification';
 import LoadingAnimations from '../common/LoadingAnimations';
 
 export default function FlashSale() {
     const navigate = useNavigate();
 
-    const [flashSaleProducts, setFlashSaleProducts] = useState([]);
+    const [flashSaleWatches, setFlashSaleWatches] = useState([]);
     const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
     const [loading, setLoading] = useState(false);
@@ -21,10 +21,10 @@ export default function FlashSale() {
 
     // Countdown timer for flash sale
     useEffect(() => {
-        if (flashSaleProducts?.length === 0) return;
+        if (flashSaleWatches?.length === 0) return;
         const timer = setInterval(() => {
-            if (flashSaleProducts?.length > 0) {
-                const endTime = new Date(flashSaleProducts[0].flashSaleEnd);
+            if (flashSaleWatches?.length > 0) {
+                const endTime = new Date(flashSaleWatches[0].flashSaleEnd);
                 const now = new Date();
                 const diff = endTime - now;
 
@@ -41,7 +41,7 @@ export default function FlashSale() {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [flashSaleProducts]);
+    }, [flashSaleWatches]);
 
     useEffect(() => {
         const getFlashSales = async () => {
@@ -49,19 +49,9 @@ export default function FlashSale() {
                 setLoading(true);
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 const page = 1;
-                const limit = 10;
-                const response = await productApi.getFlashSale(page, limit);
-                let updatedProducts = response.flashsales;
-
-                updatedProducts = updatedProducts.map(product => {
-                    const detail = product.detail;
-                    const sold = detail.reduce((t, d) => t + d.sold, 0);
-                    const quantity = detail.reduce((t, d) => t + d.quantity, 0);
-                    const percent = sold / quantity * 100;
-                    return { ...product, percent, sold };
-                });
-
-                setFlashSaleProducts(updatedProducts);
+                const limit = 4;
+                const response = await watchApi.getFlashSale(page, limit);
+                setFlashSaleWatches(response.flashsales);
             } catch (err) {
                 setShow(true);
                 setType('error');
@@ -73,8 +63,14 @@ export default function FlashSale() {
         getFlashSales();
     }, []);
 
-    const handleNavigate = (slug) => {
-        navigate(`/product/${slug}`);
+    const handleNavigate = async (slug) => {
+        try {
+            await watchApi.patchViewCount(slug);
+        } catch (err) {
+            console.log(err);
+        } finally {
+            navigate(`/watch/${slug}`);
+        }
     }
 
     return (
@@ -84,8 +80,8 @@ export default function FlashSale() {
                 <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
             )}
 
-            {/* Flash Sale Products (NEW SECTION) */}
-            <section className="p-4 bg-bg-secondary transition-colors duration-500 bg-gradient-to-r from-red-500 to-orange-400 rounded-xl">
+            {/* Flash Sale Watches (NEW SECTION) */}
+            <section className="p-4 m-4 bg-bg-secondary transition-colors duration-500 bg-gradient-to-r from-red-500 to-orange-400 rounded-xl">
                 <div className="flex items-center space-x-1.5 relative text-white">
                     <Icon icon="noto:fire" width="18" height="18" />
                     <span className='font-bold text-xl '>FLASH SALE</span>
@@ -110,13 +106,13 @@ export default function FlashSale() {
                 )}
                 <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-4 xl:grid-cols-4  justify-center items-center gap-2 mt-2">
 
-                    {flashSaleProducts?.map((product, idx) => (
+                    {flashSaleWatches?.map((watch, idx) => (
                         <div
-                            key={product._id}
+                            key={watch._id}
                             data-animate
                             className={`bg-white cursor-pointer rounded-xl max-w-80 overflow-hidden shadow-2xl border border-sale-color/30 transform transition-all duration-500 hover:scale-[1.02] animate-fadeInUp visible`}
                             style={{ animationDelay: `${idx * 0.15 + 0.3}s` }}
-                            onClick={() => handleNavigate(product.slug)}
+                            onClick={() => handleNavigate(watch.slug)}
                         >
 
                             <div className="relative group overflow-hidden shadow-lg bg-white border border-gray-100">
@@ -126,14 +122,14 @@ export default function FlashSale() {
                                      text-white text-xs font-bold px-3 py-1 z-20
                                         bg-gradient-to-r from-red-500 to-orange-400 shadow-lg rounded-bl-lg">
                                     <BadgePercent size={14} />
-                                    - {Math.ceil((1 - product.detail[0].flashSalePrice / product.detail[0].originalPrice) * 100)}%
+                                    - {watch.variations[0]?.discountPercent}%
                                 </span>
 
-                                {/* Product Image */}
+                                {/* Watches Image */}
                                 <div className="relative overflow-hidden">
                                     <img
-                                        src={`${process.env.REACT_APP_API_URL}` + `/${product?.images[0]}`}
-                                        alt={product.name}
+                                        src={watch?.thumbnail}
+                                        alt={watch.name}
                                         onError={(e) => {
                                             e.target.onerror = null;
                                             e.target.src = "https://placehold.co/300x300/dc2626/ffffff?text=FLASH+SALE";
@@ -154,26 +150,22 @@ export default function FlashSale() {
 
                             <div className="p-4 flex flex-col items-center text-center">
                                 <div className="text-lg xl:text-xl lg:text-2xl font-black text-red-600">
-                                    {formatCurrency(product.detail[0]?.flashSalePrice, 'en-Us', 'USD')}
+                                    {formatCurrency(watch.variations[0]?.flashSalePrice, 'en-Us', 'USD')}
                                 </div>
                                 <div
-                                    className="w-full relative rounded-full bg-gray-300 h-5 mt-2 overflow-hidden shadow-inner"
+                                    className="w-full relative rounded-full bg-gray-300 h-5 mt-2 shadow-inner"
                                 >
                                     <div
-                                        className="h-full rounded-full transition-all duration-500 ease-out bg-gradient-to-r from-orange-500 to-red-600 flex items-center justify-center"
-                                        style={{ width: `${product.percent}%` }}
+                                        className="h-full rounded-full transition-all duration-500 ease-out 
+                                        bg-gradient-to-r from-red-600 to-orange-400 
+                                        flex items-center justify-start"
+                                        style={{ width: `${Math.ceil(watch.variations[0]?.sold / watch.variations[0]?.stock * 100)}%` }}
                                     >
-                                        {product.percent !== '0%' && (
-                                            <Icon icon="noto:fire" width="12" height="12" />
+                                        <Icon icon="noto:fire" width="24" height="24" className="mb-1" />
+                                        {Math.ceil(watch.variations[0]?.sold / watch.variations[0]?.stock * 100) > 50 && (
+                                            <span className="text-xs md:text-sm flex-1 text-center text-white">SOLD {watch?.variations[0].sold}</span>
                                         )}
                                     </div>
-                                    {/* Hiển thị văn bản "Đã bán" */}
-                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                        <span className="text-[10px] md:text-xs lg:text-sm font-semibold text-gray-800">
-                                            SOLD <span className='text-red-700'>{product.sold}</span>
-                                        </span>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>

@@ -58,7 +58,7 @@ export default function OrderStatusTracker({ order, onClose, onChange }) {
         const orderId = order._id;
         const status = statuses[statusIndex + 1]?.id;
         try {
-            const response = await orderApi.changeStatus(orderId, status);
+            const response = await orderApi.patchStatus(orderId, status);
             toast.success(response.message);
             onChange?.();
         } catch (err) {

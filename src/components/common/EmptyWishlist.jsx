@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 
 export default function EmptyWishlist() {
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 animate-cardSlideInUp">
+    <div className=" animate-cardSlideInUp">
         {/* Empty Cart Card */}
         <div className="bg-white rounded-3xl p-4 md:p-6 xl:p-10 lg:p-8 text-center">
           {/* Icon */}
@@ -21,7 +21,7 @@ export default function EmptyWishlist() {
           >No favorite watches</h2>
           <p className="text-slate-600 text-lg mb-8 max-w-md mx-auto"
           >
-            Looks like you haven't added anything to your wishlist yet. Start shopping to find amazing products!
+            Looks like you haven't added anything to your wishlist yet. Start shopping to find amazing watches!
           </p>
 
           {/* CTA Button */}

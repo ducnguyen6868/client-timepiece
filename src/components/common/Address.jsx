@@ -3,9 +3,12 @@ import { toast } from "react-toastify";
 import { AlertCircle, Loader2, Home, Building2, User, Phone, MapPin, Save, X, } from "lucide-react";
 import { isValidPhoneNumber } from "../../utils/isValidPhoneNumber";
 import addressApi from "../../api/addressApi";
+import Notification from "./Notification";
 
 export default function Address({ onClose, onChange, addressData }) {
+
   const [loading, setLoading] = useState(false);
+
   const [address, setAddress] = useState({
     name: "",
     phone: "",
@@ -13,6 +16,10 @@ export default function Address({ onClose, onChange, addressData }) {
     type: "Home",
   });
   const [errors, setErrors] = useState({});
+
+  const [show , setShow]= useState(false);
+  const [type , setType] = useState('');
+  const [message , setMessage] = useState('');
 
   useEffect(() => {
     if (addressData) {
@@ -60,17 +67,24 @@ export default function Address({ onClose, onChange, addressData }) {
       const response = addressData
         ? await addressApi.putAddress(address)
         : await addressApi.postAddress(address);
-      toast.success(response.message);
+      setShow(true);
+      setType('success');
+      setMessage(response.message);
+      await new Promise(resolve=>setTimeout(resolve,1000));
       onChange?.();
       onClose?.();
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
+      setShow(true);
+      setType('error');
+      setMessage(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
+    <>
+    <Notification show={show} type={type} message={message} onClose={()=>setShow(false)}/>
     <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 transition-all duration-300">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3 mb-5">
@@ -226,5 +240,6 @@ export default function Address({ onClose, onChange, addressData }) {
         </div>
       </form>
     </div>
+    </>
   );
 }

@@ -39,7 +39,7 @@ export default function CommunitySection() {
             )}
 
             {/* Community */}
-            <section className="bg-bg-primary py-2 px-4 md:py-3 md:px-6 xl:py-4 xl:px-8 transition-colors duration-500">
+            <section className="bg-bg-primary p-4 transition-colors duration-500">
                 <h2 className='text-center text-white bg-gradient-to-br from-brand to-brand-hover
                 text-base p-2 md:text-lg md:p-3 xl:text-xl xl:p-4 rounded-md mb-2 md:rounded-lg md:mb-3 xl:rounded-xl xl:mb-4
                 '>Timepiece Community</h2>
@@ -57,7 +57,7 @@ export default function CommunitySection() {
                                 {/* Image Container */}
                                 <div className="relative overflow-hidden bg-bg-tertiary">
                                     <img
-                                        src={`${process.env.REACT_APP_API_URL}` + `/${post.image}`}
+                                        src={post.image}
                                         alt={post.name}
                                         className="w-full aspect-[4/3] object-cover transform hover:scale-110 transition-transform duration-500"
                                         loading="lazy"
@@ -74,7 +74,7 @@ export default function CommunitySection() {
                                     <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-3 mb-2">
                                         <img
                                             className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full flex-shrink-0 object-cover"
-                                            src={`${process.env.REACT_APP_API_URL}` + `/${post.avatar}`}
+                                            src={post.avatar}
                                             alt={post.name}
                                             loading="lazy"
                                             onError={(e) => {

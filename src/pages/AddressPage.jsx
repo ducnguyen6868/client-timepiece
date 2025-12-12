@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import { MapPin, Trash2, Edit3, Home, PlusCircle, CheckCircle2, XCircle ,Building2 } from "lucide-react";
 import addressApi from "../api/addressApi";
 import Address from "../components/common/Address";
+import Notification from "../components/common/Notification";
 
 export default function AddressPage() {
+
   const [addresses, setAddresses] = useState([]);
   const [addressData, setAddressData] = useState({});
   const [modal, setModal] = useState(false);
@@ -12,12 +13,18 @@ export default function AddressPage() {
   const [del, setDel] = useState(false);
   const [edit, setEdit] = useState(false);
 
+  const [show,setShow] = useState(false);
+  const [type,setType] = useState('');
+  const [message,setMessage]= useState('');
+
   const getAddresses = async () => {
     try {
       const response = await addressApi.getAddress();
       setAddresses(response.addresses);
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
+      setShow(true);
+      setType('error');
+      setMessage(err.response?.data?.message || err.message);
     }
   };
 
@@ -34,10 +41,14 @@ export default function AddressPage() {
     try {
       const response = await addressApi.deleteAddress(addressId);
       await getAddresses();
+      setShow(true);
+      setType('success');
+      setMessage(response.message);
       setDel(false);
-      toast.success(response.message);
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
+      setShow(true);
+      setType('error');
+      setMessage(err.response?.data?.message || err.message)
     }
   };
 
@@ -45,9 +56,13 @@ export default function AddressPage() {
     try {
       const response = await addressApi.patchAddress(id);
       await getAddresses();
-      toast.success(response.message);
+      setShow(true);
+      setType('success');
+      setMessage(response.message);
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
+      setShow(true);
+      setType('error');
+      setMessage(err.response?.data?.message || err.message);
     }
   };
 
@@ -57,6 +72,8 @@ export default function AddressPage() {
   };
 
   return (
+    <>
+    <Notification show={show} type={type} message={message} onClose={()=>setShow(false)}/>
     <div className="min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center my-2 md:my-4 xl:my-6 border-b pb-4 border-gray-200">
@@ -69,7 +86,7 @@ export default function AddressPage() {
           onClick={() => setModal(true)}
         >
           <PlusCircle className="w-5 h-5" />
-          Add New
+          New address
         </button>
       </div>
 
@@ -138,7 +155,7 @@ export default function AddressPage() {
       {/* Add / Edit Modal */}
       {(modal || edit) && (
         <div
-          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+          className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50"
           onClick={() => {
             setModal(false);
             setEdit(false);
@@ -163,7 +180,7 @@ export default function AddressPage() {
       {/* Confirm Delete Modal */}
       {del && (
         <div
-          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+          className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50"
           onClick={() => setDel(false)}
         >
           <div
@@ -197,5 +214,6 @@ export default function AddressPage() {
         </div>
       )}
     </div>
+    </>
   );
 }
