@@ -38,7 +38,7 @@ const Message = () => {
 
     const handleSearchConver = () => {
         if (!conversations || conversations.length === 0) return;
-        const conver = conversations.filter(conver => conver.participants[0].fullName == keyword || conver.participants[1].fullName == keyword);
+        const conver = conversations.filter(conver => conver.participants[0].fullName === keyword || conver.participants[1].fullName === keyword);
         setSearchConver(conver);
     }
 
@@ -200,7 +200,7 @@ const Message = () => {
                     </div>
 
                     {/* List */}
-                    {keyword == '' ? (
+                    {keyword === '' ? (
                         <div className="flex-1 overflow-y-auto">
                             {conversations.map((conver, index) => {
                                 const otherUser =
