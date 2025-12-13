@@ -34,7 +34,7 @@ export default function CategorySection() {
     )
   }
   return (
-    <section className="py-6 bg-gray-100">
+    <section className="py-2 md:py-4 xl:py-6 bg-gray-100">
       <div className="max-w-7xl mx-auto px-4">
         {/* Section Header */}
         <h2 className="text-2xl text-center md:text-3xl text-gray-800 mb-2">

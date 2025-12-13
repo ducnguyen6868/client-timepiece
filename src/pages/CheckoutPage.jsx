@@ -32,7 +32,7 @@ export default function CheckoutPage() {
   const [type, setType] = useState('');
 
   useEffect(() => {
-    if (!infoUser || infoUser.name === '') return;
+    if (!infoUser || infoUser.fullName === '') return;
     const getPoint = async () => {
       try {
         const res = await profileApi.profile();
@@ -41,7 +41,6 @@ export default function CheckoutPage() {
         setType('error');
         setMessage(err.response?.data?.message || err.message);
         setShow(true);
-        localStorage.removeItem('token');
       }
     };
     getPoint();

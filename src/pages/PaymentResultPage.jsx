@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { formatCurrency } from '../utils/formatCurrency';
 import { CheckCircle2, XCircle, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -9,7 +8,6 @@ import watchApi from '../api/watchApi';
 import WatchCard from '../components/common/WatchCard';
 import Notification from '../components/common/Notification';
 import LoadingAnimations from '../components/common/LoadingAnimations';
-import { set } from 'mongoose';
 
 export default function PaymentResultPage() {
   const navigate = useNavigate();

@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-  ShoppingCart, Minus, Plus, Star, Heart,
-  ChevronLeft, ChevronRight, Check, Clock, Award, Eye
+  ShoppingCart, Minus, Plus, Star, Heart, X,
+  ChevronLeft, ChevronRight, Check, Clock, Award, Eye,
 } from 'lucide-react';
 import { Icon } from '@iconify/react';
 import { UserContext } from '../contexts/UserContext';
@@ -14,6 +14,30 @@ import WatchNotFound from '../components/layout/WatchNotFound';
 import LoadingAnimations from '../components/common/LoadingAnimations';
 import Notification from '../components/common/Notification';
 
+const Login = ({ onClose }) => {
+  return (
+    <div className='fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm'
+      onClick={onClose}
+    >
+      <div className='bg-white p-4 rounded-lg relative w-full max-w-80'
+        onClick={(e) => e.stopPropagation()}>
+        <button className='absolute top-2 right-2'>
+          <X className='w-5 h-5' />
+        </button>
+        <p className='mb-4 pt-2'>Please login to complete this action.</p>
+        <p className='flex gap-4'>
+          <button className='flex-1 text-gray-900 bg-slate-200 py-2 px-6 rounded-lg'
+            onClick={onClose}>
+            Back
+          </button>
+          <Link to='/login' className='flex-1 text-center bg-brand text-white py-2 px-6 rounded-lg'>
+            Login
+          </Link>
+        </p>
+      </div>
+    </div>
+  )
+}
 export default function WatchPage() {
 
   const { infoUser, setInfoUser, locale, currency } = useContext(UserContext);
@@ -22,16 +46,16 @@ export default function WatchPage() {
   const navigate = useNavigate();
 
   const [logged, setLogged] = useState(false);
+  const [alert, setAlert] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const [loading, setLoading] = useState(true);
   const [watch, setWatch] = useState();
-  const [hoursFlashSale, setHoursFlashSale] = useState();
+  const [timeLeft, setTimeLeft] = useState(0);
 
   const [isWish, setIsWish] = useState(false);
   const [wishCount, setWishCount] = useState(0);
-
 
   const [show, setShow] = useState(false);
   const [type, setType] = useState('');
@@ -41,11 +65,6 @@ export default function WatchPage() {
   const [selectedImage, setSelectedImage] = useState(0);
 
   const variation = watch?.variations[selectedVariation];
-  const currentPrice = variation?.flashSalePrice || variation?.currentPrice;
-  const hasDiscount = variation?.flashSalePrice || variation?.originalPrice > variation?.currentPrice;
-  const discountPercent = hasDiscount
-    ? Math.round((1 - currentPrice / variation?.originalPrice) * 100)
-    : 0;
   const isInStock = variation?.quantity > 0;
 
 
@@ -82,14 +101,21 @@ export default function WatchPage() {
   }, [slug]);
 
   useEffect(() => {
-    if (!watch || !watch.flashSaleEnd) return;
+    if (!watch?.flashSaleEnd) return;
 
-    const now = Date.now();
-    const end = Date.parse(watch.flashSaleEnd) || 0;
-    const hoursFlashSale = Math.ceil((end - now) / (100 * 60 * 60));
-    setHoursFlashSale(hoursFlashSale);
+    const intervalId = setInterval(() => {
+      const now = Date.now();
+      const end = new Date(watch.flashSaleEnd).getTime();
+      const minutesLeft = Math.max(
+        0,
+        Math.ceil((end - now) / (1000 * 60))
+      );
 
-  }, [watch]);
+      setTimeLeft(minutesLeft);
+    }, 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, [watch?.flashSaleEnd]);
 
   useEffect(() => {
     if (!infoUser || infoUser.fullName === '') return;
@@ -107,7 +133,7 @@ export default function WatchPage() {
     }
     checkWishlist();
 
-  }, [infoUser.name, slug, wishCount]);
+  }, [infoUser, slug, wishCount]);
 
   const renderStars = (rating) => (
     <div className="flex text-yellow-400">
@@ -137,7 +163,7 @@ export default function WatchPage() {
         setMessage(err.response?.data?.message || err.message);
       }
     } else {
-      navigate('/login');
+      setAlert(true);
     }
   };
 
@@ -155,7 +181,7 @@ export default function WatchPage() {
         setMessage(err.response?.data?.message || err.message);
       }
     } else {
-      navigate('/login');
+      setAlert(true);
     }
   };
 
@@ -209,28 +235,36 @@ export default function WatchPage() {
                 />
 
                 {watch.flashSale && variation.flashSalePrice && (
-                  <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1.5 rounded-lg font-bold text-sm">
+                  <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1.5 rounded-md font-bold text-[10px] md:text-xs">
                     FLASH SALE
                   </div>
                 )}
 
-                {hasDiscount && (
-                  <div className="absolute top-4 right-4 bg-orange-500 text-white px-3 py-1.5 rounded-lg font-bold">
-                    -{discountPercent}%
-                  </div>
-                )}
+                {
+                  watch.flashSale ? (
+                    <div className="absolute top-4 right-4 bg-orange-500 text-white text-[12px] px-3 py-1.5 rounded-md uppercase font-bold">
+                      - {((1 - variation.flashSalePrice / variation.originalPrice)*100).toFixed(2)}%
+                    </div>
+                  ) : (
+                    <div className="absolute top-4 right-4 bg-orange-500 text-white text-[12px] px-3 py-1.5 rounded-md uppercase font-bold">
+                      - {((1 - variation.currentPrice / variation.originalPrice)*100).toFixed(2)}%
+                    </div>
+                  )
+
+                }
+
 
                 {variation.images.length > 1 && (
                   <>
                     <button
                       onClick={prevImage}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/80 p-2 rounded-full shadow-lg"
                     >
                       <ChevronLeft className="w-6 h-6" />
                     </button>
                     <button
                       onClick={nextImage}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/80 p-2 rounded-full shadow-lg"
                     >
                       <ChevronRight className="w-6 h-6" />
                     </button>
@@ -318,24 +352,38 @@ export default function WatchPage() {
               {/* Price */}
               <div className="bg-gray-50 rounded-lg">
                 <div className="flex items-baseline gap-3 mb-2">
-                  <span className="text-4xl font-bold text-blue-600">
-                    {formatCurrency(currentPrice, locale, currency)}
-                  </span>
-                  {hasDiscount && (
+                  {watch.flashSale ? (
                     <>
-                      <span className="text-xl text-gray-400 line-through">
-                        {formatCurrency(variation.originalPrice, locale, currency)}
+                      <span className="text-2xl font-bold text-brand md:text-3xl xl:text-3xl">
+                        {formatCurrency(variation?.flashSalePrice, locale, currency)}
                       </span>
-                      <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded text-sm font-semibold">
-                        Save {formatCurrency((variation?.originalPrice - currentPrice), locale, currency)}
+                      <span className="text-base md:text-lg xl:text-xl text-gray-400 line-through">
+                        {formatCurrency(variation?.originalPrice, locale, currency)}
+                      </span>
+                      <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded text-[11px] md:text-sm font-semibold">
+                        Save {formatCurrency((variation?.originalPrice - variation?.flashSalePrice), locale, currency)}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+
+                      <span className="text-2xl font-bold text-brand md:text-3xl xl:text-3xl">
+                        {formatCurrency(variation?.currentPrice, locale, currency)}
+                      </span>
+                      <span className="text-base md:text-lg xl:text-xl text-gray-400 line-through">
+                        {formatCurrency(variation?.originalPrice, locale, currency)}
+                      </span>
+                      <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded text-[11px] md:text-sm font-semibold">
+                        Save {formatCurrency((variation?.originalPrice - variation?.currentPrice), locale, currency)}
                       </span>
                     </>
                   )}
+
                 </div>
-                {watch.flashSale && variation.flashSalePrice && (
+                {watch.flashSale && variation?.flashSalePrice && (
                   <div className="flex items-center gap-2 text-sm text-red-600">
                     <Clock className="w-4 h-4" />
-                    <span>Flash sale ends in {hoursFlashSale} hours</span>
+                    <span>Flash sale ends in {timeLeft} minutes</span>
                   </div>
                 )}
               </div>
@@ -519,7 +567,7 @@ export default function WatchPage() {
                     ))}
                   </ul>
                 </div>
-                <div className="mt-4 bg-blue-50 rounded-lg p-6">
+                <div className="bg-blue-50 rounded-lg p-4 md:mt-2 md:p-6">
                   <h4 className="font-semibold mb-3 flex items-center gap-2">
                     <Award className="w-5 h-5 text-blue-600" />
                     Why Choose This Watch?
@@ -575,6 +623,10 @@ export default function WatchPage() {
           </div>
         </div>
       </div>
+
+      {alert && (
+        <Login onClose={() => setAlert(false)} />
+      )}
     </>
   );
 }

@@ -204,7 +204,6 @@ export default function SettingPage() {
                 const response = await profileApi.profile();
                 setUser(response.user);
             } catch (err) {
-                localStorage.removeItem('token');
                 console.log(err.response?.data?.message || err.message);
             } finally {
                 setLoading(false);

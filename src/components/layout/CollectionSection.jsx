@@ -60,13 +60,13 @@ const CollectionSection = () => {
     }
 
     return (
-        <section className="relative mb-1 sm:py-3 md:py-4 bg-gray-50 h-28 md:h-52 lg:h-64 m-4 overflow-hidden">
+        <section className="relative mb-1 sm:py-3 md:py-4 bg-gray-50 h-28 md:h-52 lg:h-64 mx-4 mt-2 md:mt-4 overflow-hidden">
             {collections.map((collection, index) => (
                 <Link
                     key={collection._id}
                     to={`/collection/${collection.slug}`}
                     className={`
-                    absolute inset-0 transition-all duration-700 ease-in-out rounded-xl overflow-hidden
+                    absolute inset-0 transition-all duration-700 ease-in-out rounded-lg overflow-hidden
                     ${index === currentIndex
                             ? "opacity-100 translate-x-0 z-0"
                             : index < currentIndex

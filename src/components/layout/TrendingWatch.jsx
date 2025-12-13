@@ -65,7 +65,7 @@ export default function TrendingWatch() {
                 <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
             )}
             {/* Trending Watches */}
-            <section className="m-4 flex justify-center py-6 transition-colors duration-500" id='trending-container'>
+            <section className="m-4 flex justify-center py-2 md:py-4 xl:py-6 transition-colors duration-500" id='trending-container'>
                 <div className="w-full mx-auto py-4 px-4 md:px-8 lg:px-12 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg">
                     <div
                         id="trending-header"

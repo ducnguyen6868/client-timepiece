@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { AlertCircle, Loader2, Home, Building2, User, Phone, MapPin, Save, X, } from "lucide-react";
 import { isValidPhoneNumber } from "../../utils/isValidPhoneNumber";
 import addressApi from "../../api/addressApi";
@@ -85,19 +84,13 @@ export default function Address({ onClose, onChange, addressData }) {
   return (
     <>
     <Notification show={show} type={type} message={message} onClose={()=>setShow(false)}/>
-    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 transition-all duration-300">
+    <div className="bg-white dark:bg-gray-900 rounded-lg md:rounded-xl xl:rounded-2xl shadow-lg p-4 transition-all duration-300">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3 mb-5">
         <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
           <MapPin className="text-brand" size={20} />
           Address Information
         </h2>
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-red-500 transition-colors"
-        >
-          <X size={20} />
-        </button>
       </div>
 
       {/* Form */}

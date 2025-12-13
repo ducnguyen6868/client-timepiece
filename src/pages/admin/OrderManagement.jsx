@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { formatDate } from '../../utils/formatDate';
 import orderApi from '../../api/orderApi';
-import OrderDetail from '../../components/layout/OrderDetail';
+import OrderDetail from '../OrderDetailPage';
 import OrderStatusTracker from '../../components/common/OrderStatusTracker';
 import LoadingAnimations from '../../components/common/LoadingAnimations';
 import AdminLogin from './AdminLogin';

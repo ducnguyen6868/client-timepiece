@@ -1,15 +1,16 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
-import { Link , useNavigate, useLocation } from 'react-router-dom';
-import { Home, MessageSquare , Gift, ShoppingBag, User } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Home, MessageSquare, Gift, ShoppingBag, User } from 'lucide-react';
 import ImageError from '../../assets/imageError.jpg';
 import ChatModal from '../layout/ChatModal';
 
 // --- New NavBar Component ---
 export default function NavBottom() {
     const [activeTab, setActiveTab] = useState('');
+
     const [login, setLogin] = useState(false);
-    const [show,setShow] = useState(false);
+    const [show, setShow] = useState(false);
 
     const navigate = useNavigate();
 
@@ -23,23 +24,28 @@ export default function NavBottom() {
     }, [queryParams]);
 
     useEffect(() => {
-        if (!infoUser || !infoUser.fullName) return;
+        if (!infoUser || infoUser.fullName === '') return;
         setLogin(true);
     }, [infoUser]);
 
     const handleActiveTab = (item) => {
         setActiveTab(item);
-        if (item === 'chat'){
+        if (item === '/chat') {
             setShow(true);
             return;
-        } 
-        navigate(`/${item}`);
+        };
+
+        if (item === '/user/orders' &&!login) {
+            navigate(`/order-history`);
+            return;
+        };
+        navigate(`${item}`);
     }
 
     return (
         <>
             {activeTab === 'chat' && show && (
-                <ChatModal onClose={()=>setShow(false)}/>
+                <ChatModal onClose={() => setShow(false)} />
             )}
             <nav
                 // Position: Fixed at the bottom, spanning full width
@@ -48,7 +54,7 @@ export default function NavBottom() {
                 {/* Center content on wide screens, ensure spacing on mobile */}
                 <div className="flex w-full justify-around items-center h-16 max-w-xl mx-auto px-2 bg-gray-100 rounded-lg">
                     <button
-                        onClick={() => handleActiveTab('')}
+                        onClick={() => handleActiveTab('/')}
                         className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === ''
                             ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
                             : 'text-brand hover:text-brand-hover'
@@ -57,8 +63,8 @@ export default function NavBottom() {
                         <Home className="h-8 w-8" />
                     </button>
                     <button
-                        onClick={() => handleActiveTab('user/orders')}
-                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'order'
+                        onClick={() => handleActiveTab('/user/orders')}
+                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'order-history'
                             ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
                             : 'text-brand hover:text-brand-hover'
                             } rounded-lg`}
@@ -66,8 +72,8 @@ export default function NavBottom() {
                         <ShoppingBag className="h-8 w-8" />
                     </button>
                     <button
-                        onClick={() => handleActiveTab('user/promotions')}
-                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'order'
+                        onClick={() => handleActiveTab('/user/promotions')}
+                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === '/user/promotions'
                             ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
                             : 'text-brand hover:text-brand-hover'
                             } rounded-lg`}
@@ -75,7 +81,7 @@ export default function NavBottom() {
                         <Gift className="h-8 w-8" />
                     </button>
                     <button
-                        onClick={() => handleActiveTab('chat')}
+                        onClick={() => handleActiveTab('/chat')}
                         className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === 'chat'
                             ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
                             : 'text-brand hover:text-brand-hover'

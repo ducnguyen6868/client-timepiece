@@ -155,7 +155,7 @@ export default function AddressPage() {
       {/* Add / Edit Modal */}
       {(modal || edit) && (
         <div
-          className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50"
+          className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 mx-4"
           onClick={() => {
             setModal(false);
             setEdit(false);

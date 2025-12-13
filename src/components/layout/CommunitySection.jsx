@@ -39,7 +39,7 @@ export default function CommunitySection() {
             )}
 
             {/* Community */}
-            <section className="bg-bg-primary p-4 transition-colors duration-500">
+            <section className="bg-bg-primary px-4 md:px-2 xl:px-4 transition-colors duration-500">
                 <h2 className='text-center text-white bg-gradient-to-br from-brand to-brand-hover
                 text-base p-2 md:text-lg md:p-3 xl:text-xl xl:p-4 rounded-md mb-2 md:rounded-lg md:mb-3 xl:rounded-xl xl:mb-4
                 '>Timepiece Community</h2>

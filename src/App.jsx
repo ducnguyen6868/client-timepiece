@@ -13,6 +13,7 @@ import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import WatchPage from './pages/WatchPage';
 import BrandPage from './pages/BrandPage';
+import FlashSalePage from './pages/FlashSalePage';
 import CollectionPage from './pages/CollectionPage';
 import CategoryPage from './pages/CategoryPage';
 import SearchResultsPage from './pages/SearchResultsPage';
@@ -21,7 +22,8 @@ import CheckoutPage from './pages/CheckoutPage';
 import PaymentResultPage from './pages/PaymentResultPage';
 import CartPage from './pages/CartPage';
 import WishlistPage from './pages/WishlistPage';
-import OrderPage from './pages/OrderPage';
+import OrderHistoryPage from './pages/OrderHistoryPage';
+import OrderDetailPage from './pages/OrderDetailPage';
 
 import AuthAccount from './middlewares/authAccount';
 
@@ -55,6 +57,7 @@ function App() {
 
           <Route path='/' element={<Public />}>
             <Route index element={<HomePage />}></Route>
+            <Route path="flash-sale" element={<FlashSalePage />}></Route>
             <Route path="collection/:slug" element={<CollectionPage />}></Route>
             <Route path="brand/:slug" element={<BrandPage />}></Route>
             <Route path="watch/:slug" element={<WatchPage />}></Route>
@@ -63,7 +66,8 @@ function App() {
             <Route path="watch/checkout" element={<CheckoutPage />}></Route>
             <Route path="payment-result" element={<PaymentResultPage />}></Route>
             <Route path='cart' element={<CartPage />}></Route>
-            <Route path='order' element={<OrderPage />}></Route>
+            <Route path='order-history' element={<OrderHistoryPage />}></Route>
+            <Route path='order-detail/:orderId' element={<OrderDetailPage />}></Route>
           </Route>
 
           {/* Các route danh cho User */}
@@ -73,7 +77,7 @@ function App() {
             <Route path='point' element={<AuthAccount><PointPage /></AuthAccount>}></Route>
             <Route path='wallet' element={<AuthAccount><WalletPage /></AuthAccount>}></Route>
             <Route path='promotions' element={<AuthAccount><PromotionPage /></AuthAccount>}></Route>
-            <Route path='orders' element={<AuthAccount><OrderPage /></AuthAccount>}></Route>
+            <Route path='orders' element={<AuthAccount><OrderHistoryPage /></AuthAccount>}></Route>
             <Route path='address' element={<AuthAccount><AddressPage /></AuthAccount>}></Route>
             <Route path='wishlist' element={<AuthAccount><WishlistPage /></AuthAccount>}></Route>
             <Route path='settings' element={<AuthAccount><SettingPage /></AuthAccount>}></Route>

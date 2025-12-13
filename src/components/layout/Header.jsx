@@ -121,7 +121,7 @@ export default function Header() {
                                     <>
                                         {/* Profile */}
                                         <Link to="/user/profile" className="hidden sm:block ">
-                                            <img className="w-9 h-9 rounded-full shadow-sm hover:shadow-md transition-all duration-300"
+                                            <img className="w-9 h-9 rounded-full object-cover object-center shadow-sm hover:shadow-md transition-all duration-300"
                                                 src={infoUser.avatar}
                                                 title='Avatar'
                                                 alt='Avatar'

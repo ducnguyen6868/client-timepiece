@@ -46,9 +46,9 @@ export default function CollectionPage() {
     return (
         <>
             <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
-            <div className="w-full min-h-screen bg-gray-50 p-2 sm:p-3 md:p-4">
+            <div className="w-full min-h-screen bg-gray-50 p-4">
                 {/* Collection Banner */}
-                <div className="">
+                <div className="mb-2">
                     <img
                         src={collection.banner}
                         alt={collection.name}
@@ -57,27 +57,25 @@ export default function CollectionPage() {
                             e.target.onerror = null;
                             e.target.src = `https://placehold.co/300x300/e2e8f0/64748b?text=${collection.name}`;
                         }}
-                        className="w-full h-full object-cover rounded-xl relative z-0"
+                        className="w-full h-full object-cover rounded-md md:rounded-lg relative z-0"
                     />
                     {/* Logo and collection Name */}
-                    <div className="p-8 -mt-12 z-10 relative">
+                    <div className="p-2 md:p-4 xl:p-6 z-0 relative">
                         <div className="max-w-7xl mx-auto">
-                            <div className="flex items-end space-x-6">
-                                <div className="p-1 rounded-lg bg-white shadow-xl">
-                                    <img
-                                        src={collection.thumbnail}
-                                        alt={`${collection.name}`}
-                                        loading='lazy'
-                                        onError={(e) => {
-                                            e.target.onerror = null;
-                                            e.target.src = `https://placehold.co/300x300/e2e8f0/64748b?text=Collection`;
-                                        }}
-                                        className="w-24 h-24 object-cover rounded-lg"
-                                    />
-                                </div>
-                                <div className="pb-2">
-                                    <h1 className="text-4xl font-bold text-black mb-2">{collection.name}</h1>
-                                    <h3 className="text-black/80">{collection.description}</h3>
+                            <div className="flex items-start gap-2">
+                                <img
+                                    src={collection.thumbnail}
+                                    alt={`${collection.name}`}
+                                    loading='lazy'
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = `https://placehold.co/300x300/e2e8f0/64748b?text=Collection`;
+                                    }}
+                                    className="w-16 h-16 md:w-20 md::h-20 xl:w-24 xl:h-24 object-cover rounded-lg"
+                                />
+                                <div className="">
+                                    <h1 className="text-xl md:text-3xl xl:text-4xl font-bold text-black">{collection.name}</h1>
+                                    <h3 className="text-black/80 text-[10px] md:text-sm xl:text-base text-justify">{collection.description}</h3>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +85,7 @@ export default function CollectionPage() {
                 {/* Watches Grid */}
 
                 {watches?.length > 0 ? (
-                    <div className='grid grid-cols-2
+                    <div className='grid grid-cols-1
                     sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4
                     xl:grid-cols-5 gap-2 sm:gap-3 md:gap-4 lg:gap-5'>
                         {

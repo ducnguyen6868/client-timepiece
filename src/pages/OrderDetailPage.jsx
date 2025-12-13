@@ -1,21 +1,25 @@
-import { ShoppingCart, Truck, MapPin, Tag, XCircle, Package, MoveRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { formatDate } from '../../utils/formatDate';
-import { formatTime } from '../../utils/formatTime';
+import { ShoppingCart, Truck, MapPin, Tag, Package, MoveRight } from 'lucide-react';
+import { Link , useLocation } from 'react-router-dom';
+import { formatDate } from '../utils/formatDate';
+import { formatTime } from '../utils/formatTime';
 
-// ************************************************
 // Main Component: Order Details Content
-// ************************************************
-export default function OrderDetail({ order, onClose }) {
+export default function OrderDetailPage() {
+  const location = useLocation();
+  const order =location.state||{};
 
-  if (!order) return null;
+  if(!order.code){
+    return(
+      <p>Order not found...</p>
+    );
+  };
+
   return (
-    <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex justify-center items-start p-6 md:p-10 z-50 overflow-y-auto" onClick={() => onClose()}>
-      <div className="bg-white dark:bg-gray-900 w-full max-w-5xl rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 space-y-8 animate-fadeIn" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white dark:bg-gray-900 w-full p-6 space-y-2 md:space-y-4 xl:space-y-6 animate-fadeIn" >
         {/* Header */}
         <header className="flex justify-between items-start border-b pb-4">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+            <h1 className="text-xl xl:text-2xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
               <ShoppingCart className="w-6 h-6 text-teal-600" />
               Order Details
             </h1>
@@ -28,19 +32,10 @@ export default function OrderDetail({ order, onClose }) {
               </span>
             </p>
           </div>
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="p-2 text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-              title="Close"
-            >
-              <XCircle className="w-6 h-6" />
-            </button>
-          )}
         </header>
 
         {/* Shipping Info */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-4">
           <InfoBox
             title="Shipping Address"
             icon={<MapPin className="w-5 h-5 text-teal-600" />}
@@ -107,7 +102,7 @@ export default function OrderDetail({ order, onClose }) {
         </section>
 
         {/* Payment Info */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 border-t pt-6">
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-4 border-t pt-2 md:pt-4">
           <InfoBox title="Payment Info" icon={<Tag className="w-5 h-5 text-teal-600" />}>
             <p className="text-gray-700 dark:text-gray-300">
               Method: <span className="font-semibold">{order?.paymentMethod} - {order?.payment}</span>
@@ -126,7 +121,6 @@ export default function OrderDetail({ order, onClose }) {
           </div>
         </section>
       </div>
-    </div>
   );
 }
 
