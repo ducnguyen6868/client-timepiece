@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Home, MessageSquare, Gift, ShoppingBag, User } from 'lucide-react';
+import { Home, MessageSquare, ShoppingBag, User } from 'lucide-react';
 import ImageError from '../../assets/imageError.jpg';
 import ChatModal from '../layout/ChatModal';
 
@@ -44,7 +44,7 @@ export default function NavBottom() {
 
     return (
         <>
-            {activeTab === 'chat' && show && (
+            {activeTab === '/chat' && show && (
                 <ChatModal onClose={() => setShow(false)} />
             )}
             <nav
@@ -70,15 +70,6 @@ export default function NavBottom() {
                             } rounded-lg`}
                     >
                         <ShoppingBag className="h-8 w-8" />
-                    </button>
-                    <button
-                        onClick={() => handleActiveTab('/user/promotions')}
-                        className={`flex flex-col flex-1 items-center justify-center p-2 sm:p-2 text-xs font-medium transition duration-200 ease-in-out ${activeTab === '/user/promotions'
-                            ? `text-white bg-brand` // Active link color (User is active for Admin Login context)
-                            : 'text-brand hover:text-brand-hover'
-                            } rounded-lg`}
-                    >
-                        <Gift className="h-8 w-8" />
                     </button>
                     <button
                         onClick={() => handleActiveTab('/chat')}

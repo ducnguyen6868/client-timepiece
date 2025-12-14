@@ -12,6 +12,7 @@ export const UserProvider = ({ children }) => {
     const [locale, setLocale] = useState('en-US');
     const [currency, setCurrency] = useState('USD');
     const [infoUser, setInfoUser] = useState({
+        code:'',
         fullName: '',
         email: '',
         avatar: '',
@@ -32,6 +33,7 @@ export const UserProvider = ({ children }) => {
                         }
                     });
                     setInfoUser({
+                        code: response.data.user.code,
                         fullName: response.data.user.fullName,
                         email: response.data.user.email,
                         avatar: response.data.user.avatar,
