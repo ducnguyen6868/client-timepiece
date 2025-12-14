@@ -52,7 +52,10 @@ export default function WatchPage() {
   const [activeTab, setActiveTab] = useState('description');
   const [loading, setLoading] = useState(true);
   const [watch, setWatch] = useState();
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [timeLeft, setTimeLeft] = useState({
+    minutesLeft: 0,
+    secondsLeft: 0
+  });
 
   const [isWish, setIsWish] = useState(false);
   const [wishCount, setWishCount] = useState(0);
@@ -105,14 +108,13 @@ export default function WatchPage() {
 
     const intervalId = setInterval(() => {
       const now = Date.now();
-      const end = new Date(watch.flashSaleEnd).getTime();
-      const minutesLeft = Math.max(
-        0,
-        Math.ceil((end - now) / (1000 * 60))
-      );
+      const end = new Date(watch.flashSaleEnd);
+      const diff = end-now;
+      const minutesLeft = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secondsLeft =  Math.floor((diff % (1000 * 60)) / 1000);
 
-      setTimeLeft(minutesLeft);
-    }, 60 * 1000);
+      setTimeLeft({ minutesLeft, secondsLeft });
+    }, 1000);
 
     return () => clearInterval(intervalId);
   }, [watch?.flashSaleEnd]);
@@ -243,11 +245,11 @@ export default function WatchPage() {
                 {
                   watch.flashSale ? (
                     <div className="absolute top-4 right-4 bg-orange-500 text-white text-[12px] px-3 py-1.5 rounded-md uppercase font-bold">
-                      - {((1 - variation.flashSalePrice / variation.originalPrice)*100).toFixed(2)}%
+                      - {((1 - variation.flashSalePrice / variation.originalPrice) * 100).toFixed(2)}%
                     </div>
                   ) : (
                     <div className="absolute top-4 right-4 bg-orange-500 text-white text-[12px] px-3 py-1.5 rounded-md uppercase font-bold">
-                      - {((1 - variation.currentPrice / variation.originalPrice)*100).toFixed(2)}%
+                      - {((1 - variation.currentPrice / variation.originalPrice) * 100).toFixed(2)}%
                     </div>
                   )
 
@@ -383,7 +385,7 @@ export default function WatchPage() {
                 {watch.flashSale && variation?.flashSalePrice && (
                   <div className="flex items-center gap-2 text-sm text-red-600">
                     <Clock className="w-4 h-4" />
-                    <span>Flash sale ends in {timeLeft} minutes</span>
+                    <span>Flash sale ends in {timeLeft.minutesLeft} : {timeLeft.secondsLeft} </span>
                   </div>
                 )}
               </div>
