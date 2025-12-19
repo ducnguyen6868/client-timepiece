@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import { useImageStore } from '../../store/imageStore';
 import { Search, ShoppingCart, Heart, Camera } from 'lucide-react';
+import {useDebounce} from '../../hooks/useDebounce';
 import websiteLogo from '../../assets/website-logo.png';
 import ImageError from '../../assets/imageError.jpg';
 
@@ -12,6 +13,7 @@ export default function Header() {
     const navigate = useNavigate();
     const [logged, setLogged] = useState(false);
     const [keyword, setKeyword] = useState('');
+    const debounceKeyword = useDebounce(keyword,500);
 
     const [scanning, setScanning] = useState(false);
     const [uploadedImage, setUploadedImage] = useState(null);
@@ -23,7 +25,12 @@ export default function Header() {
             setLogged(true);
         }
     }, [infoUser]);
-
+    
+    useEffect(()=>{
+        if(debounceKeyword){
+            console.log('HEHEHEHEHEHEHEHEH');
+        }
+    },[debounceKeyword]);
     const handleSearch = async () => {
         if (keyword !== '') {
             navigate(`/search?keyword=${keyword}`);

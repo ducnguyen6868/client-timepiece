@@ -1,7 +1,7 @@
 import axiosClient from './axiosClient';
 
 const communityApi = {
-    getCommunities : (page,limit)=>axiosClient.get(`/community?page=${page}&&limit=${limit}`),
+    getCommunities : ()=>axiosClient.get(`/community`),
 }
 
 export default communityApi;

@@ -36,7 +36,7 @@ export default function CategoryPage() {
         }
         getWatches();
     }, [slug]);
-
+    
     const processedWatches = useMemo(() => {
         if (!Array.isArray(watches)) return [];
 

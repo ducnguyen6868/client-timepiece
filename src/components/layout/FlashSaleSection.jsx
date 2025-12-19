@@ -49,7 +49,7 @@ export default function FlashSaleSection() {
             try {
                 await new Promise(resolve => setTimeout(resolve, 200));
                 const page = 1;
-                const limit = 4;
+                const limit = 6;
                 const response = await watchApi.getFlashSale(page, limit);
                 const updateWatches = response.flashsales.map(watch=>{
                     const discountPercent = watch.flashSale?
@@ -107,7 +107,7 @@ export default function FlashSaleSection() {
                         <LoadingAnimations option='skeleton' />
                     </div>
                 )}
-                <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-4 xl:grid-cols-4  justify-center items-center gap-2 mt-2">
+                <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-4 xl:grid-cols-6  justify-center items-center gap-2 mt-2">
 
                     {flashSaleWatches?.map((watch, idx) => (
                         <div 
@@ -146,7 +146,7 @@ export default function FlashSaleSection() {
                                     {formatCurrency(watch.variations[0]?.flashSalePrice, 'en-Us', 'USD')}
                                 </div>
                                 <div
-                                    className="w-full relative rounded-full bg-gray-300 h-2 sm:h-3 md:h-4 xl:h-5  mt-2 shadow-inner"
+                                    className="w-full relative rounded-full bg-gray-300 h-2 md:h-[2.5] xl:h-3  mt-2 shadow-inner"
                                 >
                                     <div
                                         className="h-full rounded-full transition-all duration-500 ease-out 

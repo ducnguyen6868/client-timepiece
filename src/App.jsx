@@ -94,7 +94,7 @@ function App() {
             <Route path='orders' element={<AuthAccount><OrderManagement /></AuthAccount>}></Route>
             <Route path='promotions' element={<AuthAccount><PromotionManagement /></AuthAccount>}></Route>
             <Route path='users' element={<AuthAccount><UserManagement /></AuthAccount>}></Route>
-            <Route path='chats' element={<AuthAccount><ChatManagement /></AuthAccount>}></Route>
+            <Route path='chats' element={<ChatManagement />}></Route>
             <Route path='settings' element={<AuthAccount><AdminSettingPage /></AuthAccount>}></Route>
           </Route>
 

@@ -80,7 +80,7 @@ export default function PaymentResultPage() {
   const handleNavigate = () => {
     const token = localStorage.getItem('token');
     if (token) navigate('/user/orders');
-    else navigate('/order');
+    else navigate('/order-history');
   };
 
   // ✅ UI Animation Variants
