@@ -16,6 +16,7 @@ export const UserProvider = ({ children }) => {
         fullName: '',
         email: '',
         avatar: '',
+        role:'',
         wishlist: wishlist?.length || 0,
         cart: cart?.length || 0,
         conversationId:''
@@ -25,26 +26,25 @@ export const UserProvider = ({ children }) => {
         const getInfoUser = async () => {
             const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
             const token = localStorage.getItem('token') || sessionStorage.getItem("token");
-            if (token) {
-                try {
-                    const response = await axios.get(`${API_URL}/profile`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    });
-                    setInfoUser({
-                        code: response.data.user.code,
-                        fullName: response.data.user.fullName,
-                        email: response.data.user.email,
-                        avatar: response.data.user.avatar,
-                        wishlist: response.data.user.wishlist?.length || 0,
-                        cart: response.data.user.carts?.length || 0
-                    })
-                } catch (err) {
-                    console.log(err);
-                    localStorage.removeItem('token');
-                }
-            }
+            if (!token ) return;
+            try {
+                const response = await axios.get(`${API_URL}/profile`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setInfoUser({
+                    code: response.data.user.code,
+                    fullName: response.data.user.fullName,
+                    email: response.data.user.email,
+                    avatar: response.data.user.avatar,
+                    role:response.data.user.role,
+                    wishlist: response.data.user.wishlist?.length || 0,
+                    cart: response.data.user.carts?.length || 0
+                })
+            } catch (err) {
+                console.log(err);
+            };
         }
         getInfoUser();
     }, []);

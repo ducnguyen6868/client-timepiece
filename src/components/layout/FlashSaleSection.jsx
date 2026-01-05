@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BadgePercent } from "lucide-react";
+import { BadgePercent, Flame } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { useNavigate } from "react-router-dom";
 import { Icon } from '@iconify/react';
@@ -10,7 +10,7 @@ import LoadingAnimations from '../common/LoadingAnimations';
 export default function FlashSaleSection() {
 
     const navigate = useNavigate();
-    
+
     const [flashSaleWatches, setFlashSaleWatches] = useState([]);
     const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
@@ -47,15 +47,14 @@ export default function FlashSaleSection() {
     useEffect(() => {
         const getFlashSales = async () => {
             try {
-                await new Promise(resolve => setTimeout(resolve, 200));
                 const page = 1;
                 const limit = 6;
                 const response = await watchApi.getFlashSale(page, limit);
-                const updateWatches = response.flashsales.map(watch=>{
-                    const discountPercent = watch.flashSale?
-                    (1-watch.variations[0].flashSalePrice/watch.variations[0].originalPrice||0)*100:
-                    (1-watch.variations[0].currentPrice/watch.variations[0].originalPrice||0)*100;
-                    return {...watch,discountPercent}
+                const updateWatches = response.flashsales.map(watch => {
+                    const discountPercent = watch.flashSale ?
+                        (1 - watch.variations[0].flashSalePrice / watch.variations[0].originalPrice || 0) * 100 :
+                        (1 - watch.variations[0].currentPrice / watch.variations[0].originalPrice || 0) * 100;
+                    return { ...watch, discountPercent }
                 });
                 setFlashSaleWatches(updateWatches);
             } catch (err) {
@@ -69,17 +68,10 @@ export default function FlashSaleSection() {
         getFlashSales();
     }, []);
 
-    const handleView= async(slug)=>{
-        try{
-            await watchApi.patchViewCount(slug);
-        }catch(err){
-            setShow(true);
-            setType('error');
-            setMessage(err.response?.data?.message||err.message);
-        }finally{
-            navigate(`/watch/${slug}`);
-        }
-    }
+    const handleNavigate=()=>{
+        navigate(`/flash-sale`);
+    };
+
     return (
         <>
             {/* Notification */}
@@ -88,85 +80,95 @@ export default function FlashSaleSection() {
             )}
 
             {/* Flash Sale Watches (NEW SECTION) */}
-            <section className="p-4 mx-4 md:my-4 bg-bg-secondary transition-colors duration-500 bg-gradient-to-r from-red-500 to-orange-400 rounded-xl">
-                <div className="flex items-center gap-1 relative text-white">
-                    <Icon icon="noto:fire" width="18" height="18" />
-                    <span className='font-bold text-base md:text-xl '>FLASH SALE</span>
-                    <Icon icon="noto:fire" width="18" height="18" />
+            <div className="bg-white dark:bg-gray-900 rounded-2xl mx-8 -mt-12 relative z-10  shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                {/* Banner Header */}
+                <div className="bg-gradient-to-r from-orange-500 to-red-600 p-6 flex flex-col md:flex-row justify-between items-center text-white gap-4">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-white/20 p-2 rounded-lg animate-pulse">
+                            <Flame size={28} fill="currentColor" />
+                        </div>
+                        <div>
+                            <h2 className="text-2xl font-black uppercase tracking-tighter italic">Flash Sale</h2>
+                            <p className="text-white/80 text-xs font-medium uppercase tracking-widest">Ưu đãi giới hạn mỗi ngày</p>
+                        </div>
+                    </div>
 
-                    {/* Hours */}
-                    <span className="text-sm md:text-base bg-gray-200 font-bold text-brand px-2 rounded ">{String(timeLeft.hours).padStart(2, '0')}</span>
-                    {/* Minutes */}
-                    <span className="text-sm md:text-base bg-gray-200 font-bold text-brand px-2 rounded ">{String(timeLeft.minutes).padStart(2, '0')}</span>
-                    {/* Seconds */}
-                    <span className="text-sm md:text-base bg-gray-200 font-bold text-brand px-2 rounded ">{String(timeLeft.seconds).padStart(2, '0')}</span>
+                    {/* Countdown Timer */}
+                    <div className="flex items-center gap-4 bg-black/10 backdrop-blur-md px-5 py-2.5 rounded-xl border border-white/10">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">Kết thúc sau</span>
+                        <div className="flex gap-2 font-mono font-bold text-lg">
+                            <span className="bg-white text-orange-600 w-9 h-9 flex items-center justify-center rounded-lg shadow-inner">
+                                {String(timeLeft.hours).padStart(2, '0')}
+                            </span>
+                            <span className="flex items-center animate-pulse">:</span>
+                            <span className="bg-white text-orange-600 w-9 h-9 flex items-center justify-center rounded-lg shadow-inner">
+                                {String(timeLeft.minutes).padStart(2, '0')}
+                            </span>
+                            <span className="flex items-center animate-pulse">:</span>
+                            <span className="bg-white text-orange-600 w-9 h-9 flex items-center justify-center rounded-lg shadow-inner">
+                                {String(timeLeft.seconds).padStart(2, '0')}
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
-                {loading && (
-                    <div className="mt-4 w-full">
-                        <LoadingAnimations option='skeleton' />
-                    </div>
-                )}
-                <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-4 xl:grid-cols-6  justify-center items-center gap-2 mt-2">
+                {/* Product Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 p-4 bg-gray-50/50 dark:bg-transparent">
+                    {flashSaleWatches.map((watch) => {
+                        const progress = (watch.variations[0].sold / watch.variations[0].stock) * 100;
 
-                    {flashSaleWatches?.map((watch, idx) => (
-                        <div 
-                            key={watch._id}
-                            data-animate
-                            className='bg-white cursor-pointer rounded-md max-w-80 relative
-                            overflow-hidden border border-sale-color/30 transform
-                            transition-all duration-500 hover:scale-[1.02] animate-fadeInUp visible'
-                            style={{ animationDelay: `${idx * 0.15 + 0.3}s` }}
-                            onClick={()=>handleView(watch.slug)}
-                        >
-
-                            {/* Discount Badge */}
-                            <span
-                                className="absolute top-0 right-0 flex items-center gap-1
-                                     text-white text-xs font-bold px-3 py-1 z-20
-                                        bg-gradient-to-r from-red-500 to-orange-400 shadow-lg rounded-bl-lg">
-                                <BadgePercent size={14} />
-                                - {watch.discountPercent.toFixed(2)}%
-                            </span>
-
-                            {/* Watches Image */}
-                            <img
-                                src={watch?.thumbnail}
-                                alt={watch.name}
-                                onError={(e) => {
-                                    e.target.onerror = null;
-                                    e.target.src = "https://placehold.co/300x300/dc2626/ffffff?text=FLASH+SALE";
-                                }}
-                                loading='lazy'
-                                className="w-full aspect-square object-cover transition-all duration-700 group-hover:scale-110"
-                            />
-
-                            <div className="p-2 md:p-3 xl:p-4 flex flex-col items-center text-center">
-                                <div className="text-lg xl:text-xl lg:text-2xl font-black text-red-600">
-                                    {formatCurrency(watch.variations[0]?.flashSalePrice, 'en-Us', 'USD')}
+                        return (
+                            <div key={watch._id} className="group relative bg-white dark:bg-gray-800 rounded-2xl
+                            overflow-hidden transition-all shadow-2xl border border-transparent hover:border-orange-100
+                            dark:hover:border-gray-700 cursor-pointer"
+                            onClick={handleNavigate}>
+                                {/* Sale Tag */}
+                                <div className="absolute top-2 left-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded-md shadow-lg z-10">
+                                   - {((1-watch.variations[0].flashSalePrice/watch.variations[0].originalPrice)*100).toFixed(2)} %
                                 </div>
-                                <div
-                                    className="w-full relative rounded-full bg-gray-300 h-2 md:h-[2.5] xl:h-3  mt-2 shadow-inner"
-                                >
-                                    <div
-                                        className="h-full rounded-full transition-all duration-500 ease-out 
-                                        bg-gradient-to-r from-red-600 to-orange-400 
-                                        flex items-center justify-start"
-                                        style={{ width: `${Math.ceil(watch.variations[0]?.sold / watch.variations[0]?.stock * 100)}%` }}
-                                    >
-                                        <Icon icon="noto:fire" width="18" height="18" className="mb-1" />
-                                        {Math.ceil(watch.variations[0]?.sold / watch.variations[0]?.stock * 100) > 50 && (
-                                            <span className="text-[10px] sm:text-xs md:text-sm flex-1 text-center text-white">SOLD {watch?.variations[0].sold}</span>
-                                        )}
+
+                                {/* Image Container */}
+                                <div className="aspect-square overflow-hidden bg-gray-100 dark:bg-gray-950 flex items-center justify-center relative">
+                                    <img
+                                        alt={watch.name}
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                        src={watch.thumbnail}
+                                    />
+                                </div>
+
+                                {/* Product Info */}
+                                <div className="space-y-1 p-2">
+                                    <h3 className="font-bold text-gray-800 dark:text-gray-100 text-xs truncate uppercase tracking-tight">
+                                        {watch.name}
+                                    </h3>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-red-600 dark:text-orange-500 font-black text-base">
+                                            ${watch.variations[0].flashSalePrice}
+                                        </span>
+                                        <span className="text-gray-400 text-[10px] line-through">
+                                            ${watch.variations[0].originalPrice}
+                                        </span>
+                                    </div>
+
+                                    {/* Progress Bar */}
+                                    <div className="pt-2">
+                                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
+                                            <div
+                                                className="bg-gradient-to-r from-orange-500 to-red-600 h-full transition-all duration-1000"
+                                                style={{ width: `${progress}%` }}
+                                            ></div>
+                                        </div>
+                                        <div className="flex justify-between mt-1.5 px-0.5">
+                                            <span className="text-[9px] font-bold text-gray-400 uppercase">Còn {watch.variations[0].stock - watch.variations[0].sold}</span>
+                                            <span className="text-[9px] font-bold text-red-500 uppercase italic">Đã bán {watch.variations[0].sold}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
-
-            </section>
-
+            </div>
         </>
     )
 }

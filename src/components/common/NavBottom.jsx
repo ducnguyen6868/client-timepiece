@@ -3,7 +3,7 @@ import { UserContext } from '../../contexts/UserContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Home, MessageSquare, ShoppingBag, User } from 'lucide-react';
 import ImageError from '../../assets/imageError.jpg';
-import ChatModal from '../layout/ChatModal';
+import ChatModal from '../layout/ChatWidget.jsx';
 
 // --- New NavBar Component ---
 export default function NavBottom() {

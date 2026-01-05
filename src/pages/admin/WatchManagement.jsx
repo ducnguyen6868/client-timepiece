@@ -127,7 +127,7 @@ export default function WatchManagement() {
     return (
         <>
             <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-gray-50 p-4">
                 <div className="max-w-7xl mx-auto">
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6 md:gap-4">

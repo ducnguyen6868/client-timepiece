@@ -70,7 +70,7 @@
   box-sizing: border-box;
 }
 body {
-font-family: "Poppins", sans-serif;
+font-family: sans-serif;
 }
 input.error{
   border-color: rgb(231, 13, 13);

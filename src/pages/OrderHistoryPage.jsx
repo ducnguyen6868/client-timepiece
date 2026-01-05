@@ -1,227 +1,310 @@
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Package, Truck, CheckCircle, XCircle, Clock, Loader2 } from 'lucide-react';
-import { UserContext } from '../contexts/UserContext';
-import { formatDate } from '../utils/formatDate';
-import { formatTime } from '../utils/formatTime';
-import orderApi from '../api/orderApi';
-import LoadingAnimations from '../components/common/LoadingAnimations';
-import Notification from '../components/common/Notification';
-
-// Reusable Component: Order Status Badge
-const OrderStatusBadge = ({ status }) => {
-    let classes = '';
-    let Icon = null;
-
-    switch (status) {
-        case 'Delivered Successfully':
-            classes = 'bg-green-100 text-green-700';
-            Icon = CheckCircle;
-            break;
-        case 'Order Placed':
-            classes = 'bg-amber-100 text-amber-700';
-            Icon = Clock;
-            break;
-        case 'Processing':
-            classes = 'bg-yellow-100 text-yellow-700';
-            Icon = Loader2;
-            break;
-        case 'Shipping':
-            classes = 'bg-blue-100 text-blue-700';
-            Icon = Truck;
-            break;
-        case 'Canceled':
-            classes = 'bg-red-100 text-red-700';
-            Icon = XCircle;
-            break;
-        default:
-            classes = 'bg-gray-100 text-gray-600';
-            Icon = Clock;
-    }
-
-    return (
-        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-semibold rounded-sm md:rounded-md xl:rounded-lg ${classes}`}>
-            {Icon && <Icon className="w-3.5 h-3.5" />}
-            <span>{status}</span>
-        </span>
-    );
-};
-
-// Main Component: Order Page
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 
 export default function OrderHistoryPage() {
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
-    const { infoUser } = useContext(UserContext);
-    const navigate = useNavigate();
+  const filters = [
+    { id: 'all', label: 'Tất cả' },
+    { id: 'pending', label: 'Chờ xác nhận' },
+    { id: 'shipping', label: 'Đang vận chuyển' },
+    { id: 'completed', label: 'Hoàn thành' },
+    { id: 'cancelled', label: 'Đã hủy' },
+  ];
 
-    const [logged, setLogged] = useState(false);
-    const [checkLogged, setCheckLogged] = useState(false);
+  const orders = [
+    {
+      id: 'ORD-9211',
+      date: '20 Tháng 10, 2023 - 14:30',
+      status: 'shipping',
+      statusLabel: 'Đang vận chuyển',
+      statusColor: 'blue',
+      items: [
+        {
+          name: 'Đồng hồ Citizen C7 40mm Nam NH8390-20H Automatic',
+          price: '4.500.000đ',
+          color: 'Xám bạc',
+          size: '40mm',
+          quantity: 1,
+        },
+        {
+          name: 'Dây da đồng hồ cao cấp size 20mm',
+          price: '500.000đ',
+          color: 'Nâu',
+          quantity: 1,
+        },
+      ],
+      total: '5.000.000đ',
+      totalColor: 'text-brand',
+    },
+    {
+      id: 'ORD-8832',
+      date: '15 Tháng 09, 2023 - 09:15',
+      status: 'completed',
+      statusLabel: 'Hoàn thành',
+      statusColor: 'green',
+      items: [
+        {
+          name: 'Casio G-Shock GA-2100-1A1DR Carbon Core Guard',
+          price: '3.200.000đ',
+          color: 'Đen Full',
+          quantity: 1,
+        },
+      ],
+      total: '3.200.000đ',
+      totalColor: 'text-slate-900',
+    },
+    {
+      id: 'ORD-1102',
+      date: '01 Tháng 08, 2023 - 18:45',
+      status: 'cancelled',
+      statusLabel: 'Đã hủy',
+      statusColor: 'red',
+      items: [
+        {
+          name: 'Orient Bambino Gen 2 FAC00009N0',
+          price: '4.800.000đ',
+          color: 'Vàng Cream',
+          quantity: 1,
+        },
+      ],
+      total: '4.800.000đ',
+      totalColor: 'text-slate-600',
+      cancelled: true,
+    },
+  ];
 
-    const [loading, setLoading] = useState(true);
-    const [show, setShow] = useState(false);
-    const [type, setType] = useState('');
-    const [message, setMessage] = useState('');
-
-    const [orders, setOrders] = useState([]);
-    const [activeFilter, setActiveFilter] = useState('All');
-    const [filteredOrders, setFilteredOrders] = useState([]);
-
-    const statusFilters = ['All', 'Order Placed', 'Processing', 'Shipping', 'Delivered Successfully', 'Canceled'];
-
-    const [page, setPage] = useState(1);
-    const [pages, setPages] = useState(1);
-
-    useEffect(() => {
-        if (!infoUser || infoUser.fullName === '') setLogged(false);
-        else setLogged(true);
-        setCheckLogged(true);
-    }, [infoUser]);
-
-    useEffect(() => {
-        if (!checkLogged) return;
-        const getOrders = async () => {
-            try {
-                await new Promise(resolve => setTimeout(resolve, 200));
-                let response;
-                if (logged) {
-                    response = await orderApi.getOrders();
-                } else {
-                    let order = localStorage.getItem('order');
-                    order = JSON.parse(order);
-                    response = await orderApi.viewList(order);
-                }
-                setOrders(response.orders || []);
-            } catch (err) {
-                setShow(true);
-                setType('error');
-                setMessage(err.response?.data?.message || err.message);
-            } finally {
-                setLoading(false);
-            };
-        };
-        getOrders();
-    }, [checkLogged]);
-
-    useEffect(() => {
-        if (!orders.length) return;
-        const filtered = orders.filter(order =>
-            activeFilter === 'All' || order.status?.at(-1)?.present === activeFilter
-        );
-        setFilteredOrders(filtered);
-        const pages = Math.ceil(filtered.length / 5);
-        setPages(pages);
-    }, [activeFilter, orders]);
-
-    const startOrder = (page - 1) * 5;
-    const endOrder = startOrder + 5;
-    const listOrder = filteredOrders.slice(startOrder, endOrder);
-
-    const handleNavigate=(order)=>{
-        navigate(`/order-detail/${order._id}`,{
-            state:order
-        });
+  const getStatusIcon = (status) => {
+    const icons = {
+      shipping: 'mdi:truck-delivery',
+      completed: 'mdi:check-circle',
+      cancelled: 'mdi:cancel',
+      pending: 'mdi:clock-outline',
     };
+    return icons[status] || 'mdi:package';
+  };
 
-    if (loading) {
-        return (
-            <LoadingAnimations option='dots_circle' />
-        );
+  const getStatusStyles = (color) => {
+    const styles = {
+      blue: 'text-blue-600 bg-blue-50 border-blue-100',
+      green: 'text-green-600 bg-green-50 border-green-100',
+      red: 'text-red-600 bg-red-50 border-red-100',
+      orange: 'text-orange-600 bg-orange-50 border-orange-100',
     };
+    return styles[color] || 'text-gray-600 bg-gray-50 border-gray-100';
+  };
 
-    return (
-        <>
-            <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
-            <div className={logged ? `space-y-6` : 'px-4 md:px-5 xl:px-6 lg:px-8'}>
-                {/* Status Filter Tabs */}
-                <div className="flex space-x-2 my-2 border-b border-gray-200 overflow-x-auto">
-                    {statusFilters.map(filter => (
-                        <button
-                            key={filter}
-                            onClick={() => setActiveFilter(filter)}
-                            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors border-b-2 whitespace-nowrap
-              ${activeFilter === filter
-                                    ? 'border-teal-500 text-brand bg-teal-50/50'
-                                    : 'border-transparent text-gray-600 hover:bg-gray-100'
-                                }`}
+  return (
+    <main className="flex-1 flex flex-col gap-8">
+      {/* Header */}
+      <div className="flex flex-col gap-2 pb-6 border-b border-slate-200">
+        <h1 className="text-3xl font-bold text-slate-900">Lịch sử mua hàng</h1>
+        <p className="text-slate-500 text-sm">
+          Theo dõi, kiểm tra và quản lý các đơn hàng của bạn.
+        </p>
+      </div>
+
+      {/* Filters and Search */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+        {/* Filter Buttons */}
+        <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0 no-scrollbar">
+          {filters.map((filter) => (
+            <button
+              key={filter.id}
+              onClick={() => setActiveFilter(filter.id)}
+              className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all active:scale-95 ${activeFilter === filter.id
+                ? 'bg-slate-800 text-white font-bold shadow-lg shadow-slate-200'
+                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Search */}
+        <div className="relative w-full lg:w-72">
+          <Icon
+            icon="mdi:magnify"
+            className="absolute left-3 top-2.5 text-slate-400 text-xl"
+          />
+          <input
+            className="w-full bg-white border border-slate-200 rounded-lg py-2 pl-10 pr-4 text-sm text-slate-900 focus:border-brand focus:ring-1 focus:ring-brand placeholder-slate-400 transition-colors outline-none"
+            placeholder="Tìm kiếm theo tên hoặc ID..."
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Orders List */}
+      <div className="flex flex-col gap-6">
+        {orders.map((order) => (
+          <div
+            key={order.id}
+            className={`bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-teal-500 hover:shadow-md transition-all group ${order.cancelled ? 'opacity-75 hover:opacity-100' : ''
+              }`}
+          >
+            {/* Order Header */}
+            <div className="p-6 flex flex-col gap-6">
+              <div className="flex flex-wrap justify-between items-start gap-4 pb-4 border-b border-slate-100">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-bold text-slate-900 text-lg">
+                      Đơn hàng #{order.id}
+                    </h3>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                      {order.items.length} SP
+                    </span>
+                  </div>
+                  <span className="text-sm text-slate-500 flex items-center gap-1">
+                    <Icon icon="mdi:clock-outline" className="text-base" />
+                    {order.date}
+                  </span>
+                </div>
+                <div
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${getStatusStyles(
+                    order.statusColor
+                  )}`}
+                >
+                  <Icon icon={getStatusIcon(order.status)} className="text-lg" />
+                  <span className="text-xs font-bold uppercase tracking-wide">
+                    {order.statusLabel}
+                  </span>
+                </div>
+              </div>
+
+              {/* Order Items */}
+              <div className="flex flex-col gap-4">
+                {order.items.map((item, idx) => (
+                  <div key={idx} className="flex items-start gap-4">
+                    <div className="w-20 h-20 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
+                      <Icon icon="mdi:watch" className="text-slate-300 text-4xl" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-start gap-4">
+                        <h4
+                          className={`font-medium line-clamp-2 hover:text-brand cursor-pointer transition-colors ${order.cancelled ? 'text-slate-600' : 'text-slate-800'
+                            }`}
                         >
-                            {filter} (
-                            {orders.filter(o =>
-                                filter === 'All' || o.status?.at(-1)?.present === filter
-                            ).length}
-                            )
-                        </button>
-                    ))}
-                </div>
-
-                {/* Orders List */}
-                <div className="space-y-2">
-                    {filteredOrders.length > 0 ? (
-                        <>
-                            {listOrder.map(order => {
-                                const latestStatus = order.status?.at(-1);
-                                return (
-                                    <div key={order._id} 
-                                        className="bg-white p-3 md:p-4 xl:p-5 rounded-xl shadow-sm border
-                                    border-gray-200 hover:shadow-md transition-all cursor-pointer"
-                                    onClick={()=>handleNavigate(order)}
-                                    >
-                                        <div className="flex justify-between items-start border-b border-gray-100 pb-3 mb-3">
-                                            <div className='hidden md:block'>
-                                                <span className="text-xs font-semibold uppercase text-gray-500">Order code : </span>
-                                                <span className="text-lg font-bold text-teal-600">{order.code}</span>
-                                            </div>
-                                            <OrderStatusBadge status={latestStatus?.present} />
-                                        </div>
-
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                                            <div>
-                                                <p className="text-gray-500">Order Date</p>
-                                                <span>
-                                                    {formatDate(order?.createdAt)} - {formatTime(order?.createdAt)}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <p className="text-gray-500">Total</p>
-                                                <p className="text-lg font-bold text-gray-900">${order.final_amount.toFixed(2)}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-gray-500">Items ({order.watches.length})</p>
-                                                {order.watches.map((watch, index) => (
-                                                    <p key={index} className="font-medium text-gray-800 truncate">x{watch.quantity} {watch.name} </p>
-                                                ))}
-                                            </div>
-                                        </div>
-                                        <div className='mt-4 md:hidden'>
-                                            <span className="text-sm font-semibold uppercase text-gray-500">Order code : </span>
-                                            <span className="text-sm font-bold text-teal-600">{order.code}</span>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                            {/* Pagination Placeholder */}
-                            {pages > 1 && (
-                                <div className="p-4 flex justify-center gap-4 items-center border-t border-gray-200 bg-white rounded-xl shadow-md">
-                                    <button className="px-3 py-1 text-sm rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100" disabled={page === 1} onClick={() => setPage(page - 1)}>Previous</button>
-                                    <button className="px-3 py-1 text-sm rounded-lg bg-brand text-white">{page} / {pages}</button>
-                                    <button className="px-3 py-1 text-sm rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100" disabled={page === pages} onClick={() => setPage(page + 1)} >Next</button>
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <div className="text-center p-8 bg-white rounded-xl shadow-sm border border-gray-200">
-                            <Package className="w-10 h-10 mx-auto mb-3 text-gray-400" />
-                            <p className="text-lg font-semibold text-gray-700">
-                                No {activeFilter === 'All' ? '' : activeFilter} orders found.
-                            </p>
-                            {activeFilter === 'All' && (
-                                <p className="text-sm text-gray-500 mt-1">
-                                    Start shopping to see your orders here!
-                                </p>
-                            )}
-                        </div>
-                    )}
-                </div>
+                          {item.name}
+                        </h4>
+                        <span
+                          className={`font-semibold whitespace-nowrap ${order.cancelled
+                            ? 'text-slate-500 line-through decoration-slate-300'
+                            : 'text-slate-900'
+                            }`}
+                        >
+                          {item.price}
+                        </span>
+                      </div>
+                      <p
+                        className={`text-xs mt-1 ${order.cancelled ? 'text-slate-400' : 'text-slate-500'
+                          }`}
+                      >
+                        Màu sắc: {item.color}
+                        {item.size && ` | Size: ${item.size}`}
+                      </p>
+                      <p
+                        className={`text-sm mt-2 ${order.cancelled ? 'text-slate-500' : 'text-slate-600'
+                          }`}
+                      >
+                        x{item.quantity}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-        </>
-    );
+
+            {/* Order Footer */}
+            <div className="bg-slate-50 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-slate-100">
+              <div className="flex items-center gap-2">
+                <span
+                  className={`text-sm ${order.cancelled ? 'text-slate-500' : 'text-slate-600'
+                    }`}
+                >
+                  Tổng tiền:
+                </span>
+                <span className={`text-xl font-bold ${order.totalColor}`}>
+                  {order.total}
+                </span>
+              </div>
+              <div className="flex gap-3 w-full sm:w-auto">
+                {order.status === 'shipping' && (
+                  <>
+                    <Link className="flex-1 sm:flex-none px-6 py-2 rounded-lg border
+                    border-slate-300 bg-white text-slate-700 hover:bg-slate-50
+                    hover:border-slate-400 text-sm font-medium transition-colors shadow-sm"
+                      to='/user/order-detail/test'>
+                      Xem chi tiết
+                    </Link>
+                    <button className="flex-1 sm:flex-none px-6 py-2 rounded-lg bg-brand text-white text-sm font-bold shadow-lg shadow-brand/20 hover:bg-teal-700 transition-all active:scale-95">
+                      Theo dõi đơn
+                    </button>
+                  </>
+                )}
+                {order.status === 'completed' && (
+                  <>
+                    <button className="flex-1 sm:flex-none px-6 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 text-sm font-medium transition-colors shadow-sm">
+                      Mua lại
+                    </button>
+                    <button className="flex-1 sm:flex-none px-6 py-2 rounded-lg bg-white border border-slate-300 text-slate-700 text-sm font-bold hover:bg-slate-50 hover:border-slate-400 transition-all active:scale-95 shadow-sm">
+                      Đánh giá
+                    </button>
+                  </>
+                )}
+                {order.status === 'cancelled' && (
+                  <>
+                    <button className="flex-1 sm:flex-none px-6 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 text-sm font-medium transition-colors shadow-sm">
+                      Chi tiết hủy
+                    </button>
+                    <button className="flex-1 sm:flex-none px-6 py-2 rounded-lg bg-brand text-white text-sm font-bold shadow-lg shadow-brand/10 hover:bg-teal-700 transition-all active:scale-95">
+                      Mua lại
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        <nav className="flex items-center gap-2">
+          <button
+            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 hover:bg-slate-50 hover:text-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Icon icon="mdi:chevron-left" className="text-xl" />
+          </button>
+          {[1, 2, 3].map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold transition-colors ${currentPage === page
+                ? 'bg-brand text-white shadow-lg shadow-brand/20'
+                : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-brand'
+                }`}
+            >
+              {page}
+            </button>
+          ))}
+          <button
+            onClick={() => setCurrentPage(Math.min(3, currentPage + 1))}
+            disabled={currentPage === 3}
+            className="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Icon icon="mdi:chevron-right" className="text-xl" />
+          </button>
+        </nav>
+      </div>
+    </main>
+  );
 }

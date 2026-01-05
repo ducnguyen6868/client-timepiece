@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Icon } from "@iconify/react";
 import { useNavigate, Link } from "react-router-dom";
-import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { isValidEmail } from '../utils/isValidEmail';
 import ForgotPasswordModal from '../components/common/ForgotPasswordModal';
@@ -30,10 +29,9 @@ export default function LoginPage() {
   const [isHiddenPassword, setIsHiddenPassword] = useState(true);
   const [errors, setErrors] = useState({});
 
-
   const handleLoginChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setLoginData((prev) => ({
+    setLoginData(prev => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -44,25 +42,27 @@ export default function LoginPage() {
     e.preventDefault();
     const newErrors = {};
 
-    if (!loginData.email) newErrors.email = 'Email is required';
-    if (!(isValidEmail(loginData.email))) newErrors.email = 'Email format isn`t correct';
-    if (!loginData.password) newErrors.password = 'Password is required';
+    if (!loginData.email) newErrors.email = 'Email không được để trống';
+    else if (!isValidEmail(loginData.email)) newErrors.email = 'Email không đúng định dạng';
+
+    if (!loginData.password) newErrors.password = 'Mật khẩu không được để trống';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    // API login
+
     try {
       setLoading(true);
       const response = await authApi.login(loginData);
+
       if (loginData.rememberMe) {
-        //Save token to localstorage 
         localStorage.setItem("token", response.token);
       } else {
         sessionStorage.setItem("token", response.token);
       }
-      await setInfoUser(prev => ({
+
+      setInfoUser(prev => ({
         ...prev,
         fullName: response.user.fullName,
         email: response.user.email,
@@ -70,14 +70,16 @@ export default function LoginPage() {
         cart: response.user.carts?.length,
         wishlist: response.user.wishlist?.length
       }));
+
       setType('success');
+      setMessage(response.message || 'Đăng nhập thành công');
       setShow(true);
-      setMessage(response.message);
+
       await new Promise(resolve => setTimeout(resolve, 1000));
       navigate('/');
     } catch (err) {
-      setMessage(err.response?.data?.message || err.message);
       setType('error');
+      setMessage(err.response?.data?.message || 'Đăng nhập thất bại');
       setShow(true);
     } finally {
       setLoading(false);
@@ -86,157 +88,140 @@ export default function LoginPage() {
 
   return (
     <>
-      <Notification type={type} message={message} show={show} onClose={() => setShow(false)} />
-      <div className="min-h-screen relative flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 px-4"
-      >
-        <img className='fixed w-full h-full' src={loginImage} alt='Login' title='Login' />
-        <div className="bg-white z-10 relative dark:bg-gray-900 w-full max-w-md rounded-2xl shadow-xl p-8 space-y-4 border border-gray-100 dark:border-gray-700">
+      <Notification
+        type={type}
+        message={message}
+        show={show}
+        onClose={() => setShow(false)}
+      />
+
+      <div className="min-h-screen relative flex items-center justify-center px-4">
+        <img className="fixed w-full h-full object-cover" src={loginImage} alt="Đăng nhập" />
+
+        <div className="bg-white z-10 relative w-full max-w-lg rounded-2xl shadow-xl p-8 space-y-4">
           {/* Header */}
           <div className="text-center space-y-2">
-            <h2 className="text-2xl font-bold text-cyan-600">Welcome Back</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Get ready for hundreds of hot deals and exciting discounts!
+            <h2 className="text-2xl font-bold text-cyan-600">Chào mừng bạn quay lại</h2>
+            <p className="text-sm text-gray-500">
+              Sẵn sàng khám phá hàng trăm ưu đãi hấp dẫn ngay hôm nay!
             </p>
           </div>
 
           {/* Email */}
           <div>
-            <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="flex items-center gap-2 text-sm font-medium mb-2">
               <Icon icon="mdi:email-outline" width="18" />
-              <span>Email Address</span>
+              <span>Email</span>
             </label>
             <input
               type="email"
               name="email"
-              id="email"
               value={loginData.email}
               onChange={handleLoginChange}
-              placeholder="your@email.com"
-              autoComplete="on"
-              className={`w-full px-4 py-2 rounded-lg border text-sm bg-gray-50 dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition ${errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'}`}
+              placeholder="nguyenvana@gmail.com"
+              className={`w-full px-4 py-2 rounded-lg border ${
+                errors.email ? 'border-red-500' : 'border-gray-300'
+              }`}
             />
             {errors.email && (
-              <div className="flex items-center gap-1 mt-1 text-xs text-red-500">
-                <Icon icon="mdi:alert-circle" width="16" height="16" />
-                <span>{errors.email}</span>
-              </div>
+              <p className="text-xs text-red-500 mt-1">{errors.email}</p>
             )}
           </div>
 
           {/* Password */}
           <div>
-            <label htmlFor="password" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="flex items-center gap-2 text-sm font-medium mb-2">
               <Icon icon="mdi:lock-outline" width="18" />
-              <span>Password</span>
+              <span>Mật khẩu</span>
             </label>
 
             <div className="relative">
               <input
                 type={isHiddenPassword ? "password" : "text"}
                 name="password"
-                id="password"
                 value={loginData.password}
                 onChange={handleLoginChange}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleLoginSubmit(e);
-                }}
                 placeholder="••••••••"
-                autoComplete="current-password"
-                className={`w-full px-4 py-2 rounded-lg border text-sm bg-gray-50 dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition ${errors.password ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'}`}
+                className={`w-full px-4 py-2 rounded-lg border ${
+                  errors.password ? 'border-red-500' : 'border-gray-300'
+                }`}
               />
               <button
                 type="button"
                 onClick={() => setIsHiddenPassword(!isHiddenPassword)}
-                className="absolute right-3 top-2.5 text-gray-500 hover:text-blue-500 transition"
+                className="absolute right-3 top-2.5 text-gray-500"
               >
-                <Icon icon={isHiddenPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"} width="20" />
+                <Icon icon={isHiddenPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"} />
               </button>
             </div>
 
             {errors.password && (
-              <div className="flex items-center gap-1 mt-1 text-xs text-red-500">
-                <Icon icon="mdi:alert-circle" width="16" height="16" />
-                <span>{errors.password}</span>
-              </div>
+              <p className="text-xs text-red-500 mt-1">{errors.password}</p>
             )}
           </div>
 
-          {/* Checkbox + Forgot */}
+          {/* Remember & Forgot */}
           <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+            <label className="flex items-center gap-2">
               <input
                 type="checkbox"
                 name="rememberMe"
                 checked={loginData.rememberMe}
                 onChange={handleLoginChange}
-                className="w-4 h-4 accent-brand rounded"
               />
-              <span>Remember me</span>
+              <span>Ghi nhớ đăng nhập</span>
             </label>
+
             <button
               type="button"
               onClick={() => setIsModal(true)}
-              className="text-brand hover:underline"
+              className="text-blue-600 hover:underline"
             >
-              Forgot password?
+              Quên mật khẩu?
             </button>
           </div>
 
-          {/* Submit button */}
+          {/* Submit */}
           <button
             onClick={handleLoginSubmit}
-            className="w-full py-2 bg-brand hover:bg-brand-hover
-             text-white font-semibold rounded-lg shadow-md transition"
             disabled={loading}
+            className="w-full py-2 bg-blue-600 text-white rounded-lg"
           >
-            {loading ? (
-              <div className="flex gap-1 md:gap-2 xl:gap-3 lg:gap-4 justify-center items-center">
-                <div className="w-4 h-4 border-b-2 border-white rounded-full animate-spin mr-2"></div>
-                <span>Logging...</span>
-              </div>
-            ) : (
-              <span>Login</span>
-            )}
-
+            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
 
-          {/* Divider */}
-          <div className="flex items-center justify-center my-6">
-            <div className="h-px w-1/4 bg-gray-200" />
-            <span className="mx-3 text-sm text-gray-400">Or continue with</span>
-            <div className="h-px w-1/4 bg-gray-200" />
+          {/* Social */}
+          <div className="text-center text-sm text-gray-400 mt-4">
+            Hoặc đăng nhập bằng
           </div>
 
-          {/* Social Login */}
           <div className="flex gap-4">
-            <button className="flex-1 flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition">
-              <Icon icon="logos:google-icon" width="20" />
-              <span>Google</span>
+            <button className="flex-1 bg-gray-100 py-2 rounded-lg flex justify-center gap-2 items-center">
+              <Icon icon="logos:google-icon" />
+              Google
             </button>
-            <button className="flex-1 flex items-center justify-center gap-2 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
-              <Icon icon="logos:facebook" width="20" />
-              <span>Facebook</span>
+            <button className="flex-1 bg-blue-600 text-white py-2 rounded-lg flex justify-center items-center gap-2">
+              <Icon icon="logos:facebook"  className='w-5 h-auto'/>
+              Facebook
             </button>
           </div>
 
           {/* Footer */}
-          <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-            <p>
-              No account ?{" "}
-              <Link to="../register" className="text-blue-600 font-medium hover:underline">
-                Sign Up
-              </Link>
-            </p>
-            <Link to="/admin/login" className="text-blue-600 font-medium hover:underline">
-              Adminstrator ?
+          <div className="text-center text-sm mt-4">
+            Chưa có tài khoản?{" "}
+            <Link to="../register" className="text-blue-600 hover:underline">
+              Đăng ký
             </Link>
+            <div>
+              <Link to="/admin/login" className="text-blue-600 hover:underline">
+                Đăng nhập quản trị viên
+              </Link>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Forgot password modal */}
       {isModal && <ForgotPasswordModal onClose={() => setIsModal(false)} />}
     </>
-
   );
 }

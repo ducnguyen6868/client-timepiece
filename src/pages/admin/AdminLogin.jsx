@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useState , useContext } from "react";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
 import { isValidEmail } from '../../utils/isValidEmail';
+import { UserContext } from "../../contexts/UserContext";
 import authApi from "../../api/authApi";
 import loginImage from '../../assets/login.png';
-import websiteLogo from '../../assets/website-logo.png';
 import Notification from "../../components/common/Notification";
 
 export default function AdminLogin() {
 
+  const {setInfoUser} = useContext(UserContext);
+  const [loading,setLoading] = useState(false);
   const [forgotPass, setForgotPass] = useState(false);
   const navigate = useNavigate();
 
@@ -22,9 +24,9 @@ export default function AdminLogin() {
   const [errors, setErrors] = useState({});
 
   // Notification
-  const [show , setShow] = useState(false);
-  const [type , setType] = useState('');
-  const [message , setMessage] =useState('');
+  const [show, setShow] = useState(false);
+  const [type, setType] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleLoginChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -49,6 +51,7 @@ export default function AdminLogin() {
     }
     // API login
     try {
+      setLoading(true);
       const response = await authApi.postAdmin(loginData);
       if (loginData.rememberMe) {
         //Save token to localstorage 
@@ -59,20 +62,28 @@ export default function AdminLogin() {
       setShow(true);
       setType('success');
       setMessage(response.message);
-
-      navigate('/admin/login');
+      setInfoUser({
+        fullName:response.admin.fullName,
+        email:response.admin.email,
+        avatar:response.admin.avatar,
+        role:response.admin.role
+      });
+      localStorage.setItem('token',response.token);
+      navigate('/admin/overview');
 
     } catch (err) {
 
       setShow(true);
       setType('error');
       setMessage(err.response?.data?.message || err.message);
-    }
+    }finally{
+      setLoading(false);
+    };
   };
 
   return (
     <>
-      <Notification show={show} message={message} type={type} onClose={()=>setShow(false)}/>
+      <Notification show={show} message={message} type={type} onClose={() => setShow(false)} />
       <div className="min-h-screen relative flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 px-4"
       >
         <img className='fixed w-full h-full' src={loginImage} alt='Login' title='Login' />
@@ -174,8 +185,16 @@ export default function AdminLogin() {
           <button
             onClick={handleLoginSubmit}
             className="w-full py-2 bg-brand hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition"
+            disabled={loading}
           >
-            Login
+            {loading ? (
+              <div className="flex gap-1 md:gap-2 xl:gap-3 lg:gap-4 justify-center items-center">
+                <div className="w-4 h-4 border-b-2 border-white rounded-full animate-spin mr-2"></div>
+                <span>Logging...</span>
+              </div>
+            ) : (
+              <span>Login</span>
+            )}
           </button>
         </div>
       </div>

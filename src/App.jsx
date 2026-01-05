@@ -1,5 +1,4 @@
 import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
-//Notification
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './styles/App.css';
@@ -13,6 +12,7 @@ import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import WatchPage from './pages/WatchPage';
 import BrandPage from './pages/BrandPage';
+import PromotionPage from './pages/PromotionPage';
 import FlashSalePage from './pages/FlashSalePage';
 import CollectionPage from './pages/CollectionPage';
 import CategoryPage from './pages/CategoryPage';
@@ -24,6 +24,18 @@ import CartPage from './pages/CartPage';
 import WishlistPage from './pages/WishlistPage';
 import OrderHistoryPage from './pages/OrderHistoryPage';
 import OrderDetailPage from './pages/OrderDetailPage';
+import BrandList from './pages/BandList';
+import AboutUs from './pages/AboutUs';
+import Blog from './pages/Blog';
+import Recruitment from './pages/Recruitment';
+import ShowRoom from './pages/ShowRoom';
+import FQA from './pages/FQA';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfUse from './pages/TermsOfUse';
+import ReturnAndWarranty from './pages/ReturnAndWarranty';
+import Feedback from './pages/FeedBack';
+import LeaderBoard from './pages/LeaderBoard';
+import RecentContributions from './pages/RecentContributions';
 
 import AuthAccount from './middlewares/authAccount';
 
@@ -31,9 +43,8 @@ import User from './components/layout/User';
 import ProfilePage from './pages/ProfilePage';
 import WalletPage from './pages/WalletPage';
 import PointPage from './pages/PointPage';
-import PromotionPage from './pages/PromotionPage';
 import SettingPage from './pages/SettingPage';
-
+import MyPromotion from './pages/MyPromotion';
 
 import Admin from './components/layout/Admin';
 import AdminLogin from './pages/admin/AdminLogin';
@@ -41,8 +52,11 @@ import OverviewDashboard from './pages/admin/OverviewDashboard';
 import WatchManagement from './pages/admin/WatchManagement';
 import OrderManagement from './pages/admin/OrderManagement';
 import PromotionManagement from './pages/admin/PromotionManagement';
-import UserManagement from './pages/admin/UserManagement';
+import CustomerManagement from './pages/admin/CustomerManagement';
+import StaffManagement from './pages/admin/StaffManagement';
+import Analytics from './pages/admin/Analytics';
 import ChatManagement from './pages/admin/ChatManagement';
+import NotificationsActivity from './pages/admin/NotificationsActivity';
 import AdminSettingPage from './pages/admin/AdminSettingPage';
 
 function App() {
@@ -58,8 +72,21 @@ function App() {
           <Route path='/' element={<Public />}>
             <Route index element={<HomePage />}></Route>
             <Route path="flash-sale" element={<FlashSalePage />}></Route>
+            <Route path="about-us" element={<AboutUs />}></Route>
+            <Route path="blog" element={<Blog />}></Route>
+            <Route path="recruitment" element={<Recruitment />}></Route>
+            <Route path="showroom" element={<ShowRoom />}></Route>
+            <Route path="fqa" element={<FQA />}></Route>
+            <Route path="privacy-policy" element={<PrivacyPolicy />}></Route>
+            <Route path="terms-of-use" element={<TermsOfUse />}></Route>
+            <Route path="return-and-warranty" element={<ReturnAndWarranty />}></Route>
             <Route path="collection/:slug" element={<CollectionPage />}></Route>
+            <Route path="feed-back" element={<Feedback />}></Route>
+            <Route path="leader-board" element={<LeaderBoard />}></Route>
+            <Route path="recent-contributions" element={<RecentContributions />}></Route>
+            <Route path="brands" element={<BrandList />}></Route>
             <Route path="brand/:slug" element={<BrandPage />}></Route>
+            <Route path="promotions" element={<PromotionPage />}></Route>
             <Route path="watch/:slug" element={<WatchPage />}></Route>
             <Route path="category/:slug" element={<CategoryPage />}></Route>
             <Route path="search" element={<SearchResultsPage />}></Route>
@@ -76,8 +103,9 @@ function App() {
             <Route path='profile' element={<AuthAccount><ProfilePage /></AuthAccount>}></Route>
             <Route path='point' element={<AuthAccount><PointPage /></AuthAccount>}></Route>
             <Route path='wallet' element={<AuthAccount><WalletPage /></AuthAccount>}></Route>
-            <Route path='promotions' element={<AuthAccount><PromotionPage /></AuthAccount>}></Route>
-            <Route path='orders' element={<AuthAccount><OrderHistoryPage /></AuthAccount>}></Route>
+            <Route path='promotions' element={<AuthAccount><MyPromotion /></AuthAccount>}></Route>
+            <Route path='orders-history' element={<AuthAccount><OrderHistoryPage /></AuthAccount>}></Route>
+            <Route path='order-detail/:orderId' element={<AuthAccount><OrderDetailPage /></AuthAccount>}></Route>
             <Route path='address' element={<AuthAccount><AddressPage /></AuthAccount>}></Route>
             <Route path='wishlist' element={<AuthAccount><WishlistPage /></AuthAccount>}></Route>
             <Route path='settings' element={<AuthAccount><SettingPage /></AuthAccount>}></Route>
@@ -92,10 +120,13 @@ function App() {
             <Route path='overview' element={<AuthAccount><OverviewDashboard /></AuthAccount>}></Route>
             <Route path='watches' element={<AuthAccount><WatchManagement /></AuthAccount>}></Route>
             <Route path='orders' element={<AuthAccount><OrderManagement /></AuthAccount>}></Route>
+            <Route path='analytics' element={<AuthAccount><Analytics /></AuthAccount>}></Route>
             <Route path='promotions' element={<AuthAccount><PromotionManagement /></AuthAccount>}></Route>
-            <Route path='users' element={<AuthAccount><UserManagement /></AuthAccount>}></Route>
+            <Route path='customers' element={<AuthAccount><CustomerManagement /></AuthAccount>}></Route>
+            <Route path='staffs' element={<AuthAccount><StaffManagement /></AuthAccount>}></Route>
             <Route path='chats' element={<ChatManagement />}></Route>
             <Route path='settings' element={<AuthAccount><AdminSettingPage /></AuthAccount>}></Route>
+            <Route path='notifications-activity' element={<AuthAccount><NotificationsActivity /></AuthAccount>}></Route>
           </Route>
 
           <Route path='*' element={<PageNotFound/>}/>

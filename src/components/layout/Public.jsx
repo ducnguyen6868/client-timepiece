@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { MessageSquare } from 'lucide-react';
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
-import ChatModal from './ChatModal';
+import ChatWidget from './ChatWidget.jsx';
 import NavBottom from '../common/NavBottom';
 import websiteLogo from '../../assets/website-logo.png';
 
@@ -57,7 +57,7 @@ export default function Public() {
                 </p>
             </div>
         );
-    }
+    };
 
     return (
         <>
@@ -66,7 +66,7 @@ export default function Public() {
                 <Outlet />
             </div>
             <div className='hidden md:block'>
-                {isOpen && <ChatModal onClose={() => setIsOpen(false)} />}
+                {isOpen && <ChatWidget onClose={() => setIsOpen(false)} />}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
                     className={`fixed bottom-6 right-6 p-4 rounded-full shadow-2xl z-50

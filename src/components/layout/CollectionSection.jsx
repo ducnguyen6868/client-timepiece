@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Link} from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowRight , ChevronLeft, ChevronRight } from 'lucide-react';
 import collectionApi from '../../api/collectionApi';
 
 const CollectionSection = () => {
@@ -60,32 +60,65 @@ const CollectionSection = () => {
     }
 
     return (
-        <section className="relative mb-1 sm:py-3 md:py-4 bg-gray-50 h-28 md:h-52 lg:h-64 mx-4 mt-2 md:mt-4 overflow-hidden">
+        <section className="relative mb-1 sm:py-3 md:py-4 bg-gray-50 h-28 md:h-52 lg:h-80 mx-4 mt-2 md:mt-4 overflow-hidden">
             {collections.map((collection, index) => (
-                <Link
-                    key={collection._id}
-                    to={`/collection/${collection.slug}`}
-                    className={`
+                    <div
+                        key={collection._id}
+                        className={`
                     absolute inset-0 transition-all duration-700 ease-in-out rounded-lg overflow-hidden
                     ${index === currentIndex
-                            ? "opacity-100 translate-x-0 z-0"
-                            : index < currentIndex
-                                ? "opacity-0 -translate-x-full z-0"
-                                : "opacity-0 translate-x-full z-0"
-                        }
+                                ? "opacity-100 translate-x-0 z-0"
+                                : index < currentIndex
+                                    ? "opacity-0 -translate-x-full z-0"
+                                    : "opacity-0 translate-x-full z-0"
+                            }
                 `}
-                >
-                    <img
-                        src={collection.banner}
-                        alt={collection.name}
-                        loading="lazy"
-                        onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = "https://placehold.co/800x400/00bcd4/ffffff?text=FEATURED+COLLECTION";
-                        }}
-                        className="absolute inset-0 w-full h-full object-cover "
-                    />
-                </Link>
+                    >
+                        <img
+                            src={collection.banner}
+                            alt={collection.name}
+                            loading="lazy"
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = "https://placehold.co/800x400/00bcd4/ffffff?text=FEATURED+COLLECTION";
+                            }}
+                            className="absolute inset-0 w-full h-full object-cover "
+                        />
+                        {/* Overlay Gradient dày hơn để nổi bật chữ trên nền thấp */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
+
+                        {/* Content Container */}
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                                <div className="max-w-xl space-y-3 sm:space-y-4 animate-in fade-in slide-in-from-left-5 duration-700">
+
+                                    {/* Badge - Nhỏ gọn hơn */}
+                                    <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-[10px] sm:text-xs font-medium">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+                                        BST 2025
+                                    </div>
+
+                                    {/* Title - Cỡ chữ tùy chỉnh theo màn hình (Fluid Typography) */}
+                                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-white leading-tight">
+                                    {collection.name}
+                                    </h1>
+
+                                    {/* Description - Giới hạn dòng để không bị tràn chiều cao */}
+                                    <p className="text-sm sm:text-base text-gray-300 max-w-md leading-relaxed line-clamp-2 sm:line-clamp-none">
+                                        {collection.description}
+                                    </p>
+
+                                    {/* Buttons - Thu nhỏ kích thước button */}
+                                    <div className="flex gap-3 pt-2">
+                                        <Link  to={`/collection/${collection.slug}`}  className="bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 sm:px-6 sm:py-2.5 rounded-full text-sm font-medium transition-all flex items-center gap-2 shadow-lg active:scale-95">
+                                            Mua Ngay <ArrowRight size={16} />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
             ))}
 
             {/* Indicators */}

@@ -1,192 +1,124 @@
 import { Link } from 'react-router-dom';
-import {
-    Facebook, Instagram, Youtube, Mail, MapPin, Package,
-    LifeBuoy, RefreshCw, Smartphone, CheckCircle, Zap
-} from 'lucide-react';
-import websiteLogo from '../../assets/website-logo.png';
+import { Facebook, Instagram, Youtube, ShieldCheck, Globe } from 'lucide-react';
+import WebsiteLogo from '../../assets/website-logo.png';
 
-// ************************************************
-// Reusable Component: Animated Link (Đã sửa lỗi hover)
-// ************************************************
-const AnimatedLink = ({ to, children, className = '' }) => (
-    <Link
-        to={to}
-        // Loại bỏ style cố định màu chữ để lớp hover hoạt động
-        className={`relative inline-block text-sm transition-all duration-300 group text-text-primary hover:text-teal-600 ${className}`}
-    >
-        {children}
-        {/* Animated Underline */}
-        <span className="absolute bottom-0 left-0 w-0 h-px bg-current transition-all duration-300 group-hover:w-full"></span>
-    </Link>
-);
-
-// ************************************************
-// Reusable Component: Social Icon Button
-// ************************************************
-const SocialIconButton = ({ Icon, to, label }) => (
-    <Link
-        to={to}
-        aria-label={label}
-        className={`w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center transition-all duration-300 text-text-primary
-                   hover:border-teal-400 hover:text-teal-400 hover:shadow-[0_0_10px_rgba(0,188,212,0.3)] hover:scale-[1.05]`}
-    >
-        <Icon className="w-5 h-5 transition-colors duration-300" />
-    </Link>
-);
-
-// ************************************************
-// Main Component: Website Footer Light Mode
-// ************************************************
 export default function Footer() {
 
-    return (
-        <footer className={` bg-bg-primary text-text-primary border-t border-gray-200`}>
+  const discover = [
+    { key: 'Về chúng tôi', href: '/about-us' },
+    { key: 'Blog tin tức', href: '/blog' },
+    { key: 'Tuyển dụng', href: '/recruitment' },
+    { key: 'Hệ thống cửa hàng', href: '/showroom' },
+  ];
 
-            {/* 💎 Main 4-Column Layout */}
-            <div className={`max-w-7xl mx-auto px-6 lg:px-8 py-8 `}>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+  const support = [
+    {key:'Câu hỏi thường gặp',href:'/fqa'},
+    {key:'Chính sách bảo mật',href:'/privacy-policy'},
+    {key:'Điều khoản sử dụng',href:'/terms-of-use'},
+    {key:'Đổi trả và bảo hành',href:'/return-and-warranty'},
+  ]
 
-                    {/* Column 1: Brand & About */}
-                    <div className="space-y-6">
-                        {/* Tên Công Ty và Slogan */}
-                        <div className="flex flex-row gap-2 ">
-                            <img className='w-7' src={websiteLogo} alt='Logo' title='Logo' />
-                            <Link to='/'
-                                className="text-xl font-extrabold tracking-widest"
-                                style={{
-                                    // Sử dụng linear-gradient tùy chỉnh của bạn
-                                    background: 'linear-gradient(90deg, var(--brand-light, #3355ff), var(--brand-color, #00bcd4))',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                    filter: 'drop-shadow(0 0 2px rgba(0, 188, 212, 0.4))'
-                                }}
-                            >
-                                TIMEPIECE
-                            </Link>
-                        </div>
+  return (
+    <footer className="bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 pt-20 pb-10">
+      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-8">
 
-                        <p className={`text-base font-light text-text-primary font-sans`}>
-                            “Discover timeless style with every tick.”
-                        </p>
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 mb-16">
 
-                        <p className="text-sm text-text-secondary" >
-                            TIMEPIECE blends precision, luxury, and youthful energy to inspire your moments.
-                        </p>
+          {/* Brand Identity */}
+          <div className="lg:col-span-4 flex flex-col gap-6">
+            {/* Logo */}
+            <Link to='/' className="flex items-end">
+              <img src={WebsiteLogo} alt='Website Logo' title='Website Logo' className='w-8 h-8' />
+              <span className='uppercase font-bold text-brand -mt-2'>timepiece</span>
+            </Link>
+            <p className="text-gray-500 dark:text-gray-400 text-[15px] leading-relaxed max-w-sm">
+              Hệ thống bán lẻ đồng hồ chính hãng hàng đầu Việt Nam. Chúng tôi cam kết mang đến những sản phẩm chất lượng cao, 100% chính hãng cùng dịch vụ bảo hành quốc tế uy tín.
+            </p>
 
-                        <div className="flex space-x-4 pt-2">
-                            <SocialIconButton Icon={Facebook} to="#" label="Facebook" />
-                            <SocialIconButton Icon={Instagram} to="#" label="Instagram" />
-                            <SocialIconButton Icon={Youtube} to="#" label="YouTube" />
-                            <SocialIconButton Icon={Zap} to="#" label="TikTok" />
-                        </div>
-                    </div>
-
-                    {/* Column 2: Quick Links */}
-                    <div className="space-y-5">
-                        <h3 className={`text-lg font-semibold border-b border-transparent transition-all duration-300 text-text-primary group hover:border-teal-400 w-fit`}>
-                            Explore
-                        </h3>
-                        <ul className="space-y-3">
-                            {['Home', 'Shop', 'Promotions', 'Points', 'About Us', 'Contact'].map(item => (
-                                <li key={item}>
-                                    <AnimatedLink to={`#${item.toLowerCase().replace(' ', '-')}`}>
-                                        {item}
-                                    </AnimatedLink>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Column 3: Customer Support - Đã sửa lỗi hover ở AnimatedLink */}
-                    <div className="space-y-5">
-                        <h3 className={`text-lg font-semibold text-text-primary`}>Support</h3>
-                        <ul className="space-y-3">
-                            {[
-                                { name: 'Help Center', icon: LifeBuoy },
-                                { name: 'Warranty & Repairs', icon: CheckCircle },
-                                { name: 'Shipping Information', icon: Package },
-                                { name: 'Returns & Refunds', icon: RefreshCw },
-                                { name: 'Track Your Order', icon: MapPin },
-                                { name: 'FAQs', icon: Mail },
-                            ].map(item => (
-                                <li key={item.name}>
-                                    <AnimatedLink to={`#${item.name.toLowerCase().replace(/ &| /g, '-')}`} className={`flex items-center gap-2 pb-1 max-w-max`}>
-                                        {/* Biểu tượng vẫn giữ màu Accent */}
-                                        <item.icon className="w-4 h-4  text-brand" />
-                                        <span className="text-sm">{item.name}</span>
-                                    </AnimatedLink>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Column 4: Newsletter & App */}
-                    <div className="space-y-3">
-                        <h3 className={`text-lg font-semibold text-text-primary`}>Stay Updated</h3>
-                        <p className="text-sm text-text-secondary space-y-3"  >
-                            Join our exclusive circle to receive new launches and promotions.
-                        </p>
-
-                        {/* Email Input */}
-                        <div className="flex flex-col space-y-2">
-                            <input
-                                type="email"
-                                placeholder="Enter your email"
-                                className={`w-full px-4 py-2 text-sm text-text-primary bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:border-teal-500 transition-all duration-300`}
-                            />
-                            <button
-                                className="w-full py-2 text-sm font-semibold rounded-lg transition-all duration-300 transform
-                                           hover:scale-[1.02] hover:shadow-lg text-white bg-brand"
-                            >
-                                Subscribe
-                            </button>
-                        </div>
-
-                        <p className="text-xs italic opacity-80 text-text-secondary" >
-                            We respect your privacy.
-                        </p>
-
-                        {/* App Badges */}
-                        <div className="flex space-x-3 pt-2">
-                            <AppBadge label="App Store" />
-                            <AppBadge label="Google Play" />
-                        </div>
-                    </div>
-                </div>
+            {/* Social Icons */}
+            <div className="flex gap-3">
+              {[
+                { icon: <Facebook size={18} />, label: 'Facebook' },
+                { icon: <Instagram size={18} />, label: 'Instagram' },
+                { icon: <Youtube size={18} />, label: 'Youtube' },
+                { icon: <Globe size={18} />, label: 'Website' }
+              ].map((social, index) => (
+                <Link
+                  key={index}
+                  to="#"
+                  aria-label={social.label}
+                  className="size-10 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all duration-300 shadow-sm"
+                >
+                  {social.icon}
+                </Link>
+              ))}
             </div>
+          </div>
 
-            {/* 🌐 3. Bottom Section (Subfooter) */}
-            <div className={`max-w-7xl mx-auto px-6 lg:px-8 pt-4 pb-6 border-t border-gray-200 bg-bg-primary`}>
-                <div className="flex flex-col md:flex-row justify-between items-center text-xs text-text-secondary" >
-                    <p className="order-2 md:order-1 mt-4 md:mt-0">
-                        © 2025 TIMEPIECE. All rights reserved.
-                    </p>
-                    <div className="order-1 md:order-2 flex space-x-4">
-                        {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map(item => (
-                            <Link
-                                key={item}
-                                to={`#${item.toLowerCase().replace(/ /g, '-')}`}
-                                className="hover:text-teal-600 hover:underline transition-colors duration-200"
-                            >
-                                {item}
-                            </Link>
-                        ))}
-                    </div>
-                </div>
+          {/* Quick Links 1 */}
+          <div className="lg:col-span-2 flex flex-col gap-6">
+            <h4 className="text-gray-900 dark:text-white font-bold text-lg">Khám phá</h4>
+            <div className="flex flex-col gap-3">
+              {
+                discover.map((item, index) => (
+                  <Link key={index} className="text-gray-500 dark:text-gray-400 hover:text-sky-500 transition-colors text-[15px]" to={item.href}>
+                    {item.key}
+                  </Link>
+                ))}
             </div>
-        </footer>
-    );
+          </div>
+
+          {/* Quick Links 2 */}
+          <div className="lg:col-span-3 flex flex-col gap-6">
+            <h4 className="text-gray-900 dark:text-white font-bold text-lg">Hỗ trợ khách hàng</h4>
+            <div className="flex flex-col gap-3">
+              {support.map((item, index) => (
+                <Link key={index} className="text-gray-500 dark:text-gray-400 hover:text-sky-500 transition-colors text-[15px]" to={item.href}>
+                  {item.key}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Newsletter */}
+          <div className="lg:col-span-3 flex flex-col gap-6">
+            <h4 className="text-gray-900 dark:text-white font-bold text-lg">Đăng ký nhận tin</h4>
+            <p className="text-gray-500 dark:text-gray-400 text-[15px]">Nhận thông tin về sản phẩm mới và các chương trình khuyến mãi sớm nhất.</p>
+            <form className="flex flex-col gap-3" onSubmit={(e) => e.preventDefault()}>
+              <div className="flex flex-col gap-2">
+                <input
+                  className="w-full rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 px-4 py-3.5 text-sm placeholder:text-gray-400 transition-all outline-none"
+                  placeholder="Địa chỉ email của bạn"
+                  type="email"
+                />
+                <button
+                  type="submit"
+                  className="p-2 bg-gray-900 dark:bg-sky-500 text-white rounded-lg hover:opacity-90 transition-all"
+                >
+                  Đăng ký ngay
+                </button>
+              </div>
+              <p className="text-[11px] text-gray-400 flex items-center gap-1">
+                <ShieldCheck size={12} /> Thông tin của bạn được bảo mật tuyệt đối
+              </p>
+            </form>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-gray-500">
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <p>© 2025 WatchStore. Tất cả quyền được bảo lưu.</p>
+          </div>
+
+          <div className="flex gap-8 font-medium">
+            <Link to="#" className="hover:text-sky-500 transition-colors">Privacy Policy</Link>
+            <Link to="#" className="hover:text-sky-500 transition-colors">Terms of Service</Link>
+            <Link to="#" className="hover:text-sky-500 transition-colors">Cookies Settings</Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
 }
-
-// ************************************************
-// Reusable Component: App Download Badge (Simplified)
-// ************************************************
-const AppBadge = ({ label }) => (
-    <div
-        className={`flex items-center space-x-1.5 p-2 border border-gray-300 rounded-md cursor-pointer transition-all duration-300 text-text-primary
-                   hover:border-teal-400 hover:shadow-md hover:shadow-teal-100`}
-    >
-        <Smartphone className="w-4 h-4 text-brand" />
-        <span className="text-xs font-medium">{label}</span>
-    </div>
-);

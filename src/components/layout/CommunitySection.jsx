@@ -1,12 +1,42 @@
 import { useState, useEffect } from "react";
-import { Heart } from 'lucide-react';
+import { Heart ,Instagram , Users } from 'lucide-react';
 import communityApi from '../../api/communityApi';
 import Notification from '../common/Notification';
 import LoadingAnimations from '../common/LoadingAnimations';
 
+// Component phụ cho mỗi Card bài đăng
+const CommunityCard = ({ post }) => (
+  <div className="bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-xl hover:shadow-2xl transform transition-all duration-500 hover:-translate-y-2 group cursor-pointer border border-gray-100 dark:border-gray-700">
+    <div className="relative overflow-hidden rounded-xl aspect-square mb-3">
+      <img 
+        alt="User Post" 
+        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+        src={post.image} 
+      />
+      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="bg-white/20 backdrop-blur-md p-1.5 rounded-full text-white">
+          <Instagram size={14} />
+        </div>
+      </div>
+    </div>
+    <div className="flex items-center justify-between px-1">
+      <div className="flex items-center gap-2">
+        <div className="w-7 h-7 rounded-full border border-sky-500 p-0.5">
+          <img className="w-full h-full object-cover rounded-full" src={post.avatar} alt={post.name} />
+        </div>
+        <span className="text-xs font-bold text-gray-800 dark:text-gray-200">@{post.name}</span>
+      </div>
+      <Heart 
+        size={16} 
+        className={post.likes ? "text-red-500 fill-red-500" : "text-gray-400 group-hover:text-red-400 transition-colors"} 
+      />
+    </div>
+  </div>
+);
+
 export default function CommunitySection() {
     const [communities, setCommunities] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const [show, setShow] = useState(false);
     const [type, setType] = useState('');
@@ -15,8 +45,6 @@ export default function CommunitySection() {
     useEffect(() => {
         const getCommunites = async () => {
             try {
-                setLoading(true);
-                await new Promise(resolve => setTimeout(resolve, 1000));
                 const page = 1;
                 const limit = 4;
                 const response = await communityApi.getCommunities(page, limit);
@@ -31,80 +59,89 @@ export default function CommunitySection() {
         }
         getCommunites();
     }, []);
+    
+    if(loading){
+        return(
+            <LoadingAnimations option='dots'/>
+        );
+    };
+    
     return (
         <>
             {/* Notification */}
-            {show && (
-                <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
-            )}
+            <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
 
             {/* Community */}
-            <section className="bg-bg-primary px-4 md:px-2 xl:px-4 transition-colors duration-500">
-                <h2 className='text-center text-white bg-gradient-to-br from-brand to-brand-hover
-                text-base p-2 md:text-lg md:p-3 xl:text-xl xl:p-4 rounded-md mb-2 md:rounded-lg md:mb-3 xl:rounded-xl xl:mb-4
-                '>Timepiece Community</h2>
-                <div className="mx-auto">
-                    {loading && (
-                        <LoadingAnimations option='skeleton' />
-                    )}
-                    <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:grid-cols-3 lg:grid-cols-4 md:gap-4 lg:gap-6 mb-8">
-                        {communities?.map((post, idx) => (
-                            <div
-                                key={idx}
-                                className={`bg-bg-secondary rounded-lg overflow-hidden border border-border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl animate-fadeInUp visible`}
-                                style={{ animationDelay: `${idx * 0.1}s` }}
-                            >
-                                {/* Image Container */}
-                                <div className="relative overflow-hidden bg-bg-tertiary">
-                                    <img
-                                        src={post.image}
-                                        alt={post.name}
-                                        className="w-full aspect-[4/3] object-cover transform hover:scale-110 transition-transform duration-500"
-                                        loading="lazy"
-                                        onError={(e) => {
-                                            e.target.onerror = null;
-                                            e.target.src = 'https://placehold.co/400x300/94a3b8/ffffff?text=Community+Post';
-                                        }}
-                                    />
-                                </div>
+            <section className="py-4 overflow-hidden">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-                                {/* Content */}
-                                <div className="p-2 sm:p-3 md:p-4">
-                                    {/* Author Info */}
-                                    <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-3 mb-2">
+                        {/* Left Content */}
+                        <div className="space-y-8">
+                            <div>
+                                <span className="inline-flex items-center gap-2 text-orange-500 font-bold uppercase tracking-[0.2em] text-sm mb-4">
+                                    <Users size={18} /> Cộng đồng
+                                </span>
+                                <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 dark:text-white leading-tight">
+                                    Gia Nhập Hiệp Hội <br />
+                                    <span className="text-sky-500 italic">Timepiece Society</span>
+                                </h2>
+                                <p className="text-gray-600 dark:text-gray-400 mt-6 text-lg leading-relaxed max-w-lg">
+                                    Chia sẻ phong cách của bạn và kết nối với những người đam mê đồng hồ khác. Sử dụng thẻ
+                                    <span className="font-bold text-sky-500 mx-1">#TimepieceStyle</span>
+                                    để có cơ hội xuất hiện trên trang chủ và nhận những phần quà độc quyền.
+                                </p>
+                            </div>
+
+                            {/* Social Proof (Avatar Stack) */}
+                            <div className="flex items-center gap-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl w-fit">
+                                <div className="flex -space-x-3">
+                                    {[1, 2, 3].map((i) => (
                                         <img
-                                            className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full flex-shrink-0 object-cover"
-                                            src={post.avatar}
-                                            alt={post.name}
-                                            loading="lazy"
-                                            onError={(e) => {
-                                                e.target.onerror = null;
-                                                e.target.src = 'https://placehold.co/400x300/94a3b8/ffffff?text=Author';
-                                            }}
+                                            key={i}
+                                            alt="User"
+                                            className="w-12 h-12 rounded-full border-4 border-white dark:border-gray-900 shadow-sm"
+                                            src={`https://i.pravatar.cc/150?img=${i + 10}`}
                                         />
-                                        <span className="font-semibold text-[10px] sm:text-xs md:text-sm text-text-primary truncate">
-                                            {post.name}
-                                        </span>
+                                    ))}
+                                    <div className="w-12 h-12 rounded-full border-4 border-white dark:border-gray-900 bg-sky-500 flex items-center justify-center text-xs font-black text-white shadow-sm">
+                                        +2k
                                     </div>
-
-                                    {/* Comment */}
-                                    <p className="text-xs sm:text-base  text-text-secondary leading-relaxed mb-2 sm:mb-3 line-clamp-3 sm:line-clamp-4 min-h-[2rem] sm:min-h-[2.5rem] md:min-h-[3rem]">
-                                        {post.comment}
-                                    </p>
-
-                                    {/* Like Button */}
-                                    <button
-                                        className="text-text-muted hover:text-error transition-colors transform hover:scale-110 active:scale-95 p-1 rounded-full hover:bg-bg-tertiary"
-                                        aria-label="Like post"
-                                    >
-                                        <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
-                                    </button>
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="font-bold text-gray-900 dark:text-white text-base">2,000+ Thành viên</span>
+                                    <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">Đang hoạt động sôi nổi</span>
                                 </div>
                             </div>
-                        ))}
+
+                            <button className="group flex items-center gap-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-10 py-4 rounded-full font-bold hover:scale-105 transition-all shadow-xl active:scale-95">
+                                <Instagram size={20} /> Theo dõi @Timepiece
+                            </button>
+                        </div>
+
+                        {/* Right Image Grid (Floating Style) */}
+                        <div className="grid grid-cols-2 gap-6 relative">
+                            {/* Cột 1 */}
+                            <div className="space-y-6 pt-12">
+                                {communities.filter((_,index) => index % 2 !== 0).map((post) => (
+                                    <CommunityCard key={post._id} post={post} />
+                                ))}
+                            </div>
+                            {/* Cột 2 */}
+                            <div className="space-y-6">
+                                {communities.filter((_,index) => index % 2 === 0).map((post) => (
+                                    <CommunityCard key={post._id} post={post} />
+                                ))}
+                            </div>
+
+                            {/* Trang trí nền */}
+                            <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-sky-100/50 dark:bg-sky-900/10 blur-[100px] rounded-full"></div>
+                        </div>
+
                     </div>
                 </div>
             </section>
+
         </>
     )
 }

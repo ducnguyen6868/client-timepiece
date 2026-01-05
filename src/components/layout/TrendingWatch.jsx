@@ -23,7 +23,6 @@ export default function TrendingWatch() {
         const getTrendingWatches = async () => {
             try {
                 setLoading(true);
-                await new Promise(resolve => setTimeout(resolve, 500));
                 const page = 1;
                 const limit = 6;
                 const response = await watchApi.getTrending(page, limit);

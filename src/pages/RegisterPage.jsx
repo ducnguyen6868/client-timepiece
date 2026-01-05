@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { isValidEmail } from '../utils/isValidEmail';
-import { useNavigate } from 'react-router-dom';
 import authApi from "../api/authApi";
 import loginImage from '../assets/login.png';
 import Notification from "../components/common/Notification";
 
 export default function RegisterPage() {
     const navigate = useNavigate();
+
     const [registerData, setRegisterData] = useState({
         name: "",
         email: "",
@@ -16,6 +16,7 @@ export default function RegisterPage() {
         confirmPassword: "",
         agreeTerms: true,
     });
+
     const [isHiddenPassword, setIsHiddenPassword] = useState(true);
     const [isHiddenConfirm, setIsHiddenConfirm] = useState(true);
     const [errors, setErrors] = useState({});
@@ -27,7 +28,7 @@ export default function RegisterPage() {
 
     const handleRegisterChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setRegisterData((prev) => ({
+        setRegisterData(prev => ({
             ...prev,
             [name]: type === "checkbox" ? checked : value,
         }));
@@ -38,15 +39,16 @@ export default function RegisterPage() {
         try {
             const response = await authApi.register(registerData);
 
-            setShow(true);
             setType('success');
-            setMessage(response.message);
-            await new Promise(resolve=>setTimeout(resolve,1000));
+            setMessage(response.message || 'Đăng ký tài khoản thành công');
+            setShow(true);
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
             navigate('../login');
         } catch (err) {
-            setShow(true);
             setType('error');
-            setMessage(err.response?.data?.message || err.message);
+            setMessage(err.response?.data?.message || 'Đăng ký thất bại');
+            setShow(true);
         }
     };
 
@@ -54,90 +56,105 @@ export default function RegisterPage() {
         if (step === 1) {
             const newErrors = {};
 
-            if (!registerData.name) newErrors.name = "Please enter your full name.";
+            if (!registerData.name)
+                newErrors.name = "Vui lòng nhập họ và tên";
+
             if (!registerData.email) {
-                newErrors.email = "Please enter your email";
-            } else {
-                if (!(isValidEmail(registerData.email))) newErrors.email = "Invalid email.";
+                newErrors.email = "Vui lòng nhập email";
+            } else if (!isValidEmail(registerData.email)) {
+                newErrors.email = "Email không đúng định dạng";
             }
+
             setErrors(newErrors);
             if (Object.keys(newErrors).length === 0) {
                 setStep(2);
             }
         }
+
         if (step === 2) {
             const newErrors = {};
 
             if (registerData.password.length < 8)
-                newErrors.password = "Password must be at least 8 characters.";
+                newErrors.password = "Mật khẩu phải có ít nhất 8 ký tự";
+
             if (registerData.password !== registerData.confirmPassword)
-                newErrors.confirmPassword = "Passwords do not match.";
+                newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
+
             if (!registerData.agreeTerms)
-                newErrors.agreeTerms = "You must agree to our Terms.";
+                newErrors.agreeTerms = "Bạn phải đồng ý với điều khoản sử dụng";
 
             setErrors(newErrors);
             if (Object.keys(newErrors).length > 0) return;
+
             handleRegisterSubmit();
         }
-    }
+    };
+
     return (
         <>
-            <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-800 px-4">
-                <img className='fixed w-full h-full' src={loginImage} alt='Login' title='Login' />
-                <div className="relative z-10 w-full max-w-md bg-white p-8 rounded-2xl shadow-2xl border border-gray-200">
+            <Notification
+                show={show}
+                type={type}
+                message={message}
+                onClose={() => setShow(false)}
+            />
+
+            <div className="min-h-screen flex items-center justify-center px-4">
+                <img className="fixed w-full h-full object-cover" src={loginImage} alt="Đăng ký" />
+
+                <div className="relative z-10 w-full max-w-md bg-white p-8 rounded-2xl shadow-2xl border">
 
                     {/* Header */}
                     <div className="text-center mb-8">
-                        <h2 className="text-2xl font-bold text-cyan-600">Create Your Account</h2>
+                        <h2 className="text-2xl font-bold text-cyan-600">
+                            Tạo tài khoản mới
+                        </h2>
                         <p className="text-gray-500 mt-2 text-sm">
-                            Join our exclusive community of watch enthusiasts
+                            Tham gia cộng đồng yêu thích đồng hồ của chúng tôi
                         </p>
                     </div>
 
                     {step === 1 && (
                         <>
-                            {/* Full Name */}
+                            {/* Họ tên */}
                             <div className="mb-5">
-                                <label className="flex items-center gap-2 text-sm font-medium mb-1 text-gray-700">
+                                <label className="flex items-center gap-2 text-sm font-medium mb-1">
                                     <Icon icon="mdi:account-outline" width="18" />
-                                    <span>Full Name</span>
+                                    <span>Họ và tên</span>
                                 </label>
                                 <input
                                     type="text"
                                     name="name"
                                     value={registerData.name}
                                     onChange={handleRegisterChange}
-                                    placeholder="John Doe"
-                                    className={`w-full rounded-lg px-4 py-2 border ${errors.name ? 'border-red-400' : 'border-gray-300'} focus:ring-2 focus:ring-cyan-500 focus:outline-none`}
+                                    placeholder="Nguyễn Văn A"
+                                    className={`w-full px-4 py-2 rounded-lg border ${
+                                        errors.name ? 'border-red-400' : 'border-gray-300'
+                                    }`}
                                 />
                                 {errors.name && (
-                                    <div className="flex items-center text-red-500 mt-1 text-sm">
-                                        <Icon icon="mdi:alert-circle" width="16" height="16" />
-                                        <span className="ml-1">{errors.name}</span>
-                                    </div>
+                                    <p className="text-sm text-red-500 mt-1">{errors.name}</p>
                                 )}
                             </div>
 
                             {/* Email */}
                             <div className="mb-5">
-                                <label className="flex items-center gap-2 text-sm font-medium mb-1 text-gray-700">
+                                <label className="flex items-center gap-2 text-sm font-medium mb-1">
                                     <Icon icon="mdi:email-outline" width="18" />
-                                    <span>Email Address</span>
+                                    <span>Email</span>
                                 </label>
                                 <input
                                     type="email"
                                     name="email"
                                     value={registerData.email}
                                     onChange={handleRegisterChange}
-                                    placeholder="your@email.com"
-                                    className={`w-full rounded-lg px-4 py-2 border ${errors.email ? 'border-red-400' : 'border-gray-300'} focus:ring-2 focus:ring-cyan-500 focus:outline-none`}
+                                    placeholder="nguyenvana@gmail.com"
+                                    className={`w-full px-4 py-2 rounded-lg border ${
+                                        errors.email ? 'border-red-400' : 'border-gray-300'
+                                    }`}
                                 />
                                 {errors.email && (
-                                    <div className="flex items-center text-red-500 mt-1 text-sm">
-                                        <Icon icon="mdi:alert-circle" width="16" height="16" />
-                                        <span className="ml-1">{errors.email}</span>
-                                    </div>
+                                    <p className="text-sm text-red-500 mt-1">{errors.email}</p>
                                 )}
                             </div>
                         </>
@@ -145,11 +162,11 @@ export default function RegisterPage() {
 
                     {step === 2 && (
                         <>
-                            {/* Password */}
+                            {/* Mật khẩu */}
                             <div className="mb-5">
-                                <label className="flex items-center gap-2 text-sm font-medium mb-1 text-gray-700">
+                                <label className="flex items-center gap-2 text-sm font-medium mb-1">
                                     <Icon icon="mdi:lock-outline" width="18" />
-                                    <span>Password</span>
+                                    <span>Mật khẩu</span>
                                 </label>
                                 <div className="relative">
                                     <input
@@ -158,29 +175,28 @@ export default function RegisterPage() {
                                         value={registerData.password}
                                         onChange={handleRegisterChange}
                                         placeholder="••••••••"
-                                        className={`w-full rounded-lg px-4 py-2 border ${errors.password ? 'border-red-400' : 'border-gray-300'} focus:ring-2 focus:ring-cyan-500 focus:outline-none`}
+                                        className={`w-full px-4 py-2 rounded-lg border ${
+                                            errors.password ? 'border-red-400' : 'border-gray-300'
+                                        }`}
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setIsHiddenPassword(!isHiddenPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-cyan-500 transition"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2"
                                     >
-                                        <Icon icon={isHiddenPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"} width="20" />
+                                        <Icon icon={isHiddenPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"} />
                                     </button>
                                 </div>
                                 {errors.password && (
-                                    <div className="flex items-center text-red-500 mt-1 text-sm">
-                                        <Icon icon="mdi:alert-circle" width="16" height="16" />
-                                        <span className="ml-1">{errors.password}</span>
-                                    </div>
+                                    <p className="text-sm text-red-500 mt-1">{errors.password}</p>
                                 )}
                             </div>
 
-                            {/* Confirm Password */}
+                            {/* Xác nhận mật khẩu */}
                             <div className="mb-5">
-                                <label className="flex items-center gap-2 text-sm font-medium mb-1 text-gray-700">
+                                <label className="flex items-center gap-2 text-sm font-medium mb-1">
                                     <Icon icon="mdi:shield-lock-outline" width="18" />
-                                    <span>Confirm Password</span>
+                                    <span>Xác nhận mật khẩu</span>
                                 </label>
                                 <div className="relative">
                                     <input
@@ -189,85 +205,61 @@ export default function RegisterPage() {
                                         value={registerData.confirmPassword}
                                         onChange={handleRegisterChange}
                                         placeholder="••••••••"
-                                        onKeyDown={(e) => e.key === 'Enter' && handleRegisterSubmit()}
-                                        className={`w-full rounded-lg px-4 py-2 border ${errors.confirmPassword ? 'border-red-400' : 'border-gray-300'} focus:ring-2 focus:ring-cyan-500 focus:outline-none`}
+                                        className={`w-full px-4 py-2 rounded-lg border ${
+                                            errors.confirmPassword ? 'border-red-400' : 'border-gray-300'
+                                        }`}
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setIsHiddenConfirm(!isHiddenConfirm)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-cyan-500 transition"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2"
                                     >
-                                        <Icon icon={isHiddenConfirm ? "mdi:eye-off-outline" : "mdi:eye-outline"} width="20" />
+                                        <Icon icon={isHiddenConfirm ? "mdi:eye-off-outline" : "mdi:eye-outline"} />
                                     </button>
                                 </div>
                                 {errors.confirmPassword && (
-                                    <div className="flex items-center text-red-500 mt-1 text-sm">
-                                        <Icon icon="mdi:alert-circle" width="16" height="16" />
-                                        <span className="ml-1">{errors.confirmPassword}</span>
-                                    </div>
+                                    <p className="text-sm text-red-500 mt-1">{errors.confirmPassword}</p>
                                 )}
                             </div>
 
-                            {/* Terms */}
-                            <div className="flex items-start gap-2 mb-6">
+                            {/* Điều khoản */}
+                            <div className="flex items-start gap-2 mb-4">
                                 <input
                                     type="checkbox"
                                     name="agreeTerms"
                                     checked={registerData.agreeTerms}
                                     onChange={handleRegisterChange}
-                                    className="mt-1 accent-cyan-500"
                                 />
-                                <span className="text-sm text-gray-600">
-                                    I agree to the{" "}
+                                <span className="text-sm">
+                                    Tôi đồng ý với{" "}
                                     <Link to="#" className="text-cyan-600 hover:underline">
-                                        Terms and Conditions
+                                        Điều khoản & Điều kiện
                                     </Link>
                                 </span>
                             </div>
-                            {errors.agreeTerms && <p className="text-sm text-red-500 mb-3">{errors.agreeTerms}</p>}
+                            {errors.agreeTerms && (
+                                <p className="text-sm text-red-500">{errors.agreeTerms}</p>
+                            )}
                         </>
                     )}
 
-                    {/* Submit Button */}
+                    {/* Button */}
                     <button
                         onClick={handleMultipleButton}
-                        className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2.5 rounded-lg shadow-md transition duration-300"
+                        className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2.5 rounded-lg"
                     >
-                        {step === 1 ? "Continue" : "Create Account"}
+                        {step === 1 ? "Tiếp tục" : "Tạo tài khoản"}
                     </button>
-
-                    {/* Divider */}
-                    <div className="flex items-center justify-center my-6">
-                        <div className="h-px w-1/4 bg-gray-200" />
-                        <span className="mx-3 text-sm text-gray-400">Or continue with</span>
-                        <div className="h-px w-1/4 bg-gray-200" />
-                    </div>
-
-                    {/* Social Login */}
-                    <div className="flex gap-4">
-                        <button className="flex-1 flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition">
-                            <Icon icon="logos:google-icon" width="20" />
-                            <span>Google</span>
-                        </button>
-                        <button className="flex-1 flex items-center justify-center gap-2 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
-                            <Icon icon="logos:facebook" width="20" />
-                            <span>Facebook</span>
-                        </button>
-                    </div>
 
                     {/* Footer */}
                     <p className="text-center text-sm text-gray-500 mt-6">
-                        Already have an account?{" "}
-                        <Link to="../login" className="text-cyan-600 hover:underline font-medium">
-                            Sign In
+                        Đã có tài khoản?{" "}
+                        <Link to="../login" className="text-cyan-600 font-medium hover:underline">
+                            Đăng nhập
                         </Link>
                     </p>
                 </div>
             </div>
-
-
         </>
     );
-};
-
-
+}

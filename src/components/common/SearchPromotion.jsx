@@ -24,7 +24,6 @@ export default function SearchPromotion({ brands }) {
   const handleSubmitCode = async () => {
     if (!code.trim()) return toast.warn('Please enter a promo code!');
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       const response = await promotionApi.searchPromotion(code);
       setPromotion(response.promotion);

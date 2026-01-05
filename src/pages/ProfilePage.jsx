@@ -1,242 +1,217 @@
-import {
-    ShoppingCart, MapPin, Zap, Heart, Award, BarChart2, Tag, Camera, LogOut, XCircle
-} from 'lucide-react';
-import { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../contexts/UserContext';
-import { useNavigate } from 'react-router-dom';
+import { useState , useEffect } from 'react';
+import { Icon } from "@iconify/react";
 import profileApi from '../api/profileApi';
-import Notification from '../components/common/Notification';
-import LoadingAnimations from '../components/common/LoadingAnimations';
-import ImageError from '../assets/imageError.jpg';
 
-// ************************************************
-// Main Component: Profile Page
-// ************************************************
 export default function ProfilePage() {
 
-    const [user, setUser] = useState({});
-    const { setInfoUser } = useContext(UserContext);
-    const navigate = useNavigate();
+    const [user,setUser] = useState({});
+    const [birthday, setBirthday] = useState({
+        day: "",
+        month: "",
+        year: ""
+    });
 
-    const [logout, setLogout] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [loadingAvatar, setLoadingAvatar] = useState(false);
-    const [type, setType] = useState('');
-    const [message, setMessage] = useState('');
-    const [show, setShow] = useState(false);
+    const currentYear = new Date().getFullYear();
 
-    useEffect(() => {
-        const getProfile = async () => {
-            try {
+    const years = Array.from(
+        { length: currentYear - 1900 + 1 },
+        (_, i) => currentYear - i
+    );
+
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+    useEffect(()=>{
+        const getUser = async()=>{
+            try{
                 const response = await profileApi.profile();
                 setUser(response.user);
-            } catch (err) {
-                setShow(true);
-                setType('error');
-                setMessage(err.response?.data?.message || err.message)
-            }finally{
-                setLoading(false);
+            }catch(err){
+                console.log(err.response?.data?.message||err.message);
             }
         }
-        getProfile();
-    }, []);
+        getUser();
+    },[]);
 
-    const getRank = (rank) => {
-        switch (rank) {
-            case 'Brown': return <span className="inline-flex items-center w-max px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                <Award className="w-3 h-3 mr-1" />
-                {rank + ' member'}
-            </span>;
-            case 'Silver': return <span className="inline-flex items-center w-max px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600">
-                <Award className="w-3 h-3 mr-1" />
-                {rank + ' member'}
-            </span>;
-            case 'Gold': return <span className="inline-flex items-center w-max px-3 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-600">
-                <Award className="w-3 h-3 mr-1" />
-                {rank + ' member'}
-            </span>;
-            case 'Diamond': return <span className="inline-flex items-center w-max px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                <Award className="w-3 h-3 mr-1" />
-                {rank + ' member'}
-            </span>;
-            default: break
-        }
+    const getDaysInMonth = (month, year) => {
+        if (!month || !year) return [];
+        return new Date(year, month, 0).getDate();
     };
 
-    const handleAvatarChange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const formData = new FormData();
-        formData.append('image', file);
-
-        try {
-            setLoadingAvatar(true);
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            const response = await profileApi.patchAvatar(formData);
-
-            // Update user avatar locally
-            setUser(prev => ({ ...prev, avatar: response.avatar }));
-            setInfoUser(prev => ({ ...prev, avatar: response.avatar }));
-            setShow(true);
-            setType('success');
-            setMessage(response.message);
-        } catch (err) {
-            setMessage(err.response?.data?.message || err.message);
-            setShow(true);
-            setType('error');
-        } finally {
-            setLoadingAvatar(false);
-        }
-    };
-
-    const confirmLogout = () => {
-        localStorage.removeItem('token');
-        setInfoUser({ fullName: '', email: '', avatar: '' });
-        navigate('/');
-    };
-
-    if(loading){
-        return(
-            <LoadingAnimations option='dots_circle'/>
-        );
-    };
     return (
-        <>
-            {/* 1. Profile Overview (Default Content) */}
-            <>
-                <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
-                {/* User Card */}
-                <div className="flex items-center space-x-6 pb-6 border-b border-gray-100">
-                    <div className='relative rounded-full overflow-hidden'>
-                        <img src={user.avatar}
-                            alt={user.name}
-                            title={user.name}
-                            className="w-24 h-24 rounded-full object-cover border-4 border-teal-500"
-                            onError={(e) => e.target.src = ImageError} />
-                        <button className='w-full absolute bottom-0 flex justify-center backdrop-blur-[2px]'>
-                            <Camera className='w-6 h-6 text-gray-400' />
-                        </button>
-                        <input name='image' type='file' acept='.png , .jpg , .jpeg' className='absolute inset-0 visibility opacity-0 cursor-pointer' onChange={(e) => handleAvatarChange(e)} />
-                        {loadingAvatar && (
-                            <div className='absolute inset-0 p-8 z-50 flex justify-center items-center'>
-                                <div className='border-b-2 rounded-full w-full h-full border-brand animate-spin'></div>
-                            </div>
-                        )}
-                    </div>
-                    <div className='flex flex-col justify-center gap-1'>
-                        <h2 className="text-xl font-bold text-gray-900 flex gap-4 items-end">
-                            <span>{user.fullName}</span>
-                        </h2>
-                        <p className="text-gray-600 mb-1 text-base ">{user.email}</p>
-                        {getRank(user.rank)}
-                    </div>
-                </div>
+        <div className='flex-1 p-4 bg-bg-primary shadow-xl rounded-xl'>
+            {/* Header */}
+            <div className="pb-6 border-b">
+                <h1 className="text-3xl font-bold text-slate-900">
+                    Hồ sơ của tôi
+                </h1>
+                <p className="text-sm text-gray-500">
+                    Quản lý thông tin hồ sơ để bảo mật tài khoản
+                </p>
+            </div>
+            {/* Information */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Form */}
+                <div className="lg:col-span-2 flex flex-col gap-6 pt-4">
 
-                {/* Reward Progress */}
-                <div className="my-4 ">
-                    <h3 className="text-xl font-bold text-gray-900 flex items-center mb-4">
-                        <Zap className="w-5 h-5 mr-2 text-teal-600" />
-                        Reward Progress
-                    </h3>
-                    <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                        <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm font-semibold text-gray-600">Current Points: <span className='text-brand'>{user.point?.quantity || 0}</span></span>
-                            <span className="text-sm text-gray-500">Next Tier: {user.rankScore[1] || 0}</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Input label="Họ và tên" value={user.fullName} />
+                        <Input label="Số điện thoại" value={user.phoneNumber} />
+                    </div>
+
+                    {/* Email */}
+                    <label className="flex flex-col gap-2">
+                        <div className="flex justify-between">
+                            <span className="text-sm font-medium">Email</span>
+                            <span className="text-xs text-brand cursor-pointer hover:underline">
+                                Thay đổi
+                            </span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2.5">
-                            <div
-                                className="h-2.5 rounded-full"
-                                style={{ width: `${Math.ceil(0 / user.rankScore[1])}`, backgroundColor: '#00bcd4' }}
+                        <div className="relative">
+                            <input
+                                disabled
+                                value={user.email}
+                                className="w-full px-4 py-3 rounded-lg bg-gray-50 border cursor-not-allowed"
+                            />
+                            <Icon
+                                icon="mdi:check-circle"
+                                className="absolute right-3 top-3 text-green-500"
                             />
                         </div>
-                        <p className="text-xs text-gray-500 mt-2">{user.rankScore[1] - 0} points to reach next tier!</p>
-                    </div>
-                </div>
+                    </label>
 
-                {/* Quick Stats */}
-                <div className="my-4">
-                    <h3 className="text-xl font-bold text-gray-900 flex items-center mb-4">
-                        <BarChart2 className="w-5 h-5 mr-2 text-teal-600" />
-                        Quick Stats
-                    </h3>
-                    <div className="grid grid-cols-2 gap-4">
-                        <StatCard icon={ShoppingCart} label="Total Orders" value={user.orders?.length} color="teal" />
-                        <StatCard icon={Heart} label="Wishlist Items" value={user.wishlist?.length} color="red" />
-                        <StatCard icon={Tag} label="Active Promotions" value={user.promotions?.length} color="blue" />
-                        <StatCard icon={MapPin} label="Saved Addresses" value={user.addresses?.length} color="orange" />
+                    {/* Gender */}
+                    <div className="flex flex-col gap-2">
+                        <span className="text-sm font-medium">Giới tính</span>
+                        <div className="flex gap-6">
+                            <Radio label="Nam" checked />
+                            <Radio label="Nữ" />
+                            <Radio label="Khác" />
+                        </div>
                     </div>
-                </div>
 
-                {/* Logout */}
-                <div className='flex justify-center items-center'>
-                    <button className='flex gap-2 bg-red-500 text-white
-                  py-2 px-12 rounded-xl justify-center items-center'
-                        onClick={() => setLogout(true)}
-                    >
-                        <LogOut />
-                        <span >Logout</span>
+                    {/* Birthday */}
+                    <label className="flex flex-col gap-2">
+                        <span className="text-sm font-medium">Ngày sinh</span>
+
+                        <div className="grid grid-cols-3 gap-2">
+                            {/* Day */}
+                            <select
+                                className="input"
+                                value={birthday.day}
+                                disabled={!birthday.month || !birthday.year}
+                                onChange={(e) =>
+                                    setBirthday({ ...birthday, day: e.target.value })
+                                }
+                            >
+                                <option value="">Ngày</option>
+                                {Array.from(
+                                    { length: getDaysInMonth(birthday.month, birthday.year) },
+                                    (_, i) => i + 1
+                                ).map(day => (
+                                    <option key={day} value={day}>
+                                        {day}
+                                    </option>
+                                ))}
+                            </select>
+
+                            {/* Month */}
+                            <select
+                                className="input"
+                                value={birthday.month}
+                                onChange={(e) =>
+                                    setBirthday({
+                                        ...birthday,
+                                        month: e.target.value,
+                                        day: ""
+                                    })
+                                }
+                            >
+                                <option value="">Tháng</option>
+                                {months.map(month => (
+                                    <option key={month} value={month}>
+                                        {month}
+                                    </option>
+                                ))}
+                            </select>
+
+                            {/* Year */}
+                            <select
+                                className="input"
+                                value={birthday.year}
+                                onChange={(e) =>
+                                    setBirthday({
+                                        ...birthday,
+                                        year: e.target.value,
+                                        day: ""
+                                    })
+                                }
+                            >
+                                <option value="">Năm</option>
+                                {years.map(year => (
+                                    <option key={year} value={year}>
+                                        {year}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </label>
+
+                    <button className="bg-brand text-white font-bold py-3 px-8 rounded-lg shadow hover:scale-[1.02] transition">
+                        Lưu thay đổi
                     </button>
                 </div>
 
-                {/* LOGOUT MODAL */}
-                {logout && (
-                    <div
-                        className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
-                        onClick={() => setLogout(false)}
-                    >
-                        <div
-                            className="bg-white rounded-2xl shadow-lg w-full max-w-sm p-6 text-center animate-fadeIn"
-                            onClick={e => e.stopPropagation()}
-                        >
-                            <XCircle className="text-red-500 w-10 h-10 mx-auto mb-2" />
-                            <h3 className="text-lg font-semibold text-gray-800 mb-1">Confirm Logout</h3>
-                            <p className="text-sm text-gray-600 mb-4">Are you sure you want to log out of your account?</p>
-
-                            <div className="flex justify-center gap-3">
-                                <button
-                                    className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-all"
-                                    onClick={() => setLogout(false)}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-all"
-                                    onClick={confirmLogout}
-                                >
-                                    Yes, Logout
-                                </button>
+                {/* Avatar */}
+                <div className="lg:col-span-1 flex flex-col items-center py-4 lg:border-l">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="relative group cursor-pointer">
+                            <div className="size-32 rounded-full overflow-hidden border bg-gray-100">
+                                <img
+                                    src={user.avatar}
+                                    alt="Avatar"
+                                    className="object-cover w-full h-full"
+                                />
+                            </div>
+                            <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                                <Icon icon="mdi:camera-outline" className="text-white text-2xl" />
                             </div>
                         </div>
+
+                        <button className="text-sm border px-4 py-2 rounded-lg hover:bg-gray-50">
+                            Chọn ảnh
+                        </button>
+
+                        <p className="text-xs text-gray-400 text-center">
+                            Tối đa 1MB • JPEG, PNG
+                        </p>
                     </div>
-                )}
-            </>
-        </>
-    );
-}
-
-// ************************************************
-// Reusable Component: Quick Stat Card
-// ************************************************
-const StatCard = ({ icon: Icon, label, value, color }) => {
-    // Mapping color names to Tailwind classes
-    const colorClasses = {
-        teal: 'text-teal-600 bg-teal-50',
-        red: 'text-red-600 bg-red-50',
-        blue: 'text-blue-600 bg-blue-50',
-        orange: 'text-orange-600 bg-orange-50',
-    };
-
-    return (
-        <div className="flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-4 ${colorClasses[color]}`}>
-                <Icon className="w-5 h-5" />
-            </div>
-            <div>
-                <p className="text-xl font-bold text-gray-900">{value}</p>
-                <p className="text-xs text-gray-500">{label}</p>
+                </div>
             </div>
         </div>
     );
-};
+}
+
+function Input({ label, value }) {
+    return (
+        <label className="flex flex-col gap-2">
+            <span className="text-sm font-medium">{label}</span>
+            <input
+                defaultValue={value}
+                className="px-4 py-3 rounded-lg border focus:ring-1 focus:ring-brand"
+            />
+        </label>
+    );
+}
+
+function Radio({ label, checked }) {
+    return (
+        <label className="flex items-center gap-2 cursor-pointer">
+            <input
+                type="radio"
+                className="accent-brand"
+                name='gender'
+            />
+            <span>{label}</span>
+        </label>
+    );
+}
