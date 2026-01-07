@@ -87,6 +87,14 @@ export default function WatchPage() {
   };
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  }, []);
+
+  useEffect(() => {
     if (!slug || slug === '') return;
     const getWatch = async () => {
       try {
@@ -110,9 +118,9 @@ export default function WatchPage() {
     const intervalId = setInterval(() => {
       const now = Date.now();
       const end = new Date(watch.flashSaleEnd);
-      const diff = end-now;
+      const diff = end - now;
       const minutesLeft = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const secondsLeft =  Math.floor((diff % (1000 * 60)) / 1000);
+      const secondsLeft = Math.floor((diff % (1000 * 60)) / 1000);
 
       setTimeLeft({ minutesLeft, secondsLeft });
     }, 1000);
@@ -219,7 +227,7 @@ export default function WatchPage() {
   return (
     <>
       <Notification show={show} type={type} message={message} onClose={() => setShow(false)} />
-    
+
       <div className="min-h-screen bg-gray-50">
         <div className=" max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="grid grid-cols-1 lg:grid-cols-5 lg:gap-8 mb-4">

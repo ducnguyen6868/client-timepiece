@@ -17,7 +17,7 @@ const ShimmerLoader = () => (
 );
 
 const DotsLoader = () => (
-    <div className="bg-white w-full mt-4 p-4 h-max flex items-center justify-center">
+    <div className="bg-white w-full mt-4 p-4 h-max flex items-center justify-center min-h-80">
         <div className="flex gap-2">
             {[0, 1, 2].map((i) => (
                 <div

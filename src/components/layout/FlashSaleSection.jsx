@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { BadgePercent, Flame } from 'lucide-react';
-import { formatCurrency } from '../../utils/formatCurrency';
+import { Flame } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
-import { Icon } from '@iconify/react';
 import watchApi from "../../api/watchApi";
 import Notification from '../common/Notification';
 import LoadingAnimations from '../common/LoadingAnimations';
@@ -64,13 +62,18 @@ export default function FlashSaleSection() {
             } finally {
                 setLoading(false);
             }
-        }
+        };
         getFlashSales();
     }, []);
 
     const handleNavigate=()=>{
         navigate(`/flash-sale`);
     };
+    if(loading){
+        return(
+            <LoadingAnimations option='dots'/>
+        );
+    }
 
     return (
         <>

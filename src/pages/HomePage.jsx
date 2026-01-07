@@ -58,18 +58,18 @@ export default function HomePage() {
         <CommunitySection />
       </LazySection>
 
-      <Link class="fixed bottom-8 left-8 z-[9999] flex items-center gap-3 px-5 py-3.5 bg-brand hover:bg-brand-hover text-white 
+      <Link className="fixed bottom-8 left-8 z-[9999] flex items-center gap-3 px-5 py-3.5 bg-brand hover:bg-brand-hover text-white 
       rounded-full shadow-lg shadow-cyan-500/30 transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer group
-      peer-checked:blur-sm peer-checked:pointer-events-none" for="feedback-popup-trigger"
+      peer-checked:blur-sm peer-checked:pointer-events-none" htmlFor="feedback-popup-trigger"
       to='/feed-back'
       >
-        <div class="relative flex items-center justify-center">
-          <Icon icon="material-symbols:lightbulb-outline-rounded" width="24" height="24" style={{ color:'#ffffff' }} />              <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-200 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-400"></span>
+        <div className="relative flex items-center justify-center">
+          <Icon icon="material-symbols:lightbulb-outline-rounded" width="24" height="24" style={{ color:'#ffffff' }} />              <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-200 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-400"></span>
           </span>
         </div>
-        <span class="font-bold text-sm tracking-wide pr-1">Đóng góp ý kiến</span>
+        <span className="font-bold text-sm tracking-wide pr-1">Đóng góp ý kiến</span>
       </Link>
 
     </div>
