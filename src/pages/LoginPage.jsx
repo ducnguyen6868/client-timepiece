@@ -196,7 +196,7 @@ export default function LoginPage() {
           </div>
           <div className="flex gap-4">
             <Link className="flex-1 bg-gray-100 py-2 rounded-lg flex justify-center gap-2 items-center"
-            to={`${REACT_APP_FRONTEND_URL?REACT_APP_FRONTEND_URL :`http://localhost:5000`}`+`/auth/google`}
+            to={`${process.env.REACT_APP_FRONTEND_URL?process.env.REACT_APP_FRONTEND_URL :`http://localhost:5000`}`+`/auth/google`}
             >
               <Icon icon="logos:google-icon" />
               Google
