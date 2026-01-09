@@ -194,9 +194,10 @@ export default function LoginPage() {
           <div className="text-center text-sm text-gray-400 mt-4">
             Hoặc đăng nhập bằng
           </div>
+
           <div className="flex gap-4">
             <Link className="flex-1 bg-gray-100 py-2 rounded-lg flex justify-center gap-2 items-center"
-            to={`${process.env.REACT_APP_FRONTEND_URL?process.env.REACT_APP_FRONTEND_URL :`http://localhost:5000`}`+`/auth/google`}
+            to={`${process.env.REACT_APP_API_URL?process.env.REACT_APP_API_URL :`http://localhost:5000`}`+`/auth/google`}
             >
               <Icon icon="logos:google-icon" />
               Google
