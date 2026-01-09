@@ -38,6 +38,7 @@ import LeaderBoard from './pages/LeaderBoard';
 import RecentContributions from './pages/RecentContributions';
 
 import AuthAccount from './middlewares/authAccount';
+import OauthSuccess from './pages/OauthSuccess';
 
 import User from './components/layout/User';
 import ProfilePage from './pages/ProfilePage';
@@ -93,6 +94,7 @@ function App() {
             <Route path="watch/checkout" element={<CheckoutPage />}></Route>
             <Route path="payment-result" element={<PaymentResultPage />}></Route>
             <Route path='cart' element={<CartPage />}></Route>
+            <Route path='oauth-success' element={<OauthSuccess />}></Route>
             <Route path='order-history' element={<OrderHistoryPage />}></Route>
             <Route path='order-detail/:orderId' element={<OrderDetailPage />}></Route>
           </Route>

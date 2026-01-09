@@ -1,10 +1,12 @@
-import { useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Icon } from "@iconify/react";
 import profileApi from '../api/profileApi';
 
+
 export default function ProfilePage() {
 
-    const [user,setUser] = useState({});
+    const [user, setUser] = useState({});
+    
     const [birthday, setBirthday] = useState({
         day: "",
         month: "",
@@ -20,17 +22,17 @@ export default function ProfilePage() {
 
     const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
-    useEffect(()=>{
-        const getUser = async()=>{
-            try{
+    useEffect(() => {
+        const getUser = async () => {
+            try {
                 const response = await profileApi.profile();
                 setUser(response.user);
-            }catch(err){
-                console.log(err.response?.data?.message||err.message);
+            } catch (err) {
+                console.log(err.response?.data?.message || err.message);
             }
         }
         getUser();
-    },[]);
+    }, []);
 
     const getDaysInMonth = (month, year) => {
         if (!month || !year) return [];

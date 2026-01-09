@@ -196,10 +196,12 @@ export default function LoginPage() {
           </div>
 
           <div className="flex gap-4">
-            <button className="flex-1 bg-gray-100 py-2 rounded-lg flex justify-center gap-2 items-center">
+            <Link className="flex-1 bg-gray-100 py-2 rounded-lg flex justify-center gap-2 items-center"
+            to='http://localhost:5000/auth/google'
+            >
               <Icon icon="logos:google-icon" />
               Google
-            </button>
+            </Link>
             <button className="flex-1 bg-blue-600 text-white py-2 rounded-lg flex justify-center items-center gap-2">
               <Icon icon="logos:facebook"  className='w-5 h-auto'/>
               Facebook

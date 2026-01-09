@@ -11,6 +11,7 @@ const userApi = {
     changeQuantity: (sku, quantity) => axiosClient.patch('/cart/change-quantity', { sku, quantity }),
     getList: (role, page, limit) => axiosClient.get(`/user?role=${role}&&page=${page}&&limit=${limit}`),
     patchStatusUser: (userId, status) => axiosClient.patch(`/change-status?status=${status}`, { userId }),
+    getUser:(token)=>axiosClient.get(`/oauth-success?token=${token}`)
 
 }
 export default userApi;

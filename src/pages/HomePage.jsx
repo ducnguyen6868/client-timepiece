@@ -1,6 +1,6 @@
 import { Eye } from 'lucide-react';
-import {Icon} from '@iconify/react';
-import {Link} from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import { Link  } from 'react-router-dom';
 import { useLazyLoad } from '../hooks/useLazyLoad';
 import FlashSaleSection from '../components/layout/FlashSaleSection';
 import CommunitySection from '../components/layout/CommunitySection';
@@ -30,10 +30,10 @@ function LazySection({ children, minHeight = '400px', name }) {
       )}
     </div>
   );
-}
+};
 
 export default function HomePage() {
-
+  
   return (
     <div className="min-h-screen bg-white">
 
@@ -61,10 +61,10 @@ export default function HomePage() {
       <Link className="fixed bottom-8 left-8 z-[9999] flex items-center gap-3 px-5 py-3.5 bg-brand hover:bg-brand-hover text-white 
       rounded-full shadow-lg shadow-cyan-500/30 transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer group
       peer-checked:blur-sm peer-checked:pointer-events-none" htmlFor="feedback-popup-trigger"
-      to='/feed-back'
+        to='/feed-back'
       >
         <div className="relative flex items-center justify-center">
-          <Icon icon="material-symbols:lightbulb-outline-rounded" width="24" height="24" style={{ color:'#ffffff' }} />              <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+          <Icon icon="material-symbols:lightbulb-outline-rounded" width="24" height="24" style={{ color: '#ffffff' }} />              <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-200 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-400"></span>
           </span>
